@@ -88,7 +88,8 @@
         android:id="@+id/button"
         android:layout_alignParentTop="true"
         android:layout_alignEnd="@+id/radioGroup"
-        android:background="@android:drawable/ic_menu_add" />
+        android:background="@android:drawable/ic_menu_add"
+        android:onClick="btnAddClick"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -114,7 +115,8 @@
         android:id="@+id/button2"
         android:background="@android:drawable/ic_menu_search"
         android:layout_below="@+id/radioGroup"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:onClick="btnSearchClick"/>
 
     <EditText
         android:id="@+id/txtEditName"
@@ -133,7 +135,8 @@
         android:visibility="gone"
         android:layout_below="@id/txtEditAge"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        />
 
 
     <RadioGroup
@@ -172,7 +175,7 @@
         android:contentDescription="Update"
         android:visibility="gone"
         android:background="@android:drawable/ic_menu_add"
-        />
+        android:onClick="btnUpdateClick"/>
 
     <Button
         android:id="@id/btnDelete"
@@ -183,7 +186,7 @@
         android:contentDescription="Delete"
         android:visibility="gone"
         android:background="@android:drawable/ic_delete"
-        />
+        android:onClick="btnDeleteClick"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -200,7 +203,8 @@
         android:id="@+id/button3"
         android:background="@android:drawable/ic_menu_rotate"
         android:layout_below="@+id/button2"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:onClick="btnRefreshClick"/>
 
     <ScrollView
         android:layout_width="0dp"

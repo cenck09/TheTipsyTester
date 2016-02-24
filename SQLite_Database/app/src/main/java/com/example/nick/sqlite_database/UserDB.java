@@ -33,7 +33,7 @@ public class UserDB extends SQLiteOpenHelper{
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE user (" +
-                    "user_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "name TEXT, " +
                     "age INTEGER, " +
                     "weight INTEGER, " +

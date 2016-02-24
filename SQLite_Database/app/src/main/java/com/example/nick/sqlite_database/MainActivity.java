@@ -129,12 +129,12 @@ public class MainActivity extends AppCompatActivity  {
             }else{
                 values.put("gender", "male");
             }
-            
+
 
 
             String selection = "_id = " + currentRow;
 
-            theDB.update("jokes",values,selection,null);
+            theDB.update("user",values,selection,null);
         }
     }
 
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity  {
         else {
             String selection = "_id = " + currentRow;
 
-            theDB.delete("jokes",selection,null);
+            theDB.delete("user",selection,null);
         }
     }
 
@@ -159,9 +159,13 @@ public class MainActivity extends AppCompatActivity  {
 
         while (c.moveToNext()) {
             sb.append("id: " + c.getLong(c.getColumnIndexOrThrow("_id")) + "\n");
-            sb.append(c.getString(c.getColumnIndexOrThrow("setup")));
+            sb.append(c.getString(c.getColumnIndexOrThrow("name")));
             sb.append("\n");
-            sb.append(c.getString(c.getColumnIndexOrThrow("punchline")));
+            sb.append(c.getString(c.getColumnIndexOrThrow("age")));
+            sb.append("\n");
+            sb.append(c.getString(c.getColumnIndexOrThrow("weight")));
+            sb.append("\n");
+            sb.append(c.getString(c.getColumnIndexOrThrow("gender")));
             sb.append("---------------------------------------------------------------\n");
         }
         ((TextView) findViewById(R.id.lblResults)).setText(sb);
