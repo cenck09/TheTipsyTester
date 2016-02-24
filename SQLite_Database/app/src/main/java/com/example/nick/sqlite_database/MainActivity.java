@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity  {
             values.put("weight", ((TextView) findViewById(R.id.txtEditWeight)).getText().toString());
 
             RadioButton buttonFemale = (RadioButton) this.findViewById(R.id.radioFemaleEdit);
-            RadioButton buttonMale = (RadioButton) this.findViewById(R.id.radioMaleEdit);
+
 
             if(buttonFemale.isChecked()){
                 values.put("gender", "female");
@@ -166,7 +166,8 @@ public class MainActivity extends AppCompatActivity  {
             sb.append(c.getString(c.getColumnIndexOrThrow("weight")));
             sb.append("\n");
             sb.append(c.getString(c.getColumnIndexOrThrow("gender")));
-            sb.append("---------------------------------------------------------------\n");
+            sb.append("\n");
+            sb.append("------------------------------------------------------------\n");
         }
         ((TextView) findViewById(R.id.lblResults)).setText(sb);
     }
