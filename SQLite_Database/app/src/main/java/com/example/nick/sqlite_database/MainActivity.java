@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity  {
     protected void onResume() {
         super.onResume();
 
-        UserDB.getInstance(this).getWritableDatabase(new UserDB.OnDBReadyListener() {
+        UserDB.getInstance(this).getWritableDatabase(new UserDB.onDBReadyListener() {
             @Override
             public void onDBReady(SQLiteDatabase theDB) {
                 // Will this.theDB work?
@@ -33,39 +34,60 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
-    /*
+
     public void btnAddClick(View view) {
         if (theDB == null) {
             Toast.makeText(this, "Try again in a few seconds.", Toast.LENGTH_SHORT).show();
         }
         else {
             ContentValues values = new ContentValues();
-            values.put("setup", ((TextView) findViewById(R.id.txtNewSetup)).getText().toString());
-            values.put("punchline", ((TextView) findViewById(R.id.txtNewPunchline)).getText().toString());
+            values.put("name", ((TextView) findViewById(R.id.editText)).getText().toString());
+            values.put("age", ((TextView) findViewById(R.id.editText2)).getText().toString());
+            values.put("weight", ((TextView) findViewById(R.id.editText3)).getText().toString());
+            //values.put("gender", ((TextView) findViewById(R.id.r)).getText().toString());
 
-            long newRowId = theDB.insert("jokes", null, values);
+            RadioButton buttonFemale = (RadioButton) this.findViewById(R.id.radioFemale);
+
+            if(buttonFemale.isChecked()){
+                //female is checked
+                values.put("gender", "female");
+            }else{
+                //male is checked
+                values.put("gender", "male");
+            }
+            long newRowId = theDB.insert("user", null, values);
         }
     }
-    */
 
 
-    /*
+
     public void btnSearchClick(View view) {
         if (theDB == null) {
             Toast.makeText(this, "Try again in a few seconds.", Toast.LENGTH_SHORT).show();
         }
         else {
-            String[] columns = {"_id", "setup", "punchline"};
+            String[] columns = {"_id", "name", "age", "weight", "gender"};
 
             String selection = "_id = ?";
-            String[] selectionArgs = new String[] {((TextView) findViewById(R.id.txtSearchID)).getText().toString()};
+            String[] selectionArgs = new String[] {((TextView) findViewById(R.id.editText4)).getText().toString()};
 
-            Cursor c = theDB.query("jokes", columns, selection, selectionArgs, null, null, null);
+            Cursor c = theDB.query("user", columns, selection, selectionArgs, null, null, null);
 
             if (c.moveToFirst()) {
                 currentRow = c.getLong(c.getColumnIndexOrThrow("_id"));
-                ((TextView) findViewById(R.id.txtEditSetup)).setText(c.getString(c.getColumnIndexOrThrow("setup")));
-                ((TextView) findViewById(R.id.txtEditPunchline)).setText(c.getString(c.getColumnIndexOrThrow("punchline")));
+                ((TextView) findViewById(R.id.txtEditName)).setText(c.getString(c.getColumnIndexOrThrow("name")));
+                ((TextView) findViewById(R.id.txtEditAge)).setText(c.getString(c.getColumnIndexOrThrow("age")));
+                ((TextView) findViewById(R.id.txtEditWeight)).setText(c.getString(c.getColumnIndexOrThrow("weight")));
+
+                RadioButton buttonFemale = (RadioButton) this.findViewById(R.id.radioFemaleEdit);
+                RadioButton buttonMale = (RadioButton) this.findViewById(R.id.radioMaleEdit);
+
+                if(c.getString(c.getColumnIndexOrThrow("gender")).equals("female")){
+                    buttonFemale.setChecked(true);
+                }else{
+                    buttonMale.setChecked(true);
+                }
+
 
                 changeEditFieldVisibility(View.VISIBLE);
             }
@@ -75,34 +97,47 @@ public class MainActivity extends AppCompatActivity  {
             c.close();
         }
     }
-    */
 
-    /*
+
+
     private void changeEditFieldVisibility(int visibility) {
-        findViewById(R.id.txtEditSetup).setVisibility(visibility);
-        findViewById(R.id.txtEditPunchline).setVisibility(visibility);
+        findViewById(R.id.txtEditName).setVisibility(visibility);
+        findViewById(R.id.txtEditAge).setVisibility(visibility);
+        findViewById(R.id.txtEditWeight).setVisibility(visibility);
+        findViewById(R.id.radioGroupEdit).setVisibility(visibility);
         findViewById(R.id.btnUpdate).setVisibility(visibility);
         findViewById(R.id.btnDelete).setVisibility(visibility);
     }
-    */
 
 
-    /*
+
     public void btnUpdateClick(View view) {
         if (theDB == null) {
             Toast.makeText(this, "Try again in a few seconds.", Toast.LENGTH_SHORT).show();
         }
         else {
             ContentValues values = new ContentValues();
-            values.put("setup", ((TextView) findViewById(R.id.txtEditSetup)).getText().toString());
-            values.put("punchline", ((TextView) findViewById(R.id.txtEditPunchline)).getText().toString());
+            values.put("name", ((TextView) findViewById(R.id.txtEditName)).getText().toString());
+            values.put("age", ((TextView) findViewById(R.id.txtEditAge)).getText().toString());
+            values.put("weight", ((TextView) findViewById(R.id.txtEditWeight)).getText().toString());
+
+            RadioButton buttonFemale = (RadioButton) this.findViewById(R.id.radioFemaleEdit);
+            RadioButton buttonMale = (RadioButton) this.findViewById(R.id.radioMaleEdit);
+
+            if(buttonFemale.isChecked()){
+                values.put("gender", "female");
+            }else{
+                values.put("gender", "male");
+            }
+            
+
 
             String selection = "_id = " + currentRow;
 
             theDB.update("jokes",values,selection,null);
         }
     }
-    */
+
 
     public void btnDeleteClick(View view) {
         if (theDB == null) {

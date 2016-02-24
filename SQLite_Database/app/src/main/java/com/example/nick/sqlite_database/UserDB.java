@@ -76,8 +76,8 @@ public class UserDB extends SQLiteOpenHelper{
         }
 
         @Override
-        protected void onPostExecute(SQLiteDatabase theDB){
-            listener.onDBReady(theDB);
+        protected void onPostExecute(SQLiteDatabase sqLiteDatabase) {
+            listener.onDBReady(sqLiteDatabase);
         }
 
     }
