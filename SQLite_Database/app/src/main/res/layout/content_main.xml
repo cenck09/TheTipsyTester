@@ -117,7 +117,7 @@
         android:layout_below="@+id/radioGroup"
         android:layout_alignParentEnd="true"
         android:onClick="btnSearchClick"/>
-
+<!--
     <EditText
         android:id="@+id/txtEditName"
         android:hint="Name"
@@ -167,31 +167,7 @@
 
     </RadioGroup>
 
-
-    <Button
-        android:id="@+id/btnUpdate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/btnDelete"
-        android:layout_toStartOf="@id/btnDelete"
-        android:layout_below="@id/radioGroupEdit"
-        android:contentDescription="Update"
-        android:visibility="gone"
-        android:background="@android:drawable/ic_menu_add"
-        android:onClick="btnUpdateClick"/>
-
-    <Button
-        android:id="@id/btnDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/radioGroupEdit"
-        android:contentDescription="Delete"
-        android:visibility="gone"
-        android:background="@android:drawable/ic_delete"
-        android:onClick="btnDeleteClick"/>
-
+-->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -209,6 +185,29 @@
         android:layout_below="@+id/button2"
         android:layout_alignParentEnd="true"
         android:onClick="btnRefreshClick"/>
+
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/button2"
+        android:contentDescription="Delete"
+        android:visibility="gone"
+        android:background="@android:drawable/ic_delete"
+        android:onClick="btnDeleteClick"/>
+
+    <Button
+        android:id="@+id/btnUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnDelete"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="Update"
+        android:visibility="gone"
+        android:background="@android:drawable/ic_menu_add"
+        android:onClick="btnUpdateClick"/>
 
     <ScrollView
         android:layout_width="0dp"

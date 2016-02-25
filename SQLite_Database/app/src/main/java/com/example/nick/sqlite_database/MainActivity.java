@@ -75,12 +75,12 @@ public class MainActivity extends AppCompatActivity  {
 
             if (c.moveToFirst()) {
                 currentRow = c.getLong(c.getColumnIndexOrThrow("_id"));
-                ((TextView) findViewById(R.id.txtEditName)).setText(c.getString(c.getColumnIndexOrThrow("name")));
-                ((TextView) findViewById(R.id.txtEditAge)).setText(c.getString(c.getColumnIndexOrThrow("age")));
-                ((TextView) findViewById(R.id.txtEditWeight)).setText(c.getString(c.getColumnIndexOrThrow("weight")));
+                ((TextView) findViewById(R.id.editText)).setText(c.getString(c.getColumnIndexOrThrow("name")));
+                ((TextView) findViewById(R.id.editText2)).setText(c.getString(c.getColumnIndexOrThrow("age")));
+                ((TextView) findViewById(R.id.editText3)).setText(c.getString(c.getColumnIndexOrThrow("weight")));
 
-                RadioButton buttonFemale = (RadioButton) this.findViewById(R.id.radioFemaleEdit);
-                RadioButton buttonMale = (RadioButton) this.findViewById(R.id.radioMaleEdit);
+                RadioButton buttonFemale = (RadioButton) this.findViewById(R.id.radioFemale);
+                RadioButton buttonMale = (RadioButton) this.findViewById(R.id.radioMale);
 
                 if(c.getString(c.getColumnIndexOrThrow("gender")).equals("female")){
                     buttonFemale.setChecked(true);
@@ -101,10 +101,10 @@ public class MainActivity extends AppCompatActivity  {
 
 
     private void changeEditFieldVisibility(int visibility) {
-        findViewById(R.id.txtEditName).setVisibility(visibility);
-        findViewById(R.id.txtEditAge).setVisibility(visibility);
-        findViewById(R.id.txtEditWeight).setVisibility(visibility);
-        findViewById(R.id.radioGroupEdit).setVisibility(visibility);
+     //   findViewById(R.id.txtEditName).setVisibility(visibility);
+     //   findViewById(R.id.txtEditAge).setVisibility(visibility);
+     //   findViewById(R.id.txtEditWeight).setVisibility(visibility);
+     //   findViewById(R.id.radioGroupEdit).setVisibility(visibility);
         findViewById(R.id.btnUpdate).setVisibility(visibility);
         findViewById(R.id.btnDelete).setVisibility(visibility);
     }
@@ -117,11 +117,11 @@ public class MainActivity extends AppCompatActivity  {
         }
         else {
             ContentValues values = new ContentValues();
-            values.put("name", ((TextView) findViewById(R.id.txtEditName)).getText().toString());
-            values.put("age", ((TextView) findViewById(R.id.txtEditAge)).getText().toString());
-            values.put("weight", ((TextView) findViewById(R.id.txtEditWeight)).getText().toString());
+            values.put("name", ((TextView) findViewById(R.id.editText)).getText().toString());
+            values.put("age", ((TextView) findViewById(R.id.editText2)).getText().toString());
+            values.put("weight", ((TextView) findViewById(R.id.editText3)).getText().toString());
 
-            RadioButton buttonFemale = (RadioButton) this.findViewById(R.id.radioFemaleEdit);
+            RadioButton buttonFemale = (RadioButton) this.findViewById(R.id.radioFemale);
 
 
             if(buttonFemale.isChecked()){
