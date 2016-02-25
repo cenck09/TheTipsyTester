@@ -117,57 +117,7 @@
         android:layout_below="@+id/radioGroup"
         android:layout_alignParentEnd="true"
         android:onClick="btnSearchClick"/>
-<!--
-    <EditText
-        android:id="@+id/txtEditName"
-        android:hint="Name"
-        android:visibility="gone"
-        android:layout_below="@id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/txtEditAge"
-        android:hint="Age"
-        android:visibility="gone"
-        android:layout_below="@id/txtEditName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/txtEditWeight"
-        android:hint="Weight"
-        android:visibility="gone"
-        android:layout_below="@id/txtEditAge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
 
-
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
-        android:layout_alignParentStart="true"
-        android:orientation = "horizontal"
-        android:id="@+id/radioGroupEdit"
-        android:visibility="gone">
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Male"
-            android:id="@+id/radioMaleEdit"
-            android:checked="true" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Female"
-            android:id="@+id/radioFemaleEdit"
-            android:checked="false" />
-
-    </RadioGroup>
-
--->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -216,8 +166,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@id/button3"
-        android:layout_toStartOf="@id/button3">
+        android:layout_alignLeft="@id/editText4"
+        android:layout_alignRight="@id/editText4">
         <TextView
             android:id="@+id/lblResults"
             android:layout_height="wrap_content"

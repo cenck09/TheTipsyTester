@@ -41,10 +41,15 @@ public class MainActivity extends AppCompatActivity  {
         }
         else {
             ContentValues values = new ContentValues();
-            values.put("name", ((TextView) findViewById(R.id.editText)).getText().toString());
-            values.put("age", ((TextView) findViewById(R.id.editText2)).getText().toString());
-            values.put("weight", ((TextView) findViewById(R.id.editText3)).getText().toString());
-            //values.put("gender", ((TextView) findViewById(R.id.r)).getText().toString());
+            TextView nameField = (TextView) findViewById(R.id.editText);
+            TextView ageField = (TextView) findViewById(R.id.editText2);
+            TextView weightField = (TextView) findViewById(R.id.editText3);
+
+            String name = nameField.getText().toString();
+
+            values.put("name", name);
+            values.put("age", ageField.getText().toString());
+            values.put("weight", weightField.getText().toString());
 
             RadioButton buttonFemale = (RadioButton) this.findViewById(R.id.radioFemale);
 
@@ -56,6 +61,10 @@ public class MainActivity extends AppCompatActivity  {
                 values.put("gender", "male");
             }
             long newRowId = theDB.insert("user", null, values);
+            this.updateTable();
+            Toast.makeText(this, "You have added "+ name, Toast.LENGTH_SHORT).show();
+            this.changeEditFieldVisibility(View.GONE);
+            this.clearFields();
         }
     }
 
@@ -92,6 +101,7 @@ public class MainActivity extends AppCompatActivity  {
                 changeEditFieldVisibility(View.VISIBLE);
             }
             else {
+                Toast.makeText(this, "Failed to find ID.", Toast.LENGTH_SHORT).show();
                 changeEditFieldVisibility(View.GONE);
             }
             c.close();
@@ -105,6 +115,11 @@ public class MainActivity extends AppCompatActivity  {
      //   findViewById(R.id.txtEditAge).setVisibility(visibility);
      //   findViewById(R.id.txtEditWeight).setVisibility(visibility);
      //   findViewById(R.id.radioGroupEdit).setVisibility(visibility);
+        if(visibility == View.GONE){
+            findViewById(R.id.button3).setVisibility(View.VISIBLE);
+        }else{
+            findViewById(R.id.button3).setVisibility(View.GONE);
+        }
         findViewById(R.id.btnUpdate).setVisibility(visibility);
         findViewById(R.id.btnDelete).setVisibility(visibility);
     }
@@ -117,9 +132,17 @@ public class MainActivity extends AppCompatActivity  {
         }
         else {
             ContentValues values = new ContentValues();
-            values.put("name", ((TextView) findViewById(R.id.editText)).getText().toString());
-            values.put("age", ((TextView) findViewById(R.id.editText2)).getText().toString());
-            values.put("weight", ((TextView) findViewById(R.id.editText3)).getText().toString());
+            TextView nameField = (TextView) findViewById(R.id.editText);
+            TextView ageField = (TextView) findViewById(R.id.editText2);
+            TextView weightField = (TextView) findViewById(R.id.editText3);
+
+            String name = nameField.getText().toString();
+
+            values.put("name", name);
+            values.put("age", ageField.getText().toString());
+            values.put("weight", weightField.getText().toString());
+
+           this.clearFields();
 
             RadioButton buttonFemale = (RadioButton) this.findViewById(R.id.radioFemale);
 
@@ -131,13 +154,34 @@ public class MainActivity extends AppCompatActivity  {
             }
 
 
+            changeEditFieldVisibility(View.GONE);
 
             String selection = "_id = " + currentRow;
 
             theDB.update("user",values,selection,null);
+            Toast.makeText(this, "You have updated "+ name, Toast.LENGTH_SHORT).show();
+            this.updateTable();
         }
     }
+    public void clearFields(){
+        ContentValues values = new ContentValues();
+        TextView nameField = (TextView) findViewById(R.id.editText);
+        TextView ageField = (TextView) findViewById(R.id.editText2);
+        TextView weightField = (TextView) findViewById(R.id.editText3);
+        TextView searchField = (TextView) findViewById(R.id.editText4);
 
+        String name = nameField.getText().toString();
+
+        values.put("name", name);
+        values.put("age", ageField.getText().toString());
+        values.put("weight", weightField.getText().toString());
+
+        searchField.setText("");
+        nameField.setText("");
+        ageField.setText("");
+        weightField.setText("");
+
+    }
 
     public void btnDeleteClick(View view) {
         if (theDB == null) {
@@ -145,13 +189,17 @@ public class MainActivity extends AppCompatActivity  {
         }
         else {
             String selection = "_id = " + currentRow;
+            Toast.makeText(this, "You have deleted user with ID "+selection, Toast.LENGTH_SHORT).show();
 
-            theDB.delete("user",selection,null);
+            theDB.delete("user", selection, null);
+            this.clearFields();
+            this.changeEditFieldVisibility(View.GONE);
+            this.updateTable();
         }
     }
 
 
-    public void btnRefreshClick(View view) {
+    public void updateTable(){
         StringBuffer sb = new StringBuffer();
         String[] columns = {"_id", "name", "age", "weight", "gender"};
 
@@ -170,6 +218,10 @@ public class MainActivity extends AppCompatActivity  {
             sb.append("------------------------------------------------------------\n");
         }
         ((TextView) findViewById(R.id.lblResults)).setText(sb);
+    }
+
+    public void btnRefreshClick(View view) {
+       this.updateTable();
     }
 
     @Override
