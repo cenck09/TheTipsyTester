@@ -9,4 +9,57 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.thetipsytester.thetipsytester.scoresActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sort By: "
+        android:textSize="20dp"
+        android:layout_marginTop="11dp"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User"
+        android:id="@+id/userSort"
+        android:layout_toLeftOf="@id/testSort"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test"
+        android:id="@+id/testSort"
+        android:layout_toLeftOf="@id/scoreSort"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score"
+        android:id="@+id/scoreSort"
+        android:layout_alignParentRight="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User"
+        android:id="@+id/userColumnText"
+        android:textSize="20dp"
+        android:layout_marginTop="61dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test"
+        android:id="@+id/testColumnText"
+        android:textSize="20dp"
+        android:layout_marginTop="61dp"
+        android:layout_marginLeft="150dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score"
+        android:id="@+id/scoreColumnText"
+        android:textSize="20dp"
+        android:layout_marginTop="61dp"
+        android:layout_marginLeft="280dp"/>
+    
 </RelativeLayout>
