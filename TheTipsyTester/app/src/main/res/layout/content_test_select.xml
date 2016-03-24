@@ -28,7 +28,8 @@
         android:id="@+id/singleTestButton"
         android:layout_below="@+id/testPreference"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="87dp" />
+        android:layout_marginTop="87dp"
+        android:onClick="single"/>
 
     <Button
         android:layout_width="match_parent"
@@ -36,7 +37,8 @@
         android:text="Quick Test"
         android:id="@+id/quickTestButton"
         android:layout_below="@+id/singleTestButton"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:onClick="quick"/>
 
     <Button
         android:layout_width="match_parent"
@@ -44,5 +46,6 @@
         android:text="All Tests"
         android:id="@+id/allTestButton"
         android:layout_below="@+id/quickTestButton"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:onClick="all"/>
 </RelativeLayout>
