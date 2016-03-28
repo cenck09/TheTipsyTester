@@ -15,13 +15,13 @@
         android:text="Sort By: "
         android:textSize="20dp"
         android:layout_marginTop="11dp"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="User"
-        android:id="@+id/userSort"
-        android:layout_toLeftOf="@id/testSort"/>
-
+        android:text="Score"
+        android:id="@+id/scoreSort"
+        android:layout_alignParentRight="true"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,9 +32,9 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Score"
-        android:id="@+id/scoreSort"
-        android:layout_alignParentRight="true"/>
+        android:text="User"
+        android:id="@+id/userSort"
+        android:layout_toLeftOf="@id/testSort"/>
 
     <TextView
         android:layout_width="wrap_content"
