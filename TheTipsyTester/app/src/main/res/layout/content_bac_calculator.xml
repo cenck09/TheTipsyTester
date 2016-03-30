@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="BAC Calculator"
+        android:id="@+id/bacTitle"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Beer:"
+        android:id="@+id/beerTag"
+        android:layout_below="@+id/proofTag"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="BAC:"
+        android:id="@+id/bacTag"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="0.0%"
+        android:id="@+id/bacPercent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Calculate"
+        android:id="@+id/calcButton"
+        android:layout_above="@+id/bacPercent"
+        android:onClick="calculateBAC"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select User"
+        android:id="@+id/userSelect"
+        android:layout_below="@+id/bacTitle"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Proof"
+        android:id="@+id/proofTag"
+        android:layout_below="@+id/userSelect"
+        android:layout_alignStart="@+id/beerProof" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Quantity"
+        android:id="@+id/quantityTag"
+        android:layout_below="@+id/userSelect"
+        android:layout_alignStart="@+id/beerNum" />
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/beerProof"
+        android:layout_below="@+id/proofTag"
+        android:layout_centerHorizontal="true"
+        android:text="5" />
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/beerNum"
+        android:layout_alignTop="@+id/beerProof"
+        android:layout_below="@+id/quantityTag"
+        android:layout_alignParentRight="true"
+        android:text="0" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Wine:"
+        android:id="@+id/wineTag"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/beerProof"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/wineProof"
+        android:layout_alignBottom="@+id/wineTag"
+        android:layout_alignStart="@+id/beerProof"
+        android:text="12" />
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/wineNum"
+        android:layout_alignBottom="@+id/wineProof"
+        android:layout_alignParentRight="true"
+        android:text="0" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Shots:"
+        android:id="@+id/shotTag"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/wineTag"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/shotsProof"
+        android:text="70"
+        android:layout_alignBottom="@+id/shotTag"
+        android:layout_alignStart="@+id/wineProof" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/shotsNum"
+        android:layout_alignBottom="@+id/shotsProof"
+        android:layout_alignStart="@+id/wineNum"
+        android:text="0" />
+
+</RelativeLayout>
