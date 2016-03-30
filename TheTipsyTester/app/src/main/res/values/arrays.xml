@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="UserName">
+        <item>Nick</item>
+    </string-array>
+    <string-array name="UserGender">
+        <item>male</item>
+    </string-array>
+    <string-array name="UserWeight">
+        <item>170</item>
+    </string-array>
+
+
+
+</resources>

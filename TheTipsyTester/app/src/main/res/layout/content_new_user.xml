@@ -32,9 +32,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="46dp"
             android:orientation="horizontal"
-            >
+            android:layout_below="@+id/NameEditText"
+            android:layout_centerHorizontal="true">
+
+
+            <RadioButton
+                android:id="@+id/maleRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Male"
+                android:checked="true"
+                android:layout_alignTop="@+id/radioGroup"
+                android:layout_toEndOf="@+id/NameTextView" />
+
+            <RadioButton
+                android:id="@+id/femaleRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Female"
+                android:checked="false"
+                android:layout_alignTop="@+id/radioGroup"
+                android:layout_centerHorizontal = "true"
+                android:layout_marginStart="51dp" />
 
         </RadioGroup>
 
@@ -55,31 +76,14 @@
             android:layout_alignBottom="@+id/WeightTextView"
             android:layout_toEndOf="@+id/WeightTextView" />
 
-        <RadioButton
-            android:id="@+id/femaleRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Female"
-            android:checked="false"
-            android:layout_alignTop="@+id/radioGroup"
-            android:layout_alignStart="@+id/WeightEditText"
-            android:layout_marginStart="51dp" />
 
-        <RadioButton
-            android:id="@+id/maleRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Male"
-            android:checked="false"
-            android:layout_alignTop="@+id/radioGroup"
-            android:layout_toEndOf="@+id/NameTextView" />
 
         <Button
             android:id="@+id/saveUserButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save"
-
+            android:onClick="btnAddClick"
             android:layout_below="@+id/WeightTextView"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="89dp" />
