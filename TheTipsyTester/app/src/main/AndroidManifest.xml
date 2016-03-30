@@ -28,7 +28,7 @@
                 android:value="com.thetipsytester.thetipsytester.MainActivity" />
         </activity>
         <activity android:name=".baselineActivity" />
-        <activity android:name=".bacCalculatorActivity" />
+        <activity android:name=".bacCalculatorActivity" android:screenOrientation="portrait"/>
         <activity android:name=".scoresActivity" />
         <activity android:name=".settingsActivity" />
         <activity android:name=".userSelectActivity"></activity>
