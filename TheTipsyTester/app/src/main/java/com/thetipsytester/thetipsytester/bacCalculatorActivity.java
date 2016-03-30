@@ -44,11 +44,20 @@ public class bacCalculatorActivity extends AppCompatActivity {
             bac = (((gramsOfAlcohol)/(453.592*bodyWeight * 0.55))* 100)- 0.015*hours;
         }
 
-        String retVal = Double.toString(bac);
-        retVal = retVal.substring(0,5);
 
         TextView calculatedVal = (TextView) findViewById(R.id.calculatedBAC);
-        calculatedVal.setText(retVal + "%");
+        if(bac<0){
+            bac = 0;
+            calculatedVal.setText("0.000%");
+        }else {
+
+            String retVal = Double.toString(bac);
+            retVal = retVal.substring(0, 5);
+            calculatedVal.setText(retVal + "%");
+        }
+
+
+
 
     }
 
