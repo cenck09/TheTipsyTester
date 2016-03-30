@@ -58,6 +58,16 @@
         android:layout_alignParentStart="true"
         android:onClick="scores"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select User"
+        android:id="@+id/userSelectButtonMain"
+        android:layout_below="@+id/scoresButtonMain"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/scoresButtonMain"
+        android:onClick="userSelect"/>
+
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -67,5 +77,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:onClick="settings"/>
+
+
 
 </RelativeLayout>

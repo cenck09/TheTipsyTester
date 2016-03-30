@@ -51,6 +51,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void userSelect(View view) {
+        Intent intent = new Intent(this, userSelectActivity.class);
+
+        startActivity(intent);
+    }
+
     public void settings(View view){
         //When the Settings button is clicked from the main menu
         Intent intent = new Intent(this, settingsActivity.class);

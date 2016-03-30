@@ -20,20 +20,20 @@
         android:layout_height="wrap_content"
         android:text="User"
         android:id="@+id/userSort"
-        android:layout_toLeftOf="@id/testSort"/>
+        android:layout_toLeftOf="@+id/testSort"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Test"
-        android:id="@+id/testSort"
-        android:layout_toLeftOf="@id/scoreSort"/>
+        android:id="@id/testSort"
+        android:layout_toLeftOf="@+id/scoreSort"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Score"
-        android:id="@+id/scoreSort"
+        android:id="@id/scoreSort"
         android:layout_alignParentRight="true"/>
 
     <TextView
