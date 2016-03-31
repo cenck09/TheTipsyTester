@@ -29,22 +29,6 @@ public class userSelectActivity extends AppCompatActivity implements LoaderManag
 
         mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
             public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-                if (columnIndex == 2) {
-                    final long rowid = cursor.getLong(cursor.getColumnIndex("_id"));
-
-                    view.setOnClickListener(new View.OnClickListener() {
-                        long _rowid = rowid;
-
-                        public void onClick(View v) {
-                            if(getIntent().getStringExtra("activity").equals("BAC")){
-                                Intent intent = new Intent(userSelectActivity.this, bacCalculatorActivity.class);
-                                intent.putExtra("rowid", rowid);
-                                startActivity(intent);
-                            }
-                        }
-                    });
-                    return true;
-                }
                 return false;
             }
         });
@@ -93,15 +77,11 @@ public class userSelectActivity extends AppCompatActivity implements LoaderManag
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //Bundle args = new Bundle();
-        //args.putLong("rowid", id);
 
         Intent intent = new Intent(this, bacCalculatorActivity.class);
         intent.putExtra("rowid", id);
 
         startActivity(intent);
 
-        //setupDialog.setArguments(args);
-        //setupDialog.show(getFragmentManager(), "setupDialog");
     }
 }
