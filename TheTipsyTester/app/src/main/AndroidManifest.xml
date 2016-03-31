@@ -36,6 +36,7 @@
         <activity android:name=".bacCalculatorActivity" android:screenOrientation="portrait"/>
         <activity android:name=".scoresActivity" />
         <activity android:name=".settingsActivity" />
+        <activity android:name=".newUserActivity"/>
         <activity android:name=".userSelectActivity"></activity>
     </application>
 
