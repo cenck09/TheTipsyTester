@@ -6,20 +6,25 @@ import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 public class bacCalculatorActivity extends AppCompatActivity {
 
     Long rowid;
     String name = "John",gender = "male";
-    int bodyWeight = 0;
+    int bodyWeight = 150;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bac_calculator);
+
 
 
         if (getIntent().hasExtra("rowid")) {
@@ -32,6 +37,9 @@ public class bacCalculatorActivity extends AppCompatActivity {
             name = c.getString(0);
             gender = c.getString(1);
             bodyWeight = Integer.parseInt(c.getString(2));
+
+            TextView userName = (TextView)findViewById(R.id.userText);
+            userName.setText("Current User: " + name);
 
             c.close();
         }

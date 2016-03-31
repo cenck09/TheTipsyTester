@@ -47,16 +47,16 @@ public class UserDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES);
 
-        String[] names = appContext.getResources().getStringArray(R.array.UserName);
-        String[] genders = appContext.getResources().getStringArray(R.array.UserGender);
-        String[] weights = appContext.getResources().getStringArray(R.array.UserWeight);
+        String[] name = appContext.getResources().getStringArray(R.array.name);
+        String[] gender = appContext.getResources().getStringArray(R.array.gender);
+        String[] weight = appContext.getResources().getStringArray(R.array.weight);
 
         db.beginTransaction();
         ContentValues values = new ContentValues();
-        for (int i = 0; i < names.length; i++) {
-            values.put("name", names[i]);
-            values.put("gender", genders[i]);
-            values.put("weight", weights[i]);
+        for (int i = 0; i < name.length; i++) {
+            values.put("name", name[i]);
+            values.put("gender", gender[i]);
+            values.put("weight", weight[i]);
             db.insert("users", null, values);
         }
         db.setTransactionSuccessful();

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="UserName">
+    <string-array name="name">
         <item>Nick</item>
         <item>John</item>
     </string-array>
-    <string-array name="UserGender">
+    <string-array name="gender">
         <item>male</item>
         <item>male</item>
     </string-array>
-    <string-array name="UserWeight">
+    <string-array name="weight">
         <item>170</item>
         <item>200</item>
     </string-array>

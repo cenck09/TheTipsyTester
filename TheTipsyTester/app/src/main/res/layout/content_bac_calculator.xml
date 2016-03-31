@@ -133,7 +133,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Change User"
+        android:text="Select User"
         android:onClick="getUser"
         android:id="@+id/userSelectButton"
         android:layout_below="@+id/bacTitle"
@@ -143,7 +143,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Current User"
+        android:text=""
         android:id="@+id/userText"
         android:layout_below="@+id/userSelectButton"
         android:layout_centerHorizontal="true" />
