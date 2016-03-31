@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, testSelectActivity.class);
         //Intent intent = new Intent(this, userSelectActivity.class);
 
-
         startActivity(intent);
     }
 

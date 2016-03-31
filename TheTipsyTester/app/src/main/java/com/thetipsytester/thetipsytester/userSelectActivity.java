@@ -1,28 +1,17 @@
 package com.thetipsytester.thetipsytester;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
+
 import android.app.LoaderManager;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
 public class userSelectActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
 
@@ -35,8 +24,8 @@ public class userSelectActivity extends AppCompatActivity implements LoaderManag
         setContentView(R.layout.activity_user_select);
 
         mAdapter = new SimpleCursorAdapter(this, R.layout.user_list_item, null,
-                new String[]{"name","gender"},
-                new int[] {R.id.txtTitle, R.id.txtGender}, 0);
+                new String[]{"name","gender", "weight"},
+                new int[] {R.id.txtTitle, R.id.txtGender, R.id.txtWeight}, 0);
 
         mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
             public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
@@ -47,7 +36,11 @@ public class userSelectActivity extends AppCompatActivity implements LoaderManag
                         long _rowid = rowid;
 
                         public void onClick(View v) {
-                            //do something
+                            if(getIntent().getStringExtra("activity").equals("BAC")){
+                                Intent intent = new Intent(userSelectActivity.this, bacCalculatorActivity.class);
+                                intent.putExtra("rowid", rowid);
+                                startActivity(intent);
+                            }
                         }
                     });
                     return true;
@@ -85,7 +78,7 @@ public class userSelectActivity extends AppCompatActivity implements LoaderManag
         String where = null;
 
         return new CursorLoader(this, UserContentProvider.CONTENT_URI,
-                new String[]{"_id", "name", "gender"}, where, null, null);
+                new String[]{"_id", "name", "gender", "weight"}, where, null, null);
     }
 
     @Override
@@ -100,9 +93,13 @@ public class userSelectActivity extends AppCompatActivity implements LoaderManag
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //DisplaySetupDialog setupDialog = new DisplaySetupDialog();
-        Bundle args = new Bundle();
-        args.putLong("rowid", id);
+        //Bundle args = new Bundle();
+        //args.putLong("rowid", id);
+
+        Intent intent = new Intent(this, bacCalculatorActivity.class);
+        intent.putExtra("rowid", id);
+
+        startActivity(intent);
 
         //setupDialog.setArguments(args);
         //setupDialog.show(getFragmentManager(), "setupDialog");

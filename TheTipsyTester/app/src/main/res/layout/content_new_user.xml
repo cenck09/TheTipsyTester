@@ -13,8 +13,8 @@
             android:id="@+id/NameEditText"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/NameTextView"
-            android:layout_alignStart="@+id/WeightTextView" />
+            android:layout_alignBottom="@+id/NameTextView"
+            android:layout_toEndOf="@+id/NameTextView" />
 
         <TextView
             android:id="@+id/NameTextView"

@@ -1,11 +1,7 @@
 package com.thetipsytester.thetipsytester;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.support.v7.app.AppCompatActivity;
@@ -65,8 +61,10 @@ public class newUserActivity extends AppCompatActivity {
         values.put("name", ((EditText) findViewById(R.id.NameEditText)).getText().toString());
         if(male.isChecked()){
             values.put("gender", "male");
+            //System.out.println("MALE");
         }else{
             values.put("gender", "female");
+            //System.out.println("FEMALE");
         }
         values.put("weight", ((EditText) findViewById(R.id.WeightEditText)).getText().toString());
 
@@ -79,51 +77,6 @@ public class newUserActivity extends AppCompatActivity {
             finish();
         } catch (SQLException e) {
             Toast.makeText(this, "Error updating database.", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void btnDeleteClick(View view) {
-        if (rowid != null) {
-            ConfirmDeleteDialog confirmDialog = new ConfirmDeleteDialog();
-            Bundle args = new Bundle();
-            args.putLong("rowid", rowid);
-            confirmDialog.setArguments(args);
-            confirmDialog.show(getFragmentManager(), "deletionConfirmation");
-        }
-        else {
-            finish();
-        }
-    }
-
-    public static class ConfirmDeleteDialog extends DialogFragment {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-            builder.setTitle("Delete this user?")
-                    .setMessage("You will not be able to undo the deletion!")
-                    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            ContentResolver cr = getActivity().getContentResolver();
-
-                            try {
-                                long rowid = getArguments().getLong("rowid");
-                                cr.delete(UserContentProvider.CONTENT_URI, "_id = " + rowid, null);
-                                getActivity().finish();
-                            } catch (SQLException e) {
-                                Toast.makeText(getActivity(), "Error deleting record.", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    })
-                    .setNegativeButton("Return to user list", new
-                            DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    getActivity().finish();
-                                }
-                            });
-            return builder.create();
         }
     }
 }

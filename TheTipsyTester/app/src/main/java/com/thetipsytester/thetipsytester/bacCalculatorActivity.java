@@ -1,17 +1,50 @@
 package com.thetipsytester.thetipsytester;
 
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class bacCalculatorActivity extends AppCompatActivity {
+
+    Long rowid;
+    String name = "John",gender = "male";
+    int bodyWeight = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bac_calculator);
+
+
+        if (getIntent().hasExtra("rowid")) {
+            rowid = getIntent().getLongExtra("rowid", 0);
+            ContentResolver cr = getContentResolver();
+
+            Cursor c = cr.query(UserContentProvider.CONTENT_URI.buildUpon().appendPath(Long.toString(rowid)).build(),
+                    new String[] {"name","gender","weight"},null, null, null);
+
+            name = c.getString(0);
+            gender = c.getString(1);
+            bodyWeight = Integer.parseInt(c.getString(2));
+
+            c.close();
+        }
+
+
+    }
+
+
+    public void getUser(View view){
+        Intent intent = new Intent(this, userSelectActivity.class);
+        intent.putExtra("activity", "BAC");
+
+        startActivity(intent);
     }
 
     public void calculateBAC(View view){
@@ -28,7 +61,6 @@ public class bacCalculatorActivity extends AppCompatActivity {
 
         double hours = Double.parseDouble((((EditText)findViewById(R.id.hourNum)).getText().toString()));
 
-        int bodyWeight = 170;
 
         double gramsOfBeer = 0.789*29.5735*(bProof/200)*bNum*12;
         double gramsOfWine = 0.789*29.5735*(wProof/200)*wNum*5;
@@ -36,7 +68,6 @@ public class bacCalculatorActivity extends AppCompatActivity {
         double gramsOfAlcohol = gramsOfBeer+gramsOfWine+gramsOfShots;
         double bac = 0;
 
-        String gender = "male";
 
         if(gender.equals("male")){
             bac = ((gramsOfAlcohol)/(453.592*bodyWeight * 0.68))*100 - 0.015*hours;
