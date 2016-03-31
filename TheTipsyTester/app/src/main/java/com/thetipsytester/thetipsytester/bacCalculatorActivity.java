@@ -34,12 +34,16 @@ public class bacCalculatorActivity extends AppCompatActivity {
             Cursor c = cr.query(UserContentProvider.CONTENT_URI.buildUpon().appendPath(Long.toString(rowid)).build(),
                     new String[] {"name","gender","weight"},null, null, null);
 
-            name = c.getString(0);
-            gender = c.getString(1);
-            bodyWeight = Integer.parseInt(c.getString(2));
 
-            TextView userName = (TextView)findViewById(R.id.userText);
-            userName.setText("Current User: " + name);
+            if(!c.moveToFirst()){
+                Toast.makeText(bacCalculatorActivity.this, "Error retrieving user info, using default", Toast.LENGTH_SHORT).show();
+            }else {
+                name = c.getString(0);
+                gender = c.getString(1);
+                bodyWeight = Integer.parseInt(c.getString(2));
+                TextView userName = (TextView) findViewById(R.id.userText);
+                userName.setText("Current User: " + name);
+            }
 
             c.close();
         }

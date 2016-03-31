@@ -78,10 +78,18 @@ public class userSelectActivity extends AppCompatActivity implements LoaderManag
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        Intent intent = new Intent(this, bacCalculatorActivity.class);
-        intent.putExtra("rowid", id);
+        if (getIntent().getStringExtra("activity") != null && getIntent().getStringExtra("activity").equals("BAC")) {
 
-        startActivity(intent);
+            Intent intent = new Intent(this, bacCalculatorActivity.class);
+            intent.putExtra("rowid", id);
+            intent.putExtra("rowid", id);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("rowid", id);
+            startActivity(intent);
+        }
+
 
     }
 }
