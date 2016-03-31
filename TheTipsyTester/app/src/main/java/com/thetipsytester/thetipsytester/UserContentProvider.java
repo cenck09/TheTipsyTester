@@ -18,17 +18,17 @@ public class UserContentProvider extends ContentProvider {
 
     private UserDB theDB;
 
-    private static final String AUTHORITY = "edu.psu.jjb24.jokes";
-    private static final String BASE_PATH = "jokes";
+    private static final String AUTHORITY = "com.thetipsytester.thetipsytester.users";
+    private static final String BASE_PATH = "users";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" +
             BASE_PATH);
 
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-    private static final int JOKES = 1;
-    private static final int JOKES_ID = 2;
+    private static final int USERS = 1;
+    private static final int USERS_ID = 2;
     static {
-        uriMatcher.addURI(AUTHORITY, BASE_PATH, JOKES);
-        uriMatcher.addURI(AUTHORITY, BASE_PATH + "/#", JOKES_ID);
+        uriMatcher.addURI(AUTHORITY, BASE_PATH, USERS);
+        uriMatcher.addURI(AUTHORITY, BASE_PATH + "/#", USERS_ID);
     }
 
     @Override
@@ -43,8 +43,8 @@ public class UserContentProvider extends ContentProvider {
         SQLiteDatabase db = theDB.getWritableDatabase();
 
         switch (uriMatcher.match(uri)) {
-            case JOKES:
-                id = db.insert("jokes", null, values);
+            case USERS:
+                id = db.insert("users", null, values);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -64,12 +64,12 @@ public class UserContentProvider extends ContentProvider {
         Cursor cursor;
 
         switch (uriMatcher.match(uri)) {
-            case JOKES:
-                cursor = db.query("jokes", projection, selection,
+            case USERS:
+                cursor = db.query("users", projection, selection,
                         selectionArgs, null, null, sortOrder);
                 break;
-            case JOKES_ID:
-                cursor = db.query("jokes", projection,
+            case USERS_ID:
+                cursor = db.query("users", projection,
                         appendIdToSelection(selection, uri.getLastPathSegment()),
                         selectionArgs, null, null, sortOrder);
                 break;
@@ -89,11 +89,11 @@ public class UserContentProvider extends ContentProvider {
         SQLiteDatabase db = theDB.getWritableDatabase();
 
         switch (uriMatcher.match(uri)){
-            case JOKES:
-                count = db.update("jokes", values, selection, selectionArgs);
+            case USERS:
+                count = db.update("users", values, selection, selectionArgs);
                 break;
-            case JOKES_ID:
-                count = db.update("jokes", values,
+            case USERS_ID:
+                count = db.update("users", values,
                         appendIdToSelection(selection, uri.getLastPathSegment()),
                         selectionArgs);
                 break;
@@ -111,11 +111,11 @@ public class UserContentProvider extends ContentProvider {
         SQLiteDatabase db = theDB.getWritableDatabase();
 
         switch (uriMatcher.match(uri)){
-            case JOKES:
-                count = db.delete("jokes", selection, selectionArgs);
+            case USERS:
+                count = db.delete("users", selection, selectionArgs);
                 break;
-            case JOKES_ID:
-                count = db.delete("jokes",
+            case USERS_ID:
+                count = db.delete("users",
                         appendIdToSelection(selection, uri.getLastPathSegment()),
                         selectionArgs);
                 break;

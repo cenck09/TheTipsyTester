@@ -2,14 +2,14 @@
 <resources>
     <string-array name="UserName">
         <item>Nick</item>
+        <item>John</item>
     </string-array>
     <string-array name="UserGender">
+        <item>male</item>
         <item>male</item>
     </string-array>
     <string-array name="UserWeight">
         <item>170</item>
+        <item>200</item>
     </string-array>
-
-
-
 </resources>

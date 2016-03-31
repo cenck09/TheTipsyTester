@@ -14,18 +14,17 @@ public class UserDB extends SQLiteOpenHelper {
     }
 
     private static final int DATABASE_VERSION = 4;
-    private static final String DATABASE_NAME = "joke.db";
+    private static final String DATABASE_NAME = "users.db";
 
     private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE jokes (" +
+            "CREATE TABLE users (" +
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "title TEXT, " +
-                    "setup TEXT, " +
-                    "punchline TEXT," +
-                    "liked TEXT)";
+                    "name TEXT, " +
+                    "gender TEXT, " +
+                    "weight TEXT)";
 
     private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS jokes";
+            "DROP TABLE IF EXISTS users";
 
     private static UserDB theDb;
     private Context appContext;
@@ -54,13 +53,11 @@ public class UserDB extends SQLiteOpenHelper {
 
         db.beginTransaction();
         ContentValues values = new ContentValues();
-        values.put("liked","?");
         for (int i = 0; i < names.length; i++) {
             values.put("name", names[i]);
             values.put("gender", genders[i]);
             values.put("weight", weights[i]);
-            //values.put("liked", "?");
-            db.insert("user", null, values);
+            db.insert("users", null, values);
         }
         db.setTransactionSuccessful();
         db.endTransaction();

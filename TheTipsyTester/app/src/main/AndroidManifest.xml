@@ -18,6 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:name="com.thetipsytester.thetipsytester.UserContentProvider"
+            android:authorities="com.thetipsytester.thetipsytester.users"
+            android:enabled="true"
+            android:exported="false" />
         <activity
             android:name=".testSelectActivity"
             android:label="@string/title_activity_test_select"
