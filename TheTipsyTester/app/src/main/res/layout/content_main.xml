@@ -20,7 +20,9 @@
         android:text="Tipsy Tester"
         android:id="@+id/appTitle"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:background="@color/Main_Title_BColor"
+        android:textColor="@color/Main_Title_TColor"/>
 
     <Button
         android:layout_width="match_parent"

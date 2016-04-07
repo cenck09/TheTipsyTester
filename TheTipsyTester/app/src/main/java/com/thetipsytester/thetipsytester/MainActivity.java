@@ -2,6 +2,7 @@ package com.thetipsytester.thetipsytester;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
         setContentView(R.layout.activity_main);
     }
 
@@ -21,14 +22,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
         View view = this.getWindow().getDecorView();
-        view.setBackgroundColor(Integer.parseInt(sharedPref.getString("color", "-1")));
 
+        String color = sharedPref.getString("color", "232323");
+        System.out.println("HERE'S THE COLOR: " + color);
+
+        view.setBackgroundColor(Color.parseColor("#" + color));
     }
-
-
-
-
 
 
     public void testPage(View view){

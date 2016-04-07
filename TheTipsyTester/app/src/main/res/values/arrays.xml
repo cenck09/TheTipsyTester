@@ -13,19 +13,19 @@
         <item>200</item>
     </string-array>
 
-    <array
+    <string-array
         name="background_color_entries">
         <item>White</item>
-        <item>Black</item>
+        <item>Grey</item>
         <item>Blue</item>
-    </array>
+    </string-array>
 
-    <array
+    <string-array
         name="background_color_values">
-        <item>16777216</item>
-        <item>-1</item>
-        <item>16776961</item>
-    </array>
+        <item>999999</item>
+        <item>666666</item>
+        <item>008282</item>
+    </string-array>
 
 
 </resources>
