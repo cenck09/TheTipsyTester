@@ -3,12 +3,16 @@ package com.thetipsytester.thetipsytester;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.TextView;
 
 /**
@@ -20,7 +24,7 @@ public class balanceTest extends Activity implements SensorEventListener{
     Sensor accelerometer;
     SensorManager sm;
 
-    TextView acceleration;
+    //TextView acceleration;
     TextView timerText;
 
     int finalScore;
@@ -41,9 +45,8 @@ public class balanceTest extends Activity implements SensorEventListener{
         accelerometer= sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sm.registerListener(this,accelerometer,SensorManager.SENSOR_DELAY_NORMAL);
 
-        acceleration = (TextView)findViewById(R.id.acceleration);
+        //acceleration = (TextView)findViewById(R.id.acceleration);
         timerText = (TextView)findViewById(R.id.balanceCountDown);
-
         timerText.setText(timerText.getText()+String.valueOf(startTime / 1000));
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -62,6 +65,18 @@ public class balanceTest extends Activity implements SensorEventListener{
 
         // show it
         alertDialog.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        View view = this.getWindow().getDecorView();
+
+        String color = sharedPref.getString("color", "232323");
+
+        view.setBackgroundColor(Color.parseColor("#" + color));
     }
 
     public class MyCountDownTimer extends CountDownTimer{
@@ -109,8 +124,8 @@ public class balanceTest extends Activity implements SensorEventListener{
         if (measuring) {
             totalAcceleration = totalAcceleration + changeAcceleration;
         }
-        acceleration.setText("measurements: " + totalAcceleration +
-                            "\ntotal: " + lastTotal);
+        //acceleration.setText("measurements: " + totalAcceleration +
+        //                    "\ntotal: " + lastTotal);
     }
 
     public void measure(){

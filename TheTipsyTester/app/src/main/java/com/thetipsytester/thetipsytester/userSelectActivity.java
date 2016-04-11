@@ -5,7 +5,10 @@ import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -40,6 +43,18 @@ public class userSelectActivity extends AppCompatActivity implements LoaderManag
         listView.setOnItemClickListener(this);
 
         getLoaderManager().initLoader(1, null, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        View view = this.getWindow().getDecorView();
+
+        String color = sharedPref.getString("color", "232323");
+
+        view.setBackgroundColor(Color.parseColor("#" + color));
     }
 
     public void addUser(View view){

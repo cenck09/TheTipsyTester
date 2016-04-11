@@ -2,8 +2,11 @@ package com.thetipsytester.thetipsytester;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -50,6 +53,18 @@ public class newUserActivity extends AppCompatActivity {
             }
             c.close();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        View view = this.getWindow().getDecorView();
+
+        String color = sharedPref.getString("color", "232323");
+
+        view.setBackgroundColor(Color.parseColor("#" + color));
     }
 
     public void btnAddClick(View view) {
