@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,13 +11,17 @@
         android:text="X: Y: Z: "
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-    <Button
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Measure"
-        android:id="@+id/balanceMeasureButton"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Starting in: "
+        android:textSize="35dp"
+        android:id="@+id/balanceCountDown"
         android:layout_gravity="center_horizontal"
-        android:onClick="measure"
-         />
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
-</LinearLayout>
+
+
+</RelativeLayout>
