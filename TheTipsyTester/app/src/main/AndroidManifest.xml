@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.thetipsytester.thetipsytester">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <provider
+            android:name="com.thetipsytester.thetipsytester.UserContentProvider"
+            android:authorities="com.thetipsytester.thetipsytester.users"
+            android:enabled="true"
+            android:exported="false" />
+        <activity
+            android:name=".testSelectActivity"
+            android:label="@string/title_activity_test_select"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.thetipsytester.thetipsytester.MainActivity" />
+        </activity>
+        <activity android:name=".baselineActivity" />
+        <activity android:name=".bacCalculatorActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".scoresActivity" />
+        <activity android:name=".settingsActivity" />
+        <activity android:name=".newUserActivity"/>
+        <activity android:name=".userSelectActivity"></activity>
+    </application>
+
+</manifest>

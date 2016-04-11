@@ -1,0 +1,14 @@
+package com.thetipsytester.thetipsytester;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+
+public class baselineActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_baseline);
+
+    }
+}

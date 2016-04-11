@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.49">
+
+        <EditText
+            android:id="@+id/NameEditText"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/NameTextView"
+            android:layout_toEndOf="@+id/NameTextView" />
+
+        <TextView
+            android:id="@+id/NameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Name"
+            android:layout_marginTop="60dp"
+            android:layout_marginStart="27dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="46dp"
+            android:orientation="horizontal"
+            android:layout_below="@+id/NameEditText"
+            android:layout_centerHorizontal="true">
+
+
+            <RadioButton
+                android:id="@+id/maleRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Male"
+                android:checked="true"
+                android:layout_alignTop="@+id/radioGroup"
+                android:layout_toEndOf="@+id/NameTextView" />
+
+            <RadioButton
+                android:id="@+id/femaleRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Female"
+                android:checked="false"
+                android:layout_alignTop="@+id/radioGroup"
+                android:layout_centerHorizontal = "true"
+                android:layout_marginStart="51dp" />
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/WeightTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Weight"
+            android:layout_marginTop="103dp"
+            android:layout_below="@+id/radioGroup"
+            android:layout_toEndOf="@+id/NameTextView" />
+
+        <EditText
+            android:id="@+id/WeightEditText"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/WeightTextView"
+            android:layout_toEndOf="@+id/WeightTextView" />
+
+
+
+        <Button
+            android:id="@+id/saveUserButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:onClick="btnAddClick"
+            android:layout_below="@+id/WeightTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="89dp" />
+
+    </RelativeLayout>
+
+</LinearLayout>
