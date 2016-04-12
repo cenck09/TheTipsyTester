@@ -4,7 +4,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/tipsy_tester"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -38,6 +38,8 @@
         <activity android:name=".scoresActivity" />
         <activity android:name=".settingsActivity" />
         <activity android:name=".newUserActivity"/>
+        <activity android:name=".singleTestSelectActivity"/>
+        <activity android:name=".balanceTest"/>
         <activity android:name=".userSelectActivity"></activity>
     </application>
 
