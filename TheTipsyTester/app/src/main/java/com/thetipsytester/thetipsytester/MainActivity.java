@@ -25,32 +25,7 @@ public class MainActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Terms and Conditions");
-        alertDialogBuilder.setMessage("This application should not be used as an accurate measure for intoxication level." +
-                "\n\nThe makers of this app do not condone underage drinking or drinking and driving." +
-                "\n\nIn order to use this app, you must agree to these terms.");
-        alertDialogBuilder.setCancelable(false);
-        alertDialogBuilder
-                .setPositiveButton("Agree", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // if this button is clicked, close dialog box and do nothing
-
-                    }
-                })
-                .setNegativeButton("I don't agree", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // if this button is clicked, just close the activity
-                        MainActivity.this.finish();
-
-                    }
-                });
-
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-
-        // show it
-        alertDialog.show();
+        checkFirstRun();
 
     }
 
@@ -67,6 +42,43 @@ public class MainActivity extends AppCompatActivity {
         view.setBackgroundColor(Color.parseColor("#" + color));
     }
 
+
+    public void checkFirstRun() {
+        boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun", true);
+        if (isFirstRun){
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle("Terms and Conditions");
+            alertDialogBuilder.setMessage("This application should not be used as an accurate measure for intoxication level." +
+                    "\n\nThe makers of this app do not condone underage drinking or drinking and driving." +
+                    "\n\nIn order to use this app, you must agree to these terms.");
+            alertDialogBuilder.setCancelable(false);
+            alertDialogBuilder
+                    .setPositiveButton("Agree", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // if this button is clicked, close dialog box and do nothing
+
+                        }
+                    })
+                    .setNegativeButton("I don't agree", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // if this button is clicked, just close the activity
+                            MainActivity.this.finish();
+
+                        }
+                    });
+
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+
+            getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                    .edit()
+                    .putBoolean("isFirstRun", false)
+                    .apply();
+        }
+    }
 
     public void testPage(View view){
         //When the Test button is clicked from the main menu
