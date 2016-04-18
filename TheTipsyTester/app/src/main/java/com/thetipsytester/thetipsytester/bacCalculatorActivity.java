@@ -83,18 +83,40 @@ public class bacCalculatorActivity extends AppCompatActivity {
     }
 
     public void calculateBAC(View view){
+        double bProof = 10;
+        double bNum = 0;
+        double wProof = 24;
+        double wNum = 0;
+        double sProof = 80;
+        double sNum = 0;
+        double hours = 0;
 
 
-        double bProof = Double.parseDouble(((EditText)findViewById(R.id.beerProof)).getText().toString());
-        double bNum = Double.parseDouble(((EditText)findViewById(R.id.beerNum)).getText().toString());
+        if(!((EditText)findViewById(R.id.beerProof)).getText().toString().isEmpty()){
+            bProof = Double.parseDouble(((EditText)findViewById(R.id.beerProof)).getText().toString());
+        }
+        if(!((EditText)findViewById(R.id.beerNum)).getText().toString().isEmpty()){
+            bNum = Double.parseDouble(((EditText)findViewById(R.id.beerNum)).getText().toString());
+        }
+        if(!((EditText)findViewById(R.id.wineProof)).getText().toString().isEmpty()){
+            wProof = Double.parseDouble(((EditText)findViewById(R.id.wineProof)).getText().toString());
+        }
+        if(!((EditText)findViewById(R.id.wineNum)).getText().toString().isEmpty()){
+            wNum = Double.parseDouble(((EditText)findViewById(R.id.wineNum)).getText().toString());
+        }
+        if(!((EditText)findViewById(R.id.shotsProof)).getText().toString().isEmpty()){
+            sProof = Double.parseDouble(((EditText)findViewById(R.id.shotsProof)).getText().toString());
+        }
+        if(!((EditText)findViewById(R.id.shotsNum)).getText().toString().isEmpty()){
+            sNum = Double.parseDouble(((EditText)findViewById(R.id.shotsNum)).getText().toString());
+        }
+        if(!((EditText)findViewById(R.id.hourNum)).getText().toString().isEmpty()){
+            hours = Double.parseDouble(((EditText)findViewById(R.id.hourNum)).getText().toString());
+        }
 
-        double wProof = Double.parseDouble(((EditText)findViewById(R.id.wineProof)).getText().toString());
-        double wNum = Double.parseDouble(((EditText)findViewById(R.id.wineNum)).getText().toString());
 
-        double sProof = Double.parseDouble(((EditText)findViewById(R.id.shotsProof)).getText().toString());
-        double sNum = Double.parseDouble(((EditText)findViewById(R.id.shotsNum)).getText().toString());
 
-        double hours = Double.parseDouble((((EditText)findViewById(R.id.hourNum)).getText().toString()));
+
 
 
         double gramsOfBeer = 0.789*29.5735*(bProof/200)*bNum*12;
@@ -112,7 +134,7 @@ public class bacCalculatorActivity extends AppCompatActivity {
 
 
         TextView calculatedVal = (TextView) findViewById(R.id.calculatedBAC);
-        if(bac<0){
+        if(bac<=0){
             bac = 0;
             calculatedVal.setText("0.000%");
         }else {
