@@ -39,7 +39,7 @@
         android:id="@+id/baselineButtonMain"
         android:layout_above="@+id/bacButtonMain"
         android:layout_alignParentStart="true"
-        android:onClick="baselinePage"/>
+        android:onClick="calibrationPage"/>
 
     <Button
         android:layout_width="match_parent"

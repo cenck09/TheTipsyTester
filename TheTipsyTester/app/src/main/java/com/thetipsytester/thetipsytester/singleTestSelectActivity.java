@@ -10,28 +10,36 @@ import android.view.View;
 
 public class singleTestSelectActivity extends AppCompatActivity{
 
+    boolean calibration = false;
+    double bac;
+    SharedPreferences sharedPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_singletest_select);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        Intent intent = getIntent();
+        calibration = intent.getBooleanExtra("calibration", false);
+        bac = intent.getDoubleExtra("BAC", 0);
+        System.out.println("Calibraion: " + calibration);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         View view = this.getWindow().getDecorView();
-
         String color = sharedPref.getString("color", "232323");
-
         view.setBackgroundColor(Color.parseColor("#" + color));
     }
 
     public void startBalance(View view){
         //When the Baseline button is clicked from the main menu
         Intent intent = new Intent(this, balanceTest.class);
-
+        intent.putExtra("calibration", calibration);
+        intent.putExtra("BAC", bac);
         startActivity(intent);
     }
 

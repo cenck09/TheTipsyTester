@@ -29,6 +29,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed(){
+        moveTaskToBack(true);
+    }
+
 
     @Override
     protected void onResume() {
@@ -89,17 +94,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void baselinePage(View view){
+    public void calibrationPage(View view){
         //When the Baseline button is clicked from the main menu
-        Intent intent = new Intent(this, baselineActivity.class);
-
+        Intent intent = new Intent(this, bacCalculatorActivity.class);
+        intent.putExtra("calibration", true);
         startActivity(intent);
     }
 
     public void bacCalculator(View view){
         //When the BAC Calculator button is clicked from the main menu
         Intent intent = new Intent(this, bacCalculatorActivity.class);
-
         startActivity(intent);
     }
 

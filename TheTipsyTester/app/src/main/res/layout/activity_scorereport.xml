@@ -110,4 +110,41 @@
         android:layout_below="@+id/scoreBestField"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="BAC: "
+        android:id="@+id/scoreBACTag"
+        android:layout_below="@+id/scoreWorstTag"
+        android:layout_alignStart="@+id/scoreRetryButton"
+        android:layout_marginTop="51dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0.00"
+        android:id="@+id/scoreBACField"
+        android:layout_alignBottom="@+id/scoreBACTag"
+        android:layout_alignEnd="@+id/scoreNextButton" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Percent From Sober Score:"
+        android:id="@+id/scorePfSSTag"
+        android:layout_below="@+id/scoreBACTag"
+        android:layout_alignStart="@+id/scoreBACTag" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0"
+        android:id="@+id/scoresPfSSField"
+        android:layout_below="@+id/scoreBACField"
+        android:layout_alignStart="@+id/scoreBACField" />
+
 </RelativeLayout>

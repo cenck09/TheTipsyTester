@@ -19,6 +19,8 @@ public class bacCalculatorActivity extends AppCompatActivity {
     String name = "John",gender = "male";
     int bodyWeight = 150;
 
+    boolean calibration = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -27,6 +29,10 @@ public class bacCalculatorActivity extends AppCompatActivity {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         rowid = sharedPref.getLong("rowid", -1);
+
+        Intent intent = getIntent();
+        calibration = intent.getBooleanExtra("calibration", false);
+        System.out.println("Calibraion: " + calibration);
 
         if (rowid != -1) {
             TipsyDB tipsy = new TipsyDB(this);
@@ -110,24 +116,17 @@ public class bacCalculatorActivity extends AppCompatActivity {
             hours = Double.parseDouble(((EditText)findViewById(R.id.hourNum)).getText().toString());
         }
 
-
-
-
-
-
         double gramsOfBeer = 0.789*29.5735*(bProof/200)*bNum*12;
         double gramsOfWine = 0.789*29.5735*(wProof/200)*wNum*5;
         double gramsOfShots = 0.789*29.5735*(sProof/200)*sNum*1.5;
         double gramsOfAlcohol = gramsOfBeer+gramsOfWine+gramsOfShots;
         double bac = 0;
 
-
         if(gender.equals("male")){
             bac = ((gramsOfAlcohol)/(453.592*bodyWeight * 0.68))*100 - 0.015*hours;
         }else if(gender.equals("female")){
             bac = (((gramsOfAlcohol)/(453.592*bodyWeight * 0.55))* 100)- 0.015*hours;
         }
-
 
         TextView calculatedVal = (TextView) findViewById(R.id.calculatedBAC);
         if(bac<=0){
@@ -140,7 +139,12 @@ public class bacCalculatorActivity extends AppCompatActivity {
             calculatedVal.setText(retVal + "%");
         }
 
-
+        if(calibration){
+            Intent intent = new Intent(this, singleTestSelectActivity.class);
+            intent.putExtra("calibration", calibration);
+            intent.putExtra("BAC", bac);
+            startActivity(intent);
+        }
 
 
     }

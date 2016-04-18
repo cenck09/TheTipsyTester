@@ -29,6 +29,9 @@ public class balanceTest extends Activity implements SensorEventListener{
     //TextView acceleration;
     TextView timerText;
 
+    boolean calibration = false;
+    double bac = 0;
+
     int finalScore;
     boolean measuring = false, waiting = false;
     float totalAcceleration = 0, changeAcceleration = 0, lastTotal = 0, x, y ,z;
@@ -37,7 +40,7 @@ public class balanceTest extends Activity implements SensorEventListener{
     CountDownTimer countDownTimer = new MyCountDownTimer(startTime, interval);
     CountDownTimer pauseTimer = new MyCountDownTimer2(pauseTime, interval);
 
-    String[] nextTests = new String[5];
+    String[] nextTests;
 
 
 
@@ -53,6 +56,13 @@ public class balanceTest extends Activity implements SensorEventListener{
         //acceleration = (TextView)findViewById(R.id.acceleration);
         timerText = (TextView)findViewById(R.id.balanceCountDown);
         timerText.setText(timerText.getText()+String.valueOf(startTime / 1000));
+
+        Intent intent = getIntent();
+        nextTests = intent.getStringArrayExtra("nextTests");
+        calibration = intent.getBooleanExtra("calibration", false);
+        bac = intent.getDoubleExtra("BAC", 0);
+
+        System.out.println("Calibraion: " + calibration);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Balance Test");
@@ -101,12 +111,16 @@ public class balanceTest extends Activity implements SensorEventListener{
             intent.putExtra("prevTest", "balance");
             intent.putExtra("nextTests", nextTests);
             intent.putExtra("score", finalScore);
+            intent.putExtra("calibration", calibration);
+            intent.putExtra("BAC", bac);
+            timerText.setText("Score: " + finalScore);
             startActivity(intent);
+            finish();
         }
 
         @Override
         public void onTick(long millisUntilFinished){
-            timerText.setText("Measuring: " + Math.round(millisUntilFinished / (long)1000));
+            timerText.setText("Measuring: " + Math.round(millisUntilFinished / (long)1001));
 
         }
     }
@@ -123,7 +137,7 @@ public class balanceTest extends Activity implements SensorEventListener{
         }
         @Override
         public void onTick(long millisUntilFinished){
-            timerText.setText("Starts in: " + Math.round(millisUntilFinished/ (long) 1000));
+            timerText.setText("Starts in: " + Math.round(millisUntilFinished/ (long) 1001));
 
         }
     }
