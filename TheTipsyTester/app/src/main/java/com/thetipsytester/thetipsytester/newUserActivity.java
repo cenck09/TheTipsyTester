@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,18 +19,26 @@ import android.widget.Toast;
 public class newUserActivity extends AppCompatActivity {
 
     Long rowid;
+    TipsyDB tipsy;
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_user);
 
-        if (getIntent().hasExtra("rowid")) {
-            rowid = getIntent().getLongExtra("rowid", 0);
-            ContentResolver cr = getContentResolver();
+        tipsy = new TipsyDB(this);
+        db = tipsy.getWritableDatabase();
 
-            Cursor c = cr.query(UserContentProvider.CONTENT_URI.buildUpon().appendPath(Long.toString(rowid)).build(),
-                    new String[] {"name","gender","weight"},null, null, null);
+        if (getIntent().hasExtra("rowid")) {
+
+
+            rowid = getIntent().getLongExtra("rowid", 0);
+
+            String selectQuery = "SELECT * FROM " + "users" + " WHERE id = " + rowid;
+
+            Cursor c = db.rawQuery(selectQuery, null);
+
 
             if (!c.moveToFirst()) {
                 this.setTitle("Add new user");
@@ -85,9 +94,9 @@ public class newUserActivity extends AppCompatActivity {
 
         try {
             if (rowid == null) {
-                cr.insert(UserContentProvider.CONTENT_URI, values);
+                db.insert("users", null, values);
             } else {
-                cr.update(UserContentProvider.CONTENT_URI.buildUpon().appendPath(Long.toString(rowid)).build(), values, null, null);
+                //db.update();
             }
             finish();
         } catch (SQLException e) {

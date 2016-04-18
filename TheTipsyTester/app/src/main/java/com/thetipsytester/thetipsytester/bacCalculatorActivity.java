@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -31,24 +32,31 @@ public class bacCalculatorActivity extends AppCompatActivity {
 
 
         if (getIntent().hasExtra("rowid")) {
+            TipsyDB tipsy = new TipsyDB(this);
+            SQLiteDatabase db = tipsy.getWritableDatabase();
+
             rowid = getIntent().getLongExtra("rowid", 0);
-            ContentResolver cr = getContentResolver();
 
-            Cursor c = cr.query(UserContentProvider.CONTENT_URI.buildUpon().appendPath(Long.toString(rowid)).build(),
-                    new String[] {"name","gender","weight"},null, null, null);
+            String selectQuery = "SELECT * FROM " + "users" + " WHERE _id = " + rowid;
 
+            Cursor c = db.rawQuery(selectQuery, null);
 
-            if(!c.moveToFirst()){
-                Toast.makeText(bacCalculatorActivity.this, "Error retrieving user info, using default", Toast.LENGTH_SHORT).show();
-            }else {
-                name = c.getString(0);
-                gender = c.getString(1);
-                bodyWeight = Integer.parseInt(c.getString(2));
-                TextView userName = (TextView) findViewById(R.id.userText);
-                userName.setText("Current User: " + name);
+            if(c != null){
+                c.moveToFirst();
             }
 
-            c.close();
+            User u = new User();
+            u.setId(c.getInt(c.getColumnIndex("_id")));
+            u.setName(c.getString(c.getColumnIndex("name")));
+            u.setGender(c.getString(c.getColumnIndex("gender")));
+            u.setWeight(c.getInt(c.getColumnIndex("weight")));
+
+            name = u.getName();
+            gender = u.getGender();
+            bodyWeight = u.getWeight();
+
+            TextView userText = (TextView)findViewById(R.id.userText);
+            userText.setText("Current User: " + name);
         }
 
 

@@ -7,18 +7,22 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-public class userSelectActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
+public class userSelectActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
-    private SimpleCursorAdapter mAdapter;
+    private TipsyDB tipsy;
+    SQLiteDatabase db;
+    Cursor userCursor;
 
 
     @Override
@@ -26,28 +30,14 @@ public class userSelectActivity extends AppCompatActivity implements LoaderManag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_select);
 
-        mAdapter = new SimpleCursorAdapter(this, R.layout.user_list_item, null,
-                new String[]{"name","gender", "weight"},
-                new int[] {R.id.txtTitle, R.id.txtGender, R.id.txtWeight}, 0);
+        populateList();
 
-        mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-                return false;
-            }
-        });
-
-
-
-        ListView listView = (ListView) findViewById(R.id.lstUsers);
-        listView.setAdapter(mAdapter);
-        listView.setOnItemClickListener(this);
-
-        getLoaderManager().initLoader(1, null, this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        populateList();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         View view = this.getWindow().getDecorView();
@@ -64,6 +54,20 @@ public class userSelectActivity extends AppCompatActivity implements LoaderManag
         startActivity(intent);
     }
 
+    public void populateList(){
+        tipsy = new TipsyDB(this);
+        db = tipsy.getWritableDatabase();
+        userCursor = db.rawQuery("SELECT * FROM users", null);
+        Log.i("SOMETHING", "Cursor(0)" + userCursor.getColumnName(0));
+
+
+        ListView listView = (ListView) findViewById(R.id.lstUsers);
+        UserCursorAdapter userAdapter = new UserCursorAdapter(this, userCursor,0);
+        listView.setAdapter(userAdapter);
+        listView.setOnItemClickListener(this);
+
+    }
+
 
 
 
@@ -72,23 +76,6 @@ public class userSelectActivity extends AppCompatActivity implements LoaderManag
         super.onSaveInstanceState(outState);
     }
 
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        // Create a new CursorLoader with the following query parameters.
-        String where = null;
-
-        return new CursorLoader(this, UserContentProvider.CONTENT_URI,
-                new String[]{"_id", "name", "gender", "weight"}, where, null, null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        mAdapter.swapCursor(cursor);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mAdapter.swapCursor(null);
-    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
