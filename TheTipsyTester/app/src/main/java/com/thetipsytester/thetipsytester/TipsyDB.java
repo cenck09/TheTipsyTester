@@ -56,13 +56,15 @@ public class TipsyDB extends SQLiteOpenHelper {
             + "(" + KEY_ID + " INTEGER NOT NULL," + KEY_TEST + " TEXT NOT NULL,"
             + KEY_UT04 + " INTEGER," + KEY_UT08 + " INTEGER," + KEY_UT12 + " INTEGER,"
             + KEY_UT16 + " INTEGER," + KEY_UT20 + " INTEGER," + KEY_AB20 + " INTEGER,"
-            + "PRIMARY KEY (" + KEY_ID + ", " + KEY_TEST + "))";
+            + "PRIMARY KEY (" + KEY_ID + ", " + KEY_TEST + ")"
+            + "FOREIGN KEY (" + KEY_ID + ") REFERENCES users(" + KEY_ID + "))";
 
     // SCORES table create statement
     private static final String CREATE_TABLE_SCORES = "CREATE TABLE "
             + TABLE_SCORES + "(" + KEY_ID + " INTEGER NOT NULL,"
             + KEY_TEST + " TEXT NOT NULL," + KEY_BEST + " INTEGER,"
-            + KEY_WORST + " INTEGER," + "PRIMARY KEY (" + KEY_ID + ", " + KEY_TEST + "))";
+            + KEY_WORST + " INTEGER," + "PRIMARY KEY (" + KEY_ID + ", " + KEY_TEST + ")"
+            + "FOREIGN KEY (" + KEY_ID + ") REFERENCES users(" + KEY_ID + "))";
 
     public TipsyDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

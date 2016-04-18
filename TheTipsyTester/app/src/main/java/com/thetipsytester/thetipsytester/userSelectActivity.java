@@ -1,10 +1,8 @@
 package com.thetipsytester.thetipsytester;
 
 
-import android.app.LoaderManager;
-import android.content.CursorLoader;
+
 import android.content.Intent;
-import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,9 +14,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
-public class userSelectActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+
+public class userSelectActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     private TipsyDB tipsy;
     SQLiteDatabase db;
@@ -57,9 +55,7 @@ public class userSelectActivity extends AppCompatActivity implements AdapterView
     public void populateList(){
         tipsy = new TipsyDB(this);
         db = tipsy.getWritableDatabase();
-        userCursor = db.rawQuery("SELECT * FROM users", null);
-        Log.i("SOMETHING", "Cursor(0)" + userCursor.getColumnName(0));
-
+        userCursor = db.rawQuery("SELECT * FROM users ORDER BY name", null);
 
         ListView listView = (ListView) findViewById(R.id.lstUsers);
         UserCursorAdapter userAdapter = new UserCursorAdapter(this, userCursor,0);
@@ -91,4 +87,6 @@ public class userSelectActivity extends AppCompatActivity implements AdapterView
 
 
     }
+
+
 }

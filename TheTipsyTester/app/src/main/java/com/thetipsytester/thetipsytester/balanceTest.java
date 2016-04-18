@@ -3,12 +3,14 @@ package com.thetipsytester.thetipsytester;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -34,6 +36,9 @@ public class balanceTest extends Activity implements SensorEventListener{
 
     CountDownTimer countDownTimer = new MyCountDownTimer(startTime, interval);
     CountDownTimer pauseTimer = new MyCountDownTimer2(pauseTime, interval);
+
+    String[] nextTests = new String[5];
+
 
 
     @Override
@@ -90,12 +95,19 @@ public class balanceTest extends Activity implements SensorEventListener{
             lastTotal = totalAcceleration;
             totalAcceleration = 0;
             finalScore = (int)lastTotal;
-            timerText.setText("Final Score: " + (int)lastTotal);
+
+
+            Intent intent = new Intent(balanceTest.this, scorereportActivity.class);
+            intent.putExtra("prevTest", "balance");
+            intent.putExtra("nextTests", nextTests);
+            intent.putExtra("score", finalScore);
+            startActivity(intent);
         }
 
         @Override
         public void onTick(long millisUntilFinished){
-            timerText.setText("Time: " + millisUntilFinished/1000);
+            timerText.setText("Measuring: " + Math.round(millisUntilFinished / (long)1000));
+
         }
     }
 
@@ -111,7 +123,8 @@ public class balanceTest extends Activity implements SensorEventListener{
         }
         @Override
         public void onTick(long millisUntilFinished){
-            timerText.setText("Starts in: " + millisUntilFinished/1000);
+            timerText.setText("Starts in: " + Math.round(millisUntilFinished/ (long) 1000));
+
         }
     }
 

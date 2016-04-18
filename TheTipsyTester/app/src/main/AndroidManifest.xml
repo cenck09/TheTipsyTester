@@ -7,12 +7,11 @@
         android:icon="@mipmap/tipsy_tester"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,8 +21,7 @@
         <activity
             android:name=".testSelectActivity"
             android:label="@string/title_activity_test_select"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.thetipsytester.thetipsytester.MainActivity" />
@@ -34,8 +32,10 @@
         <activity android:name=".settingsActivity" />
         <activity android:name=".newUserActivity"/>
         <activity android:name=".singleTestSelectActivity"/>
-        <activity android:name=".balanceTest"/>
-        <activity android:name=".userSelectActivity"></activity>
+        <activity android:name=".balanceTest" android:screenOrientation="portrait"/>
+        <activity android:name=".scorereportActivity"/>
+        <activity android:name=".userSelectActivity">
+        </activity>
     </application>
 
 </manifest>

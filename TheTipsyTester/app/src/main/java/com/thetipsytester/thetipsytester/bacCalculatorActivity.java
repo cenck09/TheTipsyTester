@@ -38,22 +38,23 @@ public class bacCalculatorActivity extends AppCompatActivity {
 
             if(c != null){
                 c.moveToFirst();
+                name = (c.getString(c.getColumnIndex("name")));
+                gender = (c.getString(c.getColumnIndex("gender")));
+                bodyWeight = (c.getInt(c.getColumnIndex("weight")));
             }
 
-            User u = new User();
-            u.setId(c.getInt(c.getColumnIndex("_id")));
-            u.setName(c.getString(c.getColumnIndex("name")));
-            u.setGender(c.getString(c.getColumnIndex("gender")));
-            u.setWeight(c.getInt(c.getColumnIndex("weight")));
 
-            name = u.getName();
-            gender = u.getGender();
-            bodyWeight = u.getWeight();
 
             TextView userText = (TextView)findViewById(R.id.userText);
             userText.setText("Current User: " + name);
         }
 
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
 
     }
 
