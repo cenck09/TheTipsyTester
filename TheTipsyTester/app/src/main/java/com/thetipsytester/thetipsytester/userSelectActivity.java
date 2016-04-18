@@ -79,16 +79,13 @@ public class userSelectActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref.edit().putLong("rowid", id).apply();
         if (getIntent().getStringExtra("activity") != null && getIntent().getStringExtra("activity").equals("BAC")) {
-
             Intent intent = new Intent(this, bacCalculatorActivity.class);
-            intent.putExtra("rowid", id);
-            intent.putExtra("rowid", id);
             startActivity(intent);
         } else {
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("rowid", id);
             startActivity(intent);
         }
 

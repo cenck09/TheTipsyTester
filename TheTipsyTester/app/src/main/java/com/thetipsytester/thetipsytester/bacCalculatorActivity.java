@@ -1,6 +1,5 @@
 package com.thetipsytester.thetipsytester;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -13,9 +12,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 public class bacCalculatorActivity extends AppCompatActivity {
 
@@ -29,13 +25,12 @@ public class bacCalculatorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bac_calculator);
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        rowid = sharedPref.getLong("rowid", -1);
 
-
-        if (getIntent().hasExtra("rowid")) {
+        if (rowid != -1) {
             TipsyDB tipsy = new TipsyDB(this);
             SQLiteDatabase db = tipsy.getWritableDatabase();
-
-            rowid = getIntent().getLongExtra("rowid", 0);
 
             String selectQuery = "SELECT * FROM " + "users" + " WHERE _id = " + rowid;
 
