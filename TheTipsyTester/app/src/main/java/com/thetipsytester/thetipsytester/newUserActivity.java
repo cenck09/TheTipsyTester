@@ -2,6 +2,7 @@ package com.thetipsytester.thetipsytester;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -22,6 +23,7 @@ public class newUserActivity extends AppCompatActivity {
     TipsyDB tipsy;
     SQLiteDatabase db;
     boolean calibration;
+    String activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +33,12 @@ public class newUserActivity extends AppCompatActivity {
         tipsy = new TipsyDB(this);
         db = tipsy.getWritableDatabase();
 
+        activity = getIntent().getStringExtra("activity");
+
         if (getIntent().hasExtra("rowid")) {
 
-
             rowid = getIntent().getLongExtra("rowid", 0);
+
 
             String selectQuery = "SELECT * FROM " + "users" + " WHERE id = " + rowid;
 
@@ -104,7 +108,11 @@ public class newUserActivity extends AppCompatActivity {
             } else {
                 //db.update();
             }
-
+            Intent intent = new Intent(newUserActivity.this, userSelectActivity.class);
+            intent.putExtra("calibration", calibration);
+            intent.putExtra("activity", activity);
+            System.out.println("NEW USER ACTIVITY: " + activity);
+            startActivity(intent);
             finish();
         } catch (SQLException e) {
             Toast.makeText(this, "Error updating database.", Toast.LENGTH_LONG).show();

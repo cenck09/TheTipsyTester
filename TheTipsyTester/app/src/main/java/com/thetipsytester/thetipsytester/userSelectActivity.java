@@ -22,6 +22,7 @@ public class userSelectActivity extends AppCompatActivity implements AdapterView
     SQLiteDatabase db;
     Cursor userCursor;
     boolean calibration;
+    String activity;
 
 
 
@@ -32,6 +33,7 @@ public class userSelectActivity extends AppCompatActivity implements AdapterView
 
         Intent intent = getIntent();
         calibration = intent.getBooleanExtra("calibration", false);
+        activity = intent.getStringExtra("activity");
 
         populateList();
 
@@ -56,6 +58,9 @@ public class userSelectActivity extends AppCompatActivity implements AdapterView
         //When the + button is clicked from user selection page
         Intent intent = new Intent(this, newUserActivity.class);
         intent.putExtra("calibration", calibration);
+        intent.putExtra("activity", activity);
+        System.out.println("USER SELECT ACTIVITY: " + activity);
+
 
         startActivity(intent);
     }
@@ -89,9 +94,11 @@ public class userSelectActivity extends AppCompatActivity implements AdapterView
             Intent intent = new Intent(this, bacCalculatorActivity.class);
             intent.putExtra("calibration", calibration);
             startActivity(intent);
+            finish();
         } else {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+            finish();
         }
 
 

@@ -80,8 +80,8 @@ public class bacCalculatorActivity extends AppCompatActivity {
     public void getUser(View view){
         Intent intent = new Intent(this, userSelectActivity.class);
         intent.putExtra("activity", "BAC");
-
         startActivity(intent);
+        finish();
     }
 
     public void calculateBAC(View view){
