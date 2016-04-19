@@ -21,12 +21,17 @@ public class userSelectActivity extends AppCompatActivity implements AdapterView
     private TipsyDB tipsy;
     SQLiteDatabase db;
     Cursor userCursor;
+    boolean calibration;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_select);
+
+        Intent intent = getIntent();
+        calibration = intent.getBooleanExtra("calibration", false);
 
         populateList();
 
@@ -35,6 +40,8 @@ public class userSelectActivity extends AppCompatActivity implements AdapterView
     @Override
     protected void onResume() {
         super.onResume();
+
+
         populateList();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -48,6 +55,7 @@ public class userSelectActivity extends AppCompatActivity implements AdapterView
     public void addUser(View view){
         //When the + button is clicked from user selection page
         Intent intent = new Intent(this, newUserActivity.class);
+        intent.putExtra("calibration", calibration);
 
         startActivity(intent);
     }
@@ -79,6 +87,7 @@ public class userSelectActivity extends AppCompatActivity implements AdapterView
         sharedPref.edit().putLong("rowid", id).apply();
         if (getIntent().getStringExtra("activity") != null && getIntent().getStringExtra("activity").equals("BAC")) {
             Intent intent = new Intent(this, bacCalculatorActivity.class);
+            intent.putExtra("calibration", calibration);
             startActivity(intent);
         } else {
             Intent intent = new Intent(this, MainActivity.class);

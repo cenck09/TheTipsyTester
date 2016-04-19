@@ -129,22 +129,4 @@
         android:layout_alignBottom="@+id/scoreBACTag"
         android:layout_alignEnd="@+id/scoreNextButton" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Percent From Sober Score:"
-        android:id="@+id/scorePfSSTag"
-        android:layout_below="@+id/scoreBACTag"
-        android:layout_alignStart="@+id/scoreBACTag" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="0"
-        android:id="@+id/scoresPfSSField"
-        android:layout_below="@+id/scoreBACField"
-        android:layout_alignStart="@+id/scoreBACField" />
-
 </RelativeLayout>

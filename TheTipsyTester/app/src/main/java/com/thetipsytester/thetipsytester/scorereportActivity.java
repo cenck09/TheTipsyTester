@@ -21,22 +21,25 @@ public class scorereportActivity extends AppCompatActivity {
     String[] nextTests;
     int score = 0, best = 0, worst = 0;
     long rowid;
-    boolean playedBefore;
     boolean calibration = false;
     double bac = 0;
 
     int soberScore = 0;
     int insertValue;
     int newPercent;
-    int oldPercent;
+    double oldPercent;
     int oldDrunkScore;
     int newDrunkScore;
+    double testPercent;
+    int displayPercent;
+    int storedPercent;
+
+    double performancePercent;
+    String bacText;
 
     TipsyDB tipsy;
     SQLiteDatabase db;
-
     SharedPreferences sharedPref;
-
     InterstitialAd mInterstitialAd;
 
     @Override
@@ -72,7 +75,6 @@ public class scorereportActivity extends AppCompatActivity {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         rowid = sharedPref.getLong("rowid", -1);
-        playedBefore = sharedPref.getBoolean(prevTest, false);
 
         if (rowid != -1) {
             tipsy = new TipsyDB(this);
@@ -110,6 +112,44 @@ public class scorereportActivity extends AppCompatActivity {
                 } else {
                     soberScore = score;
                 }
+            }else{
+                //not calibration
+                selectQuery = "SELECT * FROM " + "tests" + " WHERE _id = " + rowid
+                        + " AND test = '" + prevTest + "'";
+                c = db.rawQuery(selectQuery, null);
+
+                if (c != null && c.moveToFirst()) {
+                    soberScore = c.getInt(c.getColumnIndex("ut04"));
+                    performancePercent = ((double) score / (double) soberScore) * 100;
+                    System.out.println("PerformancePercent: " + performancePercent);
+                    int ut04Percent = c.getInt(c.getColumnIndex("ut04"));
+                    System.out.println("UT04: " + ut04Percent);
+                    int ut08Percent = c.getInt(c.getColumnIndex("ut08"));
+                    System.out.println("UT08: " + ut08Percent);
+                    int ut12Percent = c.getInt(c.getColumnIndex("ut12"));
+                    System.out.println("UT12: " + ut12Percent);
+                    int ut16Percent = c.getInt(c.getColumnIndex("ut16"));
+                    System.out.println("UT16: " + ut16Percent);
+                    int ut20Percent = c.getInt(c.getColumnIndex("ut20"));
+                    System.out.println("UT20: " + ut20Percent);
+                    int ab20Percent = c.getInt(c.getColumnIndex("ab20"));
+                    System.out.println("AB20: " + ab20Percent);
+
+                    if(performancePercent< ut08Percent-5){
+                        bacText = "0.00-0.04%";
+                    }else if (performancePercent < ut08Percent) {
+                        bacText = "0.04-0.08%";
+                    } else if (performancePercent >= ut08Percent && performancePercent < ut12Percent) {
+                        bacText = "0.08-0.12%";
+                    } else if (performancePercent >= ut12Percent && performancePercent < ut16Percent) {
+                        bacText = "0.12-0.16%";
+                    } else if (performancePercent >= ut16Percent && performancePercent < ut20Percent) {
+                        bacText = "0.16-0.20%";
+                    } else if (performancePercent >= ab20Percent) {
+                        bacText = ">0.20%";
+                    }
+                }
+
 
             }
 
@@ -120,15 +160,17 @@ public class scorereportActivity extends AppCompatActivity {
             if (c != null && c.moveToFirst()) {
                 best = c.getInt(c.getColumnIndex("best"));
                 worst = c.getInt(c.getColumnIndex("worst"));
+                testPercent = ((double)score/(double)soberScore)*100;
+                displayPercent = (int) testPercent;
 
                 if(calibration){
-                    oldDrunkScore = soberScore*oldPercent;
-                    newDrunkScore = (oldDrunkScore*5 + score)/6;
-                    newPercent = (newDrunkScore/soberScore)*100;
+                    oldDrunkScore = (int)(soberScore * (oldPercent/100));
+                    newDrunkScore = (int)(((double)(oldDrunkScore*5) + (double)score)/6);
+                    newPercent = (int)(((double)newDrunkScore/(double)soberScore)*100);
+                    storedPercent = newPercent;
 
                     if(bac >= 0 && bac < 0.04){
                         insertValue = (soberScore*5 + score)/6;
-                        System.out.println("SOBER SCORE: " + insertValue);
                         ContentValues values = new ContentValues();
                         values.put("ut04", insertValue);
                         db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
@@ -136,30 +178,30 @@ public class scorereportActivity extends AppCompatActivity {
 
                     }else if(bac >= 0.04 && bac < 0.08){
                         ContentValues values = new ContentValues();
-                        values.put("ut08", newPercent);
+                        values.put("ut08", storedPercent);
                         db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
                                 + rowid), String.valueOf("" + prevTest)});
                     }else if(bac >= 0.08 && bac < 0.12){
                         ContentValues values = new ContentValues();
-                        values.put("ut12", newPercent);
+                        values.put("ut12", storedPercent);
                         db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
                                 + rowid), String.valueOf("" + prevTest)});
 
                     }else if(bac >= 0.12 && bac < 0.16){
                         ContentValues values = new ContentValues();
-                        values.put("ut16", newPercent);
+                        values.put("ut16", storedPercent);
                         db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
                                 + rowid), String.valueOf("" + prevTest)});
 
                     }else if(bac >= 0.16 && bac < 0.20){
                         ContentValues values = new ContentValues();
-                        values.put("ut20", newPercent);
+                        values.put("ut20", storedPercent);
                         db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
                                 + rowid), String.valueOf("" + prevTest)});
 
                     }else if(bac >= 0.2){
                         ContentValues values = new ContentValues();
-                        values.put("ab20", newPercent);
+                        values.put("ab20", storedPercent);
                         db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
                                 + rowid), String.valueOf("" + prevTest)});
                     }
@@ -176,7 +218,7 @@ public class scorereportActivity extends AppCompatActivity {
             TextView tvBest = (TextView)findViewById(R.id.scoreBestField);
             TextView tvWorst = (TextView)findViewById(R.id.scoreWorstField);
             TextView tvBAC = (TextView)findViewById(R.id.scoreBACField);
-            TextView tvPfSS = (TextView)findViewById(R.id.scoresPfSSField);
+
 
 
             tvTest.setText(prevTest.toUpperCase());
@@ -191,9 +233,11 @@ public class scorereportActivity extends AppCompatActivity {
                     retVal = retVal.substring(0, 5);
                     tvBAC.setText(retVal + "%");
                 }else{
-                    tvBAC.setText("0.00");
+                    tvBAC.setText("0.00%");
                 }
-                tvPfSS.setText("" + newPercent);
+
+            }else{
+                tvBAC.setText(bacText);
             }
 
 
@@ -218,18 +262,32 @@ public class scorereportActivity extends AppCompatActivity {
         if(prevTest.equals("balance")) {
             Intent intent = new Intent(scorereportActivity.this, balanceTest.class);
             intent.putExtra("nextTests", nextTests);
+            intent.putExtra("calibration", calibration);
             startActivity(intent);
         }
     }
 
     public void nextAction(View view) {
-        if (!playedBefore) {
+
+        if (best == 0 && worst == 0) {
             ContentValues values = new ContentValues();
             values.put("_id", rowid);
             values.put("test", prevTest);
             values.put("best", score);
             values.put("worst", score);
             db.insert("scores", null, values);
+
+            values = new ContentValues();
+            values.put("_id", rowid);
+            values.put("test", prevTest);
+            values.put("ut04", score);
+            values.put("ut08", 105);
+            values.put("ut12", 110);
+            values.put("ut16", 115);
+            values.put("ut20", 120);
+            values.put("ab20", 125);
+            db.insert("tests", null, values);
+
         } else {
 
             if (prevTest.equals("balance")) {

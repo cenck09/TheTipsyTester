@@ -21,6 +21,7 @@ public class newUserActivity extends AppCompatActivity {
     Long rowid;
     TipsyDB tipsy;
     SQLiteDatabase db;
+    boolean calibration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +79,7 @@ public class newUserActivity extends AppCompatActivity {
 
     public void btnAddClick(View view) {
         ContentResolver cr = getContentResolver();
-        String name, gender = "male", weight;
+        String name, gender, weight;
 
         RadioButton male = (RadioButton)findViewById(R.id.maleRadioButton);
 
@@ -88,13 +89,11 @@ public class newUserActivity extends AppCompatActivity {
         values.put("name", name);
 
         if(male.isChecked()){
-            values.put("gender", "male");
             gender = "male";
-            //System.out.println("MALE");
+            values.put("gender", gender);
         }else{
-            values.put("gender", "female");
-            //gender = "female";
-            //System.out.println("FEMALE");
+            gender = "female";
+            values.put("gender", gender);
         }
         weight = ((EditText) findViewById(R.id.WeightEditText)).getText().toString();
         values.put("weight", weight);
@@ -102,28 +101,10 @@ public class newUserActivity extends AppCompatActivity {
         try {
             if (rowid == null) {
                 db.insert("users", null, values);
-                //retrieve newly created user
-                String selectQuery = "SELECT  * FROM " + "users" + " WHERE "
-                        + "name" + " = '" + name + "' AND gender = '" + gender + "' AND weight = '" + weight + "'";
-                Cursor c = db.rawQuery(selectQuery, null);
-
-                if (c != null && c.moveToFirst()){
-                    //For Balance Test
-                    values = new ContentValues();
-                    values.put("_id", c.getColumnIndex("_id"));
-                    values.put("test", "balance");
-                    db.insert("tests", null, values);
-                    db.insert("scores", null, values);
-
-                    //Do same for additional tests
-
-
-
-                }
-
             } else {
                 //db.update();
             }
+
             finish();
         } catch (SQLException e) {
             Toast.makeText(this, "Error updating database.", Toast.LENGTH_LONG).show();
