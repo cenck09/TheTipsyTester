@@ -224,8 +224,16 @@ public class scorereportActivity extends AppCompatActivity {
             tvTest.setText(prevTest.toUpperCase());
             tvUser.setText(userName);
             tvScore.setText(Integer.toString(score));
-            tvBest.setText(Integer.toString(best));
-            tvWorst.setText(Integer.toString(worst));
+            if(best == 0){
+                tvBest.setText(Integer.toString(score));
+            }else{
+                tvBest.setText(Integer.toString(best));
+            }
+            if(worst == 0){
+                tvWorst.setText(Integer.toString(score));
+            }else{
+                tvWorst.setText(Integer.toString(worst));
+            }
 
             if(calibration){
                 if(bac > 0) {
@@ -268,53 +276,53 @@ public class scorereportActivity extends AppCompatActivity {
     }
 
     public void nextAction(View view) {
+        if (rowid != -1) {
 
-        if (best == 0 && worst == 0) {
-            ContentValues values = new ContentValues();
-            values.put("_id", rowid);
-            values.put("test", prevTest);
-            values.put("best", score);
-            values.put("worst", score);
-            db.insert("scores", null, values);
+            if (best == 0 && worst == 0) {
+                ContentValues values = new ContentValues();
+                values.put("_id", rowid);
+                values.put("test", prevTest);
+                values.put("best", score);
+                values.put("worst", score);
+                db.insert("scores", null, values);
 
-            values = new ContentValues();
-            values.put("_id", rowid);
-            values.put("test", prevTest);
-            values.put("ut04", score);
-            values.put("ut08", 105);
-            values.put("ut12", 110);
-            values.put("ut16", 115);
-            values.put("ut20", 120);
-            values.put("ab20", 125);
-            db.insert("tests", null, values);
+                values = new ContentValues();
+                values.put("_id", rowid);
+                values.put("test", prevTest);
+                values.put("ut04", score);
+                values.put("ut08", 105);
+                values.put("ut12", 110);
+                values.put("ut16", 115);
+                values.put("ut20", 120);
+                values.put("ab20", 125);
+                db.insert("tests", null, values);
 
-        } else {
+            } else {
 
-            if (prevTest.equals("balance")) {
-                if (score < best) {
-                    //new best score
-                    ContentValues values = new ContentValues();
-                    values.put("best", score);
-                    db.update("scores", values, "_id = ? AND test = ?", new String[]{String.valueOf("" + rowid), String.valueOf("" + prevTest)});
-                }
-                if (score > worst) {
-                    //new worst score
-                    ContentValues values = new ContentValues();
-                    values.put("worst", score);
-                    db.update("scores", values, "_id = ? AND test = ?", new String[]{String.valueOf("" + rowid), String.valueOf("" + prevTest)});
+                if (prevTest.equals("balance")) {
+                    if (score < best) {
+                        //new best score
+                        ContentValues values = new ContentValues();
+                        values.put("best", score);
+                        db.update("scores", values, "_id = ? AND test = ?", new String[]{String.valueOf("" + rowid), String.valueOf("" + prevTest)});
+                    }
+                    if (score > worst) {
+                        //new worst score
+                        ContentValues values = new ContentValues();
+                        values.put("worst", score);
+                        db.update("scores", values, "_id = ? AND test = ?", new String[]{String.valueOf("" + rowid), String.valueOf("" + prevTest)});
+                    }
                 }
             }
         }
 
-        sharedPref.edit().putBoolean(prevTest, true).commit();
-
         //check to see if nextTests is empty, if so, go to final report screen
         //else go to next test
-        if(nextTests != null && nextTests.length > 0){
+        if (nextTests != null && nextTests.length > 0) {
             //go to next test
-        }else{
+        } else {
 
-            if(mInterstitialAd.isLoaded()){
+            if (mInterstitialAd.isLoaded()) {
                 mInterstitialAd.show();
             }
         }
@@ -331,9 +339,8 @@ public class scorereportActivity extends AppCompatActivity {
     }
 
 
-
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 

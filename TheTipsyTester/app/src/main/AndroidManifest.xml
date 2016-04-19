@@ -28,7 +28,7 @@
         </activity>
         <activity android:name=".baselineActivity" android:screenOrientation="portrait"/>
         <activity android:name=".bacCalculatorActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".scoresActivity" />
+        <activity android:name=".scoresActivity" android:screenOrientation="portrait"/>
         <activity android:name=".settingsActivity" />
         <activity android:name=".newUserActivity"/>
         <activity android:name=".singleTestSelectActivity"/>
