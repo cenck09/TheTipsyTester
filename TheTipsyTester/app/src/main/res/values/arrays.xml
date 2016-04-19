@@ -15,16 +15,20 @@
 
     <string-array
         name="background_color_entries">
+        <item>Blue</item>
         <item>Grey</item>
+        <item>Pink</item>
+        <item>Red</item>
         <item>Teal</item>
-        <item>Purple</item>
     </string-array>
 
     <string-array
         name="background_color_values">
+        <item>40cdeb</item>
         <item>aaaaaa</item>
-        <item>66cdaa</item>
         <item>ff5ab2</item>
+        <item>ff0000</item>
+        <item>66cdaa</item>
     </string-array>
 
 
