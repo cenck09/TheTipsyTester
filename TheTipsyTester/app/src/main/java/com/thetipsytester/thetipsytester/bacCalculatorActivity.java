@@ -19,6 +19,7 @@ public class bacCalculatorActivity extends AppCompatActivity {
     String name = "John",gender = "male";
     int bodyWeight = 150;
 
+
     boolean calibration = false;
 
     @Override

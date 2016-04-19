@@ -63,6 +63,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="User"
+        android:textSize="20dp"
         android:id="@+id/sortUserTag"
         android:layout_below="@+id/sortBest"
         android:layout_alignParentStart="true" />
@@ -72,6 +73,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Test"
+        android:textSize="20dp"
         android:id="@+id/sortTestTag"
         android:layout_alignTop="@+id/sortUserTag"
         android:layout_toStartOf="@+id/sortByTag" />
@@ -81,6 +83,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Best"
+        android:textSize="20dp"
         android:id="@+id/sortBestTag"
         android:layout_below="@+id/sortWorst"
         android:layout_alignStart="@+id/sortWorst" />
@@ -90,6 +93,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Worst"
+        android:textSize="20dp"
         android:id="@+id/sortWorstTag"
         android:layout_alignBottom="@+id/sortBestTag"
         android:layout_alignParentEnd="true" />

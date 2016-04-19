@@ -14,7 +14,7 @@ public class scoresActivity extends AppCompatActivity {
 
     TipsyDB tipsy;
     SQLiteDatabase theDB;
-    String name;
+    String name, test, best, worst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,21 +42,34 @@ public class scoresActivity extends AppCompatActivity {
 
         while (c.moveToNext()) {
             name = c.getString(c.getColumnIndexOrThrow("name"));
+            test = c.getString(c.getColumnIndexOrThrow("test"));
+            best = c.getString(c.getColumnIndexOrThrow("best"));
+            worst = c.getString(c.getColumnIndexOrThrow("worst"));
 
             sb.append(name);
             if(name.length() <= 5) {
-                sb.append("\t\t\t\t");
+                sb.append("\t\t\t\t\t");
             }else if(name.length()>5 && name.length()<10){
-                sb.append("\t\t\t");
+                sb.append("\t\t\t\t");
             }else if(name.length()>10 && name.length()<15){
-                sb.append("\t\t");
+                sb.append("\t\t\t");
             }
-            sb.append(c.getString(c.getColumnIndexOrThrow("test")));
-            sb.append("\t\t\t\t\t\t");
-            sb.append(c.getString(c.getColumnIndexOrThrow("best")));
-            sb.append("\t\t\t\t\t\t");
-            sb.append(c.getString(c.getColumnIndexOrThrow("worst")));
-            sb.append("\n");
+            sb.append(test);
+            sb.append("\t\t\t\t\t");
+
+
+            sb.append(best);
+            if(best.length() <= 2) {
+                sb.append("\t\t\t\t\t\t\t");
+            }else if(best.length()>2 && best.length()<6){
+                sb.append("\t\t\t\t\t\t");
+            }else if(best.length()>6 && best.length()<9){
+                sb.append("\t\t\t\t\t");
+            }
+
+
+            sb.append(worst);
+            sb.append("\n\n\n");
             //sb.append("---------------------------------------------------------------\n");
         }
         c.close();
@@ -70,21 +83,34 @@ public class scoresActivity extends AppCompatActivity {
 
         while (c.moveToNext()) {
             name = c.getString(c.getColumnIndexOrThrow("name"));
+            test = c.getString(c.getColumnIndexOrThrow("test"));
+            best = c.getString(c.getColumnIndexOrThrow("best"));
+            worst = c.getString(c.getColumnIndexOrThrow("worst"));
 
             sb.append(name);
             if(name.length() <= 5) {
-                sb.append("\t\t\t\t");
+                sb.append("\t\t\t\t\t");
             }else if(name.length()>5 && name.length()<10){
-                sb.append("\t\t\t");
+                sb.append("\t\t\t\t");
             }else if(name.length()>10 && name.length()<15){
-                sb.append("\t\t");
+                sb.append("\t\t\t");
             }
-            sb.append(c.getString(c.getColumnIndexOrThrow("test")));
-            sb.append("\t\t\t\t\t\t");
-            sb.append(c.getString(c.getColumnIndexOrThrow("best")));
-            sb.append("\t\t\t\t\t\t");
-            sb.append(c.getString(c.getColumnIndexOrThrow("worst")));
-            sb.append("\n");
+            sb.append(test);
+            sb.append("\t\t\t\t\t");
+
+
+            sb.append(best);
+            if(best.length() <= 2) {
+                sb.append("\t\t\t\t\t\t\t");
+            }else if(best.length()>2 && best.length()<6){
+                sb.append("\t\t\t\t\t\t");
+            }else if(best.length()>6 && best.length()<9){
+                sb.append("\t\t\t\t\t");
+            }
+
+
+            sb.append(worst);
+            sb.append("\n\n\n");
             //sb.append("---------------------------------------------------------------\n");
         }
         c.close();
@@ -97,21 +123,34 @@ public class scoresActivity extends AppCompatActivity {
 
         while (c.moveToNext()) {
             name = c.getString(c.getColumnIndexOrThrow("name"));
+            test = c.getString(c.getColumnIndexOrThrow("test"));
+            best = c.getString(c.getColumnIndexOrThrow("best"));
+            worst = c.getString(c.getColumnIndexOrThrow("worst"));
 
             sb.append(name);
             if(name.length() <= 5) {
-                sb.append("\t\t\t\t");
+                sb.append("\t\t\t\t\t");
             }else if(name.length()>5 && name.length()<10){
-                sb.append("\t\t\t");
+                sb.append("\t\t\t\t");
             }else if(name.length()>10 && name.length()<15){
-                sb.append("\t\t");
+                sb.append("\t\t\t");
             }
-            sb.append(c.getString(c.getColumnIndexOrThrow("test")));
-            sb.append("\t\t\t\t\t\t");
-            sb.append(c.getString(c.getColumnIndexOrThrow("best")));
-            sb.append("\t\t\t\t\t\t");
-            sb.append(c.getString(c.getColumnIndexOrThrow("worst")));
-            sb.append("\n");
+            sb.append(test);
+            sb.append("\t\t\t\t\t");
+
+
+            sb.append(best);
+            if(best.length() <= 2) {
+                sb.append("\t\t\t\t\t\t\t");
+            }else if(best.length()>2 && best.length()<6){
+                sb.append("\t\t\t\t\t\t");
+            }else if(best.length()>6 && best.length()<9){
+                sb.append("\t\t\t\t\t");
+            }
+
+
+            sb.append(worst);
+            sb.append("\n\n\n");
             //sb.append("---------------------------------------------------------------\n");
         }
         c.close();
@@ -124,21 +163,34 @@ public class scoresActivity extends AppCompatActivity {
 
         while (c.moveToNext()) {
             name = c.getString(c.getColumnIndexOrThrow("name"));
+            test = c.getString(c.getColumnIndexOrThrow("test"));
+            best = c.getString(c.getColumnIndexOrThrow("best"));
+            worst = c.getString(c.getColumnIndexOrThrow("worst"));
 
             sb.append(name);
             if(name.length() <= 5) {
-                sb.append("\t\t\t\t");
+                sb.append("\t\t\t\t\t");
             }else if(name.length()>5 && name.length()<10){
-                sb.append("\t\t\t");
+                sb.append("\t\t\t\t");
             }else if(name.length()>10 && name.length()<15){
-                sb.append("\t\t");
+                sb.append("\t\t\t");
             }
-            sb.append(c.getString(c.getColumnIndexOrThrow("test")));
-            sb.append("\t\t\t\t\t\t");
-            sb.append(c.getString(c.getColumnIndexOrThrow("best")));
-            sb.append("\t\t\t\t\t\t");
-            sb.append(c.getString(c.getColumnIndexOrThrow("worst")));
-            sb.append("\n");
+            sb.append(test);
+            sb.append("\t\t\t\t\t");
+
+
+            sb.append(best);
+            if(best.length() <= 2) {
+                sb.append("\t\t\t\t\t\t\t");
+            }else if(best.length()>2 && best.length()<6){
+                sb.append("\t\t\t\t\t\t");
+            }else if(best.length()>6 && best.length()<9){
+                sb.append("\t\t\t\t\t");
+            }
+
+
+            sb.append(worst);
+            sb.append("\n\n\n");
             //sb.append("---------------------------------------------------------------\n");
         }
         c.close();

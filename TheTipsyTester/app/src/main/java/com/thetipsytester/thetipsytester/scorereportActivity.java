@@ -134,8 +134,9 @@ public class scorereportActivity extends AppCompatActivity {
                     System.out.println("UT20: " + ut20Percent);
                     int ab20Percent = c.getInt(c.getColumnIndex("ab20"));
                     System.out.println("AB20: " + ab20Percent);
-
-                    if(performancePercent< ut08Percent-5){
+                    if(ut04Percent == 0){
+                        bacText = "0.00%";
+                    }else if(performancePercent< ut08Percent-5){
                         bacText = "0.00-0.04%";
                     }else if (performancePercent < ut08Percent) {
                         bacText = "0.04-0.08%";
@@ -289,7 +290,7 @@ public class scorereportActivity extends AppCompatActivity {
                 values = new ContentValues();
                 values.put("_id", rowid);
                 values.put("test", prevTest);
-                values.put("ut04", score);
+
                 values.put("ut08", 105);
                 values.put("ut12", 110);
                 values.put("ut16", 115);

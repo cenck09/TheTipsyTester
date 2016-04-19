@@ -10,6 +10,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -42,7 +43,7 @@ public class balanceTest extends Activity implements SensorEventListener{
 
     String[] nextTests;
 
-
+    ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +107,7 @@ public class balanceTest extends Activity implements SensorEventListener{
             totalAcceleration = 0;
             finalScore = (int)lastTotal;
 
+            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP,150);
 
             Intent intent = new Intent(balanceTest.this, scorereportActivity.class);
             intent.putExtra("prevTest", "balance");
@@ -134,10 +136,12 @@ public class balanceTest extends Activity implements SensorEventListener{
             countDownTimer.start();
             measuring = true;
             waiting = false;
+            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP,150);
         }
         @Override
         public void onTick(long millisUntilFinished){
-            timerText.setText("Starts in: " + Math.round(millisUntilFinished/ (long) 1001));
+            timerText.setText("Starts in: " + Math.round(millisUntilFinished / (long) 1001));
+            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP,150);
 
         }
     }
