@@ -18,8 +18,6 @@ public class bacCalculatorActivity extends AppCompatActivity {
     Long rowid;
     String name = "John",gender = "male";
     int bodyWeight = 150;
-
-
     boolean calibration = false;
 
     @Override
@@ -81,6 +79,7 @@ public class bacCalculatorActivity extends AppCompatActivity {
     public void getUser(View view){
         Intent intent = new Intent(this, userSelectActivity.class);
         intent.putExtra("activity", "BAC");
+        intent.putExtra("calibration", calibration);
         startActivity(intent);
         finish();
     }
