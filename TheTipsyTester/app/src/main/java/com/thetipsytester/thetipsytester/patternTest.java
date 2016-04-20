@@ -10,7 +10,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import java.util.Random;
 import java.util.Timer;
@@ -88,7 +87,6 @@ public class patternTest extends AppCompatActivity{
             randPattern[9]=0;
 
             nanoSec = 1000;
-//make nested for loops so they play multiple times with a different number of buttons clicked
             if (runCount == 0) {
                 numBlocks = 2;
             }
@@ -355,8 +353,8 @@ public class patternTest extends AppCompatActivity{
                         startGame();
                     }
                 } else {
-    view.setBackgroundColor(Color.RED);
-    timer.schedule(new MyTask(button, -1), nanoSec);
+                    view.setBackgroundColor(Color.RED);
+                    timer.schedule(new MyTask(button, -1), nanoSec);
                     startGame();
                 }
             }break;
