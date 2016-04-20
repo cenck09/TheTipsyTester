@@ -33,7 +33,13 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="25dp"
                 android:onClick="startBalance"/>
-
+            <Button
+                android:id="@+id/patternSingleTestButton"
+                android:text="Pattern Match"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="25dp"
+                android:onClick="startPattern"/>
 
 
         </LinearLayout>

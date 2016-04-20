@@ -36,8 +36,14 @@ public class singleTestSelectActivity extends AppCompatActivity{
     }
 
     public void startBalance(View view){
-        //When the Baseline button is clicked from the main menu
         Intent intent = new Intent(this, balanceTest.class);
+        intent.putExtra("calibration", calibration);
+        intent.putExtra("BAC", bac);
+        startActivity(intent);
+    }
+
+    public void startPattern (View view){
+        Intent intent = new Intent(this, patternTest.class);
         intent.putExtra("calibration", calibration);
         intent.putExtra("BAC", bac);
         startActivity(intent);

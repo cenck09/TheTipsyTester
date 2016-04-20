@@ -274,6 +274,12 @@ public class scorereportActivity extends AppCompatActivity {
             intent.putExtra("calibration", calibration);
             startActivity(intent);
         }
+        if(prevTest.equals("pattern")) {
+            Intent intent = new Intent(scorereportActivity.this, patternTest.class);
+            intent.putExtra("nextTests", nextTests);
+            intent.putExtra("calibration", calibration);
+            startActivity(intent);
+        }
     }
 
     public void nextAction(View view) {
