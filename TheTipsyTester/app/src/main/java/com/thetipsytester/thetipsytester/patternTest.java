@@ -1,5 +1,5 @@
 package com.thetipsytester.thetipsytester;
-
+import android.os.CountDownTimer;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -51,7 +51,6 @@ public class patternTest extends AppCompatActivity{
                         startGame();
                     }
                 });
-
         alertDialogBuilder.show();
     }
 
@@ -61,20 +60,19 @@ public class patternTest extends AppCompatActivity{
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         View view = this.getWindow().getDecorView();
-
         String color = sharedPref.getString("color", "232323");
-
         view.setBackgroundColor(Color.parseColor("#" + color));
     }
 
     public void startGame() {
+
         if(runCount < 4) {
             int temp;
             final Random rand = new Random();
             final Timer timer = new Timer();
 
             int x = 0;
-            y=0;
+            y = 0;
             randPattern[0]=0;
             randPattern[1]=0;
             randPattern[2]=0;
@@ -86,18 +84,33 @@ public class patternTest extends AppCompatActivity{
             randPattern[8]=0;
             randPattern[9]=0;
 
+            int start=0;
+            int end = 1000;
             nanoSec = 1000;
+
             if (runCount == 0) {
                 numBlocks = 2;
+                start = 2000;
             }
             if (runCount == 1 || runCount == 2) {
                 numBlocks = 4;
+                start = 4500;
             }
             if (runCount == 3) {
                 numBlocks = 6;
+                start = 6500;
             }
+            new CountDownTimer(start, end){
+                public void onTick(long time){
+                }
+                public void onFinish() {
+                    enableDisableButtons(true);
+                }
+            }.start();
+
             for(int i = 0; i<numBlocks; ++i) {
                 temp = rand.nextInt(9) + 1;
+                enableDisableButtons(false);
 
                 switch (temp) {
                     case 1: {
@@ -162,7 +175,6 @@ public class patternTest extends AppCompatActivity{
             runCount++;
         }
         else {
-            //score = (int) Math.round((score / 160) * 100);
             Intent intent = new Intent(this, scorereportActivity.class);
             intent.putExtra("prevTest", "pattern");
             intent.putExtra("nextTests", nextTests);
@@ -173,7 +185,6 @@ public class patternTest extends AppCompatActivity{
         }
     }
 
-
     class MyTask extends TimerTask {
         private Button buttonId;
         private int buttonNum;
@@ -183,11 +194,9 @@ public class patternTest extends AppCompatActivity{
             this.buttonId = buttonId;
             buttonNum = temp;
         }
-
         @Override
         public void run() {
             runOnUiThread(new Runnable() {
-
                 @Override
                 public void run() {
                     if(buttonNum == -1){
@@ -359,5 +368,27 @@ public class patternTest extends AppCompatActivity{
                 }
             }break;
         }
+    }
+
+    public void enableDisableButtons(Boolean state) {
+        Button button1 = (Button) findViewById(R.id.button1);
+        Button button2 = (Button) findViewById(R.id.button2);
+        Button button3 = (Button) findViewById(R.id.button3);
+        Button button4 = (Button) findViewById(R.id.button4);
+        Button button5 = (Button) findViewById(R.id.button5);
+        Button button6 = (Button) findViewById(R.id.button6);
+        Button button7 = (Button) findViewById(R.id.button7);
+        Button button8 = (Button) findViewById(R.id.button8);
+        Button button9 = (Button) findViewById(R.id.button9);
+
+        button1.setEnabled(state);
+        button2.setEnabled(state);
+        button3.setEnabled(state);
+        button4.setEnabled(state);
+        button5.setEnabled(state);
+        button6.setEnabled(state);
+        button7.setEnabled(state);
+        button8.setEnabled(state);
+        button9.setEnabled(state);
     }
 }
