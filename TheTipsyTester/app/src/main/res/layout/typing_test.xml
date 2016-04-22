@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <TextView
+        android:id="@+id/sentence"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="57dp"
+        android:layout_below="@+id/time"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/userSentence"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:hint="Enter sentence here"
+        android:layout_below="@id/sentence"
+        android:layout_marginTop="20dp"
+        android:inputType="textNoSuggestions"/>
+
+    <Button
+        android:id="@+id/done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Done"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/userSentence"
+        android:layout_marginTop="20dp"
+        android:onClick="sentenceComparison"/>
+
+    <Chronometer
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textViewTimer" />
+
+    <TextView
+        android:id="@id/textViewTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time: "
+        android:layout_alignTop="@id/time"
+        android:layout_alignStart="@id/done"
+        android:textColor="#000000"/>
+</RelativeLayout>

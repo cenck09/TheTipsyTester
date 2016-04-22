@@ -33,7 +33,8 @@
         <activity android:name=".newUserActivity"/>
         <activity android:name=".singleTestSelectActivity"/>
         <activity android:name=".balanceTest" android:screenOrientation="portrait"/>
-        <activity android:name=".patternTest"/>
+        <activity android:name=".patternTest" android:screenOrientation="portrait"/>
+        <activity android:name=".typingTest" android:screenOrientation="portrait"/>
         <activity android:name=".scorereportActivity" android:screenOrientation="portrait"/>
         <activity android:name=".userSelectActivity">
         </activity>

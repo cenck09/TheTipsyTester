@@ -40,7 +40,13 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="25dp"
                 android:onClick="startPattern"/>
-
+            <Button
+                android:id="@+id/typingSingleTestButton"
+                android:text="Typing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="25dp"
+                android:onClick="startTyping"/>
 
         </LinearLayout>
 

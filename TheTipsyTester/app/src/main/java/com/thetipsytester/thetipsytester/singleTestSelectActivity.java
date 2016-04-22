@@ -49,4 +49,11 @@ public class singleTestSelectActivity extends AppCompatActivity{
         startActivity(intent);
     }
 
+    public void startTyping(View view) {
+        Intent intent = new Intent(this, typingTest.class);
+        intent.putExtra("calibration", calibration);
+        intent.putExtra("BAC", bac);
+        startActivity(intent);
+    }
+
 }

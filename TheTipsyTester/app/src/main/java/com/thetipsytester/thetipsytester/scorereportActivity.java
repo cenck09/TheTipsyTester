@@ -280,6 +280,12 @@ public class scorereportActivity extends AppCompatActivity {
             intent.putExtra("calibration", calibration);
             startActivity(intent);
         }
+        if(prevTest.equals("typing")) {
+            Intent intent = new Intent(scorereportActivity.this, typingTest.class);
+            intent.putExtra("nextTests", nextTests);
+            intent.putExtra("calibration", calibration);
+            startActivity(intent);
+        }
     }
 
     public void nextAction(View view) {
