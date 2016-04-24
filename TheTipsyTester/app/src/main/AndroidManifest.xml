@@ -26,18 +26,32 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.thetipsytester.thetipsytester.MainActivity" />
         </activity>
-        <activity android:name=".baselineActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".bacCalculatorActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".scoresActivity" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".baselineActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".bacCalculatorActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".scoresActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".settingsActivity" />
-        <activity android:name=".newUserActivity"/>
-        <activity android:name=".singleTestSelectActivity"/>
-        <activity android:name=".balanceTest" android:screenOrientation="portrait"/>
-        <activity android:name=".patternTest" android:screenOrientation="portrait"/>
-        <activity android:name=".typingTest" android:screenOrientation="portrait"/>
-        <activity android:name=".scorereportActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".userSelectActivity">
-        </activity>
+        <activity android:name=".newUserActivity" />
+        <activity android:name=".singleTestSelectActivity" />
+        <activity
+            android:name=".balanceTest"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".patternTest"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".typingTest"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".scorereportActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".userSelectActivity"></activity>
+        <activity android:name=".schwack_a_moleaa"></activity>
     </application>
 
 </manifest>
