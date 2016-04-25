@@ -25,10 +25,24 @@ public class MoleaView extends View {
 
 
     public void animateMoleaPop(){
+        this.setRedShape();
         animate = false;
 
     }
 
+    public void spawn(){
+        this.animate()
+                .alpha(1.0f)
+                .scaleX(1.0f)
+                .scaleY(1.0f)
+                .setDuration(200)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        startAnimation();
+                    }
+                });
+    }
     public void pop(){
         this.animate()
                 .alpha(0.0f)

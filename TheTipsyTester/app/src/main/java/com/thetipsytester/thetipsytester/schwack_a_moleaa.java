@@ -169,9 +169,11 @@ public class schwack_a_moleaa extends AppCompatActivity {
         logError("Got safe zone for Y = " + y);
 
         setUsedLocation(x, y);
+        molea.setAlpha(0.0f);
+        molea.setScaleX(0.0f);
+        molea.setScaleY(0.0f);
         ((RelativeLayout) findViewById(R.id.molea_arena)).addView(molea, molea.getMoleaPlacement(x, y));
-        molea.startAnimation();
-
+        molea.spawn();
     }
 
     public MoleaView setOnMoleaSmashed(final MoleaView molea){
@@ -179,7 +181,6 @@ public class schwack_a_moleaa extends AppCompatActivity {
             public void onClick(View v) {
                 addRecycledMoleas(molea);
                 molea.animateMoleaPop();
-                molea.setRedShape();
                 incrementScore();
                 ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) molea.getLayoutParams();
                 generateMolea();
