@@ -1,90 +1,390 @@
 package com.thetipsytester.thetipsytester;
 
-import android.content.SharedPreferences;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.View;
-import android.widget.GridLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.Random;
 
 
 public class schwack_a_moleaa extends AppCompatActivity {
 
-    public static final int MOLEA_GAME_TIMER = 20; // The total number of moles given to the player
-    public static final int MOLEA_LIFE_TIME = 2;   // The time that the mole stays around
-    public static final int MOLEA_MAX_COUNT = 5;   // The max number of moles in the area
-    public static final int MOLEA_MIN_COUNT = 1;   // The min number of moles in the area
+    public static final long MOLEA_GAME_TIMER = 20000; // The game time in milisec's
+
+    static final String STATE_GAME_TIME = "schwachGameTime";
+    static final String STATE_GAME_SCORE = "schwackGameScore";
+
+    static final String STATE_GAME_SAFE_X_ARRAY = "schwackGameSafeX";
+    static final String STATE_GAME_SAFE_Y_ARRAY = "schwackGameSafeY";
 
     public int score;
-    public boolean moleManagerState;
+    public long gameClock;
+    public CountDownTimer gameCounter;
+
+    public boolean safeX[];
+    public boolean safeY[];
+
+    boolean animate;
+    boolean animating;
+
+    public int borderBuffer = 15;
+
+    Random r = new Random();
+    ArrayList<MoleaView> oldMoleas = new ArrayList<MoleaView>();
+    ArrayList<MoleaView> activeMoleas = new ArrayList<MoleaView>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            score = 0;
+            gameClock = MOLEA_GAME_TIMER;
+            this.testAlert();
+        }else{
+            score = savedInstanceState.getInt(STATE_GAME_SCORE);
+            gameClock = savedInstanceState.getLong(STATE_GAME_TIME);
+            safeX = savedInstanceState.getBooleanArray(STATE_GAME_SAFE_X_ARRAY);
+            safeY = savedInstanceState.getBooleanArray(STATE_GAME_SAFE_Y_ARRAY);
+        }
+
+
         setContentView(R.layout.activity_schwack_a_moleaa);
+        this.getWindow().getDecorView().setBackgroundColor(Color.parseColor("#" + PreferenceManager.getDefaultSharedPreferences(this).getString("color", "232323")));
+
+    }
+
+    public int getSafeXLocation(){
+        int val = r.nextInt((safeX.length - borderBuffer) + 3);
+        while(!isSafeLocation(safeX ,val)){
+            val = r.nextInt((safeX.length - borderBuffer) + 3);
+        }
+        return val;
+    }
+
+    public boolean isSafeLocation(boolean arr[], int loc){
+        for(int i = loc; i<(loc+3); i++){
+            if(arr[i]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int getSafeYLocation(){
+        int val = r.nextInt((safeY.length - borderBuffer) + 4);
+        while(!isSafeLocation(safeY ,val)){
+            val = r.nextInt((safeY.length - borderBuffer) + 4);
+        }
+        return val;
+    }
+
+    public void setUsedLocation(int x, int y){
+        for(int i=(x); i<(x+3); i++){
+            safeX[i] = true;
+        }
+        for(int i=(y); i<(y+3); i++){
+            safeY[i] = true;
+        }
+    }
+
+    public void removeUsedLocation(int x, int y){
+        for(int i=(x); i<(x+3); i++){
+            safeX[i] = false;
+        }
+        for(int i=(y); i<(y+3); i++){
+            safeY[i] = false;
+        }
+    }
+
+    public void addRecycledMoleas(MoleaView view){
+        activeMoleas.remove(view);
+      //  oldMoleas.add(view);
+    }
+
+    public MoleaView getRecycledMoleas() {
+        if (true) {
+    //        if (oldMoleas.size() == 0) {
+            logError("Creating Molea");
+            MoleaView m = setOnMoleaSmashed(new MoleaView(this));
+            activeMoleas.add(m);
+            return m;
+        }else{
+            logError("Recycling Molea");
+            MoleaView m =  oldMoleas.remove(0);
+            activeMoleas.add(m);
+            return m;
+        }
+    }
+
+    public void moleaManager(){
+
+        while(activeMoleas.size()<3){
+            generateMolea();
+        }
 
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        this.getWindow().getDecorView().setBackgroundColor(Color.parseColor("#" + PreferenceManager.getDefaultSharedPreferences(this).getString("color", "232323")));
-
-        startMoleaManager((RelativeLayout) findViewById(R.id.molea_arena));
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        logError("Changed configs!");
     }
 
+    @Override
+    public void onPause(){
 
-    public void startMoleaManager(RelativeLayout battleField){
+        while (activeMoleas.size()>0) {
+            MoleaView molea = activeMoleas.remove(0);
+            ((ViewGroup)molea.getParent()).removeView(molea);
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) molea.getLayoutParams();
+            removeUsedLocation(molea.getSlotFromMargin(lp.leftMargin), molea.getSlotFromMargin(lp.topMargin));
+            oldMoleas.add(molea);
+        }
 
-        this.generateMolea(battleField);
+        super.onPause();
     }
+    public void generateMolea(){
 
-    public void generateMolea(RelativeLayout battleField){
+        final MoleaView molea = getRecycledMoleas();
+        logError("Got Molea");
+        int x = getSafeXLocation();
+        logError("Got safe zone for X = " + x);
 
-        MoleaView molea = new MoleaView(this);
+        int y  = getSafeYLocation();
+        logError("Got safe zone for Y = " + y);
 
-        molea = this.setMoleaPlacement(molea);
-        molea = this.setOnMoleaSmashed(molea);
-        RelativeLayout.LayoutParams lp = molea.getMoleaPlacement(10, 10);
-        battleField.addView(molea, lp);
-    }
+        setUsedLocation(x, y);
+        ((RelativeLayout) findViewById(R.id.molea_arena)).addView(molea, molea.getMoleaPlacement(x, y));
+        molea.startAnimation();
 
-    public MoleaView setMoleaPlacement(MoleaView molea){
-       /* molea.setLayoutParams(new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        */
-
-        molea.offsetLeftAndRight(400);
-        molea.offsetTopAndBottom(600);
-
-
-        return molea;
     }
 
     public MoleaView setOnMoleaSmashed(final MoleaView molea){
         molea.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                animateMoleaPop(molea);
+                addRecycledMoleas(molea);
+                molea.animateMoleaPop();
+                molea.setRedShape();
                 incrementScore();
+                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) molea.getLayoutParams();
+                generateMolea();
+                removeUsedLocation(molea.getSlotFromMargin(lp.leftMargin), molea.getSlotFromMargin(lp.topMargin));
             }
         });
         return molea;
     }
 
-    /*
-    * Methods for on click events, increment score and pop the molea!
-    */
-    public void animateMoleaPop(MoleaView molea){
-        ((ViewGroup)molea.getParent()).removeView(molea);
-    }
 
     public void incrementScore(){
         this.score++;
+        setScoreBoard();
+    }
+
+    private void setScoreBoard(){
+        ((TextView)findViewById(R.id.scoreBoard)).setText("" + score + "");
+    }
+
+    private void setGameClockBoard(){
+        if( gameClock < 5000 ){
+            animate = true;
+            ((TextView)findViewById(R.id.timerBoard)).setTextColor(Color.RED);
+            if(!animating) sizeIn(((TextView)findViewById(R.id.timerBoard)));
+        }
+        ((TextView)findViewById(R.id.timerBoard)).setText("" + ((double) gameClock / 1000.0));
+    }
+
+    public void sizeIn(final TextView view){
+        animating = true;
+        view.animate()
+                .scaleX((float) 1.15)
+                .scaleY((float) 1.15)
+                .setDuration(330)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        if (animate) sizeOut(view);
+                        else animating = false;
+                    }
+                });
+    }
+    public void sizeOut(final TextView view){
+        animating = true;
+        view.animate()
+                .scaleX((float) 1)
+                .scaleY((float) 1)
+                .setDuration(330)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        if (animate) sizeIn(view);
+                        else animating = false;                         }
+                });
+    }
+
+    private void addCountDownViewForValue(final int value){
+        RelativeLayout arena = (RelativeLayout)findViewById(R.id.masterView);
+        final TextView counterView = new TextView(this);
+        counterView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+        counterView.setTextSize(50);
+        int size = 200;
+        switch (value){
+            case 1:
+                counterView.setText("GO!!!");
+                break;
+            case 5:
+                counterView.setText("Ready?");
+                break;
+            default:
+                counterView.setText( "" + (value-1));
+        }
+
+        counterView.setLayoutParams(new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+
+        arena.addView(counterView);
+
+        counterView.animate()
+                .alpha(0f)
+                .setDuration(950)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+                        if (value == 1) {
+                           startGame();
+                        }
+                        ((ViewGroup) counterView.getParent()).removeView(counterView);
+                    }
+                });
+    }
+
+    private void startGameCountDown(long time){
+        logError("starting Game timer");
+
+        MoleaView molea = new MoleaView(this);
+        RelativeLayout arena = (RelativeLayout) findViewById(R.id.molea_arena);
+
+        safeX = new boolean[molea.getBattleFieldSlots(arena.getWidth())];
+        safeY = new boolean[molea.getBattleFieldSlots(arena.getHeight())];
+
+        moleaManager();
+
+        gameCounter = new CountDownTimer(time, 10) {
+            public void onTick(long millisUntilFinished) {
+                gameClock = millisUntilFinished;
+                setGameClockBoard();
+
+            }
+            public void onFinish() {
+                endGame();
+            }
+        }.start();
+
+    }
+
+    private void performReadyGameCountDown(){
+        logError("starting start game countdown timer");
+        gameCounter = new CountDownTimer(5000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                addCountDownViewForValue(Math.round(millisUntilFinished / 1000));
+            }
+
+            public void onFinish() {
+
+            }
+        }.start();
+    }
+
+    private void startGame(){
+        startGameCountDown(gameClock);
+        setScoreBoard();
+      //  startMoleaManager();
+    }
+
+    private void endGame(){
+        logError("END GAMEEEEE!!!!");
+
+        Intent currentIntent = getIntent();
+        Intent intent = new Intent(this, scorereportActivity.class);
+
+        intent.putExtra("prevTest", "pattern"); // this needs to be updated
+        intent.putExtra("nextTests",currentIntent.getStringArrayExtra("nextTests"));
+        intent.putExtra("score", score);
+        intent.putExtra("calibration", currentIntent.getBooleanExtra("calibration", false));
+        intent.putExtra("BAC", currentIntent.getDoubleExtra("BAC", 0));
+
+        startActivity(intent);
+    }
+
+    private void testAlert(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Schwack-A-Molea Test").setMessage("Schwack as many Moleas as you can before the timer goes off!. \n\nGood Luck!!");
+        alertDialogBuilder.setCancelable(false).setPositiveButton("Start", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                performReadyGameCountDown();
+            }
+        }).show();
+    }
+
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(gameClock != MOLEA_GAME_TIMER) performReadyGameCountDown();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        gameCounter.cancel();
+        animate = false;
+        savedInstanceState.putInt(STATE_GAME_SCORE, score);
+        savedInstanceState.putLong(STATE_GAME_TIME, gameClock);
+        savedInstanceState.putBooleanArray(STATE_GAME_SAFE_X_ARRAY, safeX);
+        savedInstanceState.putBooleanArray(STATE_GAME_SAFE_Y_ARRAY, safeY);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onDestroy(){
+        gameCounter.cancel();
+        animate = false;
+        while (activeMoleas.size()>0) {
+            MoleaView molea = activeMoleas.remove(0);
+            ((ViewGroup)molea.getParent()).removeView(molea);
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) molea.getLayoutParams();
+            removeUsedLocation(molea.getSlotFromMargin(lp.leftMargin), molea.getSlotFromMargin(lp.topMargin));
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        score = savedInstanceState.getInt(STATE_GAME_SCORE);
+        gameClock = savedInstanceState.getLong(STATE_GAME_TIME);
+        safeX = savedInstanceState.getBooleanArray(STATE_GAME_SAFE_X_ARRAY);
+        safeY = savedInstanceState.getBooleanArray(STATE_GAME_SAFE_Y_ARRAY);
+    }
+
+    public void logError(String err){
+        Log.d("Schwack-a-molea ",err);
     }
 }
 
