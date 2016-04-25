@@ -1,9 +1,9 @@
 package com.thetipsytester.thetipsytester;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -12,15 +12,13 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 public class bacCalculatorActivity extends AppCompatActivity {
 
     Long rowid;
     String name = "John",gender = "male";
     int bodyWeight = 150;
+    boolean calibration = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,29 +26,40 @@ public class bacCalculatorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bac_calculator);
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        rowid = sharedPref.getLong("rowid", -1);
 
+        Intent intent = getIntent();
+        calibration = intent.getBooleanExtra("calibration", false);
+        System.out.println("Calibraion: " + calibration);
 
-        if (getIntent().hasExtra("rowid")) {
-            rowid = getIntent().getLongExtra("rowid", 0);
-            ContentResolver cr = getContentResolver();
+        if (rowid != -1) {
+            TipsyDB tipsy = new TipsyDB(this);
+            SQLiteDatabase db = tipsy.getWritableDatabase();
 
-            Cursor c = cr.query(UserContentProvider.CONTENT_URI.buildUpon().appendPath(Long.toString(rowid)).build(),
-                    new String[] {"name","gender","weight"},null, null, null);
+            String selectQuery = "SELECT * FROM " + "users" + " WHERE _id = " + rowid;
 
+            Cursor c = db.rawQuery(selectQuery, null);
 
-            if(!c.moveToFirst()){
-                Toast.makeText(bacCalculatorActivity.this, "Error retrieving user info, using default", Toast.LENGTH_SHORT).show();
-            }else {
-                name = c.getString(0);
-                gender = c.getString(1);
-                bodyWeight = Integer.parseInt(c.getString(2));
-                TextView userName = (TextView) findViewById(R.id.userText);
-                userName.setText("Current User: " + name);
+            if(c != null){
+                c.moveToFirst();
+                name = (c.getString(c.getColumnIndex("name")));
+                gender = (c.getString(c.getColumnIndex("gender")));
+                bodyWeight = (c.getInt(c.getColumnIndex("weight")));
             }
 
-            c.close();
+
+
+            TextView userText = (TextView)findViewById(R.id.userText);
+            userText.setText("Current User: " + name);
         }
 
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
 
     }
 
@@ -70,24 +79,42 @@ public class bacCalculatorActivity extends AppCompatActivity {
     public void getUser(View view){
         Intent intent = new Intent(this, userSelectActivity.class);
         intent.putExtra("activity", "BAC");
-
+        intent.putExtra("calibration", calibration);
         startActivity(intent);
+        finish();
     }
 
     public void calculateBAC(View view){
+        double bProof = 10;
+        double bNum = 0;
+        double wProof = 24;
+        double wNum = 0;
+        double sProof = 80;
+        double sNum = 0;
+        double hours = 0;
 
 
-        double bProof = Double.parseDouble(((EditText)findViewById(R.id.beerProof)).getText().toString());
-        double bNum = Double.parseDouble(((EditText)findViewById(R.id.beerNum)).getText().toString());
-
-        double wProof = Double.parseDouble(((EditText)findViewById(R.id.wineProof)).getText().toString());
-        double wNum = Double.parseDouble(((EditText)findViewById(R.id.wineNum)).getText().toString());
-
-        double sProof = Double.parseDouble(((EditText)findViewById(R.id.shotsProof)).getText().toString());
-        double sNum = Double.parseDouble(((EditText)findViewById(R.id.shotsNum)).getText().toString());
-
-        double hours = Double.parseDouble((((EditText)findViewById(R.id.hourNum)).getText().toString()));
-
+        if(!((EditText)findViewById(R.id.beerProof)).getText().toString().isEmpty()){
+            bProof = Double.parseDouble(((EditText)findViewById(R.id.beerProof)).getText().toString());
+        }
+        if(!((EditText)findViewById(R.id.beerNum)).getText().toString().isEmpty()){
+            bNum = Double.parseDouble(((EditText)findViewById(R.id.beerNum)).getText().toString());
+        }
+        if(!((EditText)findViewById(R.id.wineProof)).getText().toString().isEmpty()){
+            wProof = Double.parseDouble(((EditText)findViewById(R.id.wineProof)).getText().toString());
+        }
+        if(!((EditText)findViewById(R.id.wineNum)).getText().toString().isEmpty()){
+            wNum = Double.parseDouble(((EditText)findViewById(R.id.wineNum)).getText().toString());
+        }
+        if(!((EditText)findViewById(R.id.shotsProof)).getText().toString().isEmpty()){
+            sProof = Double.parseDouble(((EditText)findViewById(R.id.shotsProof)).getText().toString());
+        }
+        if(!((EditText)findViewById(R.id.shotsNum)).getText().toString().isEmpty()){
+            sNum = Double.parseDouble(((EditText)findViewById(R.id.shotsNum)).getText().toString());
+        }
+        if(!((EditText)findViewById(R.id.hourNum)).getText().toString().isEmpty()){
+            hours = Double.parseDouble(((EditText)findViewById(R.id.hourNum)).getText().toString());
+        }
 
         double gramsOfBeer = 0.789*29.5735*(bProof/200)*bNum*12;
         double gramsOfWine = 0.789*29.5735*(wProof/200)*wNum*5;
@@ -95,16 +122,14 @@ public class bacCalculatorActivity extends AppCompatActivity {
         double gramsOfAlcohol = gramsOfBeer+gramsOfWine+gramsOfShots;
         double bac = 0;
 
-
         if(gender.equals("male")){
             bac = ((gramsOfAlcohol)/(453.592*bodyWeight * 0.68))*100 - 0.015*hours;
         }else if(gender.equals("female")){
             bac = (((gramsOfAlcohol)/(453.592*bodyWeight * 0.55))* 100)- 0.015*hours;
         }
 
-
         TextView calculatedVal = (TextView) findViewById(R.id.calculatedBAC);
-        if(bac<0){
+        if(bac<=0){
             bac = 0;
             calculatedVal.setText("0.000%");
         }else {
@@ -114,7 +139,12 @@ public class bacCalculatorActivity extends AppCompatActivity {
             calculatedVal.setText(retVal + "%");
         }
 
-
+        if(calibration){
+            Intent intent = new Intent(this, singleTestSelectActivity.class);
+            intent.putExtra("calibration", calibration);
+            intent.putExtra("BAC", bac);
+            startActivity(intent);
+        }
 
 
     }

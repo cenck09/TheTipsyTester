@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Testing Preference"
+        android:text="Test Select"
         android:id="@+id/testPreference"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
@@ -24,7 +24,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Single Test"
+        android:text="Single"
         android:id="@+id/singleTestButton"
         android:layout_below="@+id/testPreference"
         android:layout_alignParentStart="true"
@@ -34,7 +34,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Quick Test"
+        android:text="Random Three"
         android:id="@+id/quickTestButton"
         android:layout_below="@+id/singleTestButton"
         android:layout_alignParentStart="true"

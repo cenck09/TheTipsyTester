@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="testName"
+        android:paddingBottom="30dp"
+        android:id="@+id/scoreTestName"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="104dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="User:"
+        android:paddingLeft="40dp"
+        android:id="@+id/scoreUserTag"
+        android:layout_below="@+id/scoreTestName"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Score:"
+        android:paddingLeft="40dp"
+        android:id="@+id/scoreScoreTag"
+        android:layout_below="@+id/scoreUserTag"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Best:"
+        android:paddingLeft="40dp"
+        android:id="@+id/scoreBestTag"
+        android:layout_below="@+id/scoreScoreTag"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Worst:"
+        android:paddingLeft="40dp"
+        android:id="@+id/scoreWorstTag"
+        android:layout_below="@+id/scoreBestTag"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:id="@+id/scoreNextButton"
+        android:onClick="nextAction"
+        android:layout_marginBottom="81dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/scoreTestName" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Retry"
+        android:id="@+id/scoreRetryButton"
+        android:onClick="retryTest"
+        android:layout_alignTop="@+id/scoreNextButton"
+        android:layout_toStartOf="@+id/scoreTestName" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="user"
+        android:id="@+id/scoreUserField"
+        android:layout_below="@+id/scoreTestName"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="0"
+        android:id="@+id/scoreScoreField"
+        android:layout_below="@+id/scoreUserField"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0"
+        android:id="@+id/scoreBestField"
+        android:layout_alignTop="@+id/scoreBestTag"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0"
+        android:id="@+id/scoreWorstField"
+        android:layout_below="@+id/scoreBestField"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="BAC: "
+        android:id="@+id/scoreBACTag"
+        android:layout_below="@+id/scoreWorstTag"
+        android:layout_alignStart="@+id/scoreRetryButton"
+        android:layout_marginTop="51dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0.00"
+        android:id="@+id/scoreBACField"
+        android:layout_alignBottom="@+id/scoreBACTag"
+        android:layout_alignEnd="@+id/scoreNextButton" />
+
+</RelativeLayout>

@@ -12,7 +12,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal = "true"
-
         android:textSize="25dp"
         android:layout_gravity="center_horizontal" />
 
@@ -32,13 +31,30 @@
                 android:text="Balance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="25dp"
                 android:onClick="startBalance"/>
+            <Button
+                android:id="@+id/patternSingleTestButton"
+                android:text="Pattern Match"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="25dp"
+                android:onClick="startPattern"/>
+            <Button
+                android:id="@+id/typingSingleTestButton"
+                android:text="Typing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="25dp"
+                android:onClick="startTyping"/>
 
-
-
-
-
-
+            <Button
+                android:id="@+id/schwackAMoleaSingleTestButton"
+                android:text="Schwack A Molea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="25dp"
+                android:onClick="startSchwacking"/>
 
         </LinearLayout>
 

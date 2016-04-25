@@ -12,54 +12,103 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sort By: "
-        android:textSize="20dp"
-        android:layout_marginTop="11dp"/>
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Sort By:"
+        android:id="@+id/sortByTag"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="User"
-        android:id="@+id/userSort"
-        android:layout_toLeftOf="@+id/testSort"/>
+        android:onClick="btnUserClick"
+        android:id="@+id/sortUserButton"
+        android:layout_below="@+id/sortByTag"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/sortByTag" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Test"
-        android:id="@id/testSort"
-        android:layout_toLeftOf="@+id/scoreSort"/>
+        android:onClick="btnTestClick"
+        android:id="@+id/sortTestButton"
+        android:layout_above="@+id/sortWorst"
+        android:layout_alignParentEnd="true"
+        android:layout_alignStart="@+id/sortWorst" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Score"
-        android:id="@id/scoreSort"
-        android:layout_alignParentRight="true"/>
+        android:text="Best Score"
+        android:onClick="btnBestClick"
+        android:id="@+id/sortBest"
+        android:layout_below="@+id/sortUserButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/sortUserButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Worst Score"
+        android:onClick="btnWorstClick"
+        android:id="@+id/sortWorst"
+        android:layout_alignTop="@+id/sortBest"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/sortByTag" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="User"
-        android:id="@+id/userColumnText"
         android:textSize="20dp"
-        android:layout_marginTop="61dp"/>
+        android:id="@+id/sortUserTag"
+        android:layout_below="@+id/sortBest"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Test"
-        android:id="@+id/testColumnText"
         android:textSize="20dp"
-        android:layout_marginTop="61dp"
-        android:layout_marginLeft="150dp"/>
+        android:id="@+id/sortTestTag"
+        android:layout_alignTop="@+id/sortUserTag"
+        android:layout_toStartOf="@+id/sortByTag" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Score"
-        android:id="@+id/scoreColumnText"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Best"
         android:textSize="20dp"
-        android:layout_marginTop="61dp"
-        android:layout_marginLeft="280dp"/>
-    
+        android:id="@+id/sortBestTag"
+        android:layout_below="@+id/sortWorst"
+        android:layout_alignStart="@+id/sortWorst" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Worst"
+        android:textSize="20dp"
+        android:id="@+id/sortWorstTag"
+        android:layout_alignBottom="@+id/sortBestTag"
+        android:layout_alignParentEnd="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/sortScroll"
+        android:layout_below="@+id/sortUserTag"
+        android:layout_alignParentStart="true" >
+        
+        <TextView
+            android:id="@+id/sortQueryResults"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        
+    </ScrollView>
 </RelativeLayout>

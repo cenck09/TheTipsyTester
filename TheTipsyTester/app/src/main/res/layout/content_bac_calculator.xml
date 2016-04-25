@@ -74,7 +74,7 @@
         android:id="@+id/beerProof"
         android:layout_alignBottom="@+id/beerTag"
         android:layout_alignStart="@+id/proofTag"
-        android:text="0" />
+        android:hint="10" />
 
     <EditText
         android:layout_width="50dp"
@@ -84,7 +84,7 @@
         android:id="@+id/beerNum"
         android:layout_alignBottom="@+id/beerTag"
         android:layout_alignStart="@+id/numDrinkTag"
-        android:text="0" />
+        android:hint="0" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -95,7 +95,7 @@
         android:layout_alignBottom="@id/wineTag"
         android:layout_alignStart="@+id/beerProof"
         android:layout_alignEnd="@+id/beerProof"
-        android:text="0" />
+        android:hint="24" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -106,7 +106,7 @@
         android:layout_alignBottom="@+id/wineTag"
         android:layout_alignStart="@+id/beerNum"
         android:layout_alignEnd="@+id/beerNum"
-        android:text="0" />
+        android:hint="0" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -114,7 +114,7 @@
         android:inputType="number"
         android:ems="10"
         android:id="@+id/shotsProof"
-        android:text="0"
+        android:hint="80"
         android:layout_alignBottom="@id/shotsTag"
         android:layout_alignStart="@+id/wineProof"
         android:layout_alignEnd="@+id/wineProof" />
@@ -125,7 +125,7 @@
         android:inputType="number"
         android:ems="10"
         android:id="@+id/shotsNum"
-        android:text="0"
+        android:hint="0"
         android:layout_alignBottom="@id/shotsTag"
         android:layout_alignStart="@+id/wineNum"
         android:layout_alignEnd="@+id/wineNum" />
@@ -167,7 +167,7 @@
         android:layout_alignBottom="@+id/hourTag"
         android:layout_alignStart="@+id/shotsNum"
         android:layout_alignEnd="@+id/shotsNum"
-        android:text="0" />
+        android:hint="0" />
 
     <Button
         android:layout_width="match_parent"

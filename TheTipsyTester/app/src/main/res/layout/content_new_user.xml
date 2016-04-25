@@ -14,7 +14,7 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/NameTextView"
-            android:layout_toEndOf="@+id/NameTextView" />
+            android:layout_alignStart="@+id/WeightTextView" />
 
         <TextView
             android:id="@+id/NameTextView"
@@ -73,7 +73,8 @@
             android:id="@+id/WeightEditText"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/WeightTextView"
+            android:inputType="number"
+            android:layout_above="@+id/saveUserButton"
             android:layout_toEndOf="@+id/WeightTextView" />
 
 

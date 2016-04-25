@@ -3,12 +3,15 @@ package com.thetipsytester.thetipsytester;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -27,6 +30,9 @@ public class balanceTest extends Activity implements SensorEventListener{
     //TextView acceleration;
     TextView timerText;
 
+    boolean calibration = false;
+    double bac = 0;
+
     int finalScore;
     boolean measuring = false, waiting = false;
     float totalAcceleration = 0, changeAcceleration = 0, lastTotal = 0, x, y ,z;
@@ -35,6 +41,9 @@ public class balanceTest extends Activity implements SensorEventListener{
     CountDownTimer countDownTimer = new MyCountDownTimer(startTime, interval);
     CountDownTimer pauseTimer = new MyCountDownTimer2(pauseTime, interval);
 
+    String[] nextTests;
+
+    ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +57,13 @@ public class balanceTest extends Activity implements SensorEventListener{
         //acceleration = (TextView)findViewById(R.id.acceleration);
         timerText = (TextView)findViewById(R.id.balanceCountDown);
         timerText.setText(timerText.getText()+String.valueOf(startTime / 1000));
+
+        Intent intent = getIntent();
+        nextTests = intent.getStringArrayExtra("nextTests");
+        calibration = intent.getBooleanExtra("calibration", false);
+        bac = intent.getDoubleExtra("BAC", 0);
+
+        System.out.println("Calibraion: " + calibration);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Balance Test");
@@ -90,12 +106,24 @@ public class balanceTest extends Activity implements SensorEventListener{
             lastTotal = totalAcceleration;
             totalAcceleration = 0;
             finalScore = (int)lastTotal;
-            timerText.setText("Final Score: " + (int)lastTotal);
+
+            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP,150);
+
+            Intent intent = new Intent(balanceTest.this, scorereportActivity.class);
+            intent.putExtra("prevTest", "balance");
+            intent.putExtra("nextTests", nextTests);
+            intent.putExtra("score", finalScore);
+            intent.putExtra("calibration", calibration);
+            intent.putExtra("BAC", bac);
+            timerText.setText("Score: " + finalScore);
+            startActivity(intent);
+            finish();
         }
 
         @Override
         public void onTick(long millisUntilFinished){
-            timerText.setText("Time: " + millisUntilFinished/1000);
+            timerText.setText("Measuring: " + Math.round(millisUntilFinished / (long)1001));
+
         }
     }
 
@@ -108,10 +136,13 @@ public class balanceTest extends Activity implements SensorEventListener{
             countDownTimer.start();
             measuring = true;
             waiting = false;
+            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP,150);
         }
         @Override
         public void onTick(long millisUntilFinished){
-            timerText.setText("Starts in: " + millisUntilFinished/1000);
+            timerText.setText("Starts in: " + Math.round(millisUntilFinished / (long) 1001));
+            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP,150);
+
         }
     }
 

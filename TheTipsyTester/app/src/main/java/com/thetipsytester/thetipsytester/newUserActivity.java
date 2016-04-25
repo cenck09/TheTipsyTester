@@ -2,9 +2,11 @@ package com.thetipsytester.thetipsytester;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,18 +20,30 @@ import android.widget.Toast;
 public class newUserActivity extends AppCompatActivity {
 
     Long rowid;
+    TipsyDB tipsy;
+    SQLiteDatabase db;
+    boolean calibration;
+    String activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_user);
 
-        if (getIntent().hasExtra("rowid")) {
-            rowid = getIntent().getLongExtra("rowid", 0);
-            ContentResolver cr = getContentResolver();
+        tipsy = new TipsyDB(this);
+        db = tipsy.getWritableDatabase();
 
-            Cursor c = cr.query(UserContentProvider.CONTENT_URI.buildUpon().appendPath(Long.toString(rowid)).build(),
-                    new String[] {"name","gender","weight"},null, null, null);
+        activity = getIntent().getStringExtra("activity");
+
+        if (getIntent().hasExtra("rowid")) {
+
+            rowid = getIntent().getLongExtra("rowid", 0);
+
+
+            String selectQuery = "SELECT * FROM " + "users" + " WHERE id = " + rowid;
+
+            Cursor c = db.rawQuery(selectQuery, null);
+
 
             if (!c.moveToFirst()) {
                 this.setTitle("Add new user");
@@ -69,26 +83,36 @@ public class newUserActivity extends AppCompatActivity {
 
     public void btnAddClick(View view) {
         ContentResolver cr = getContentResolver();
+        String name, gender, weight;
 
         RadioButton male = (RadioButton)findViewById(R.id.maleRadioButton);
 
         ContentValues values = new ContentValues();
-        values.put("name", ((EditText) findViewById(R.id.NameEditText)).getText().toString());
+
+        name = ((EditText) findViewById(R.id.NameEditText)).getText().toString();
+        values.put("name", name);
+
         if(male.isChecked()){
-            values.put("gender", "male");
-            //System.out.println("MALE");
+            gender = "male";
+            values.put("gender", gender);
         }else{
-            values.put("gender", "female");
-            //System.out.println("FEMALE");
+            gender = "female";
+            values.put("gender", gender);
         }
-        values.put("weight", ((EditText) findViewById(R.id.WeightEditText)).getText().toString());
+        weight = ((EditText) findViewById(R.id.WeightEditText)).getText().toString();
+        values.put("weight", weight);
 
         try {
             if (rowid == null) {
-                cr.insert(UserContentProvider.CONTENT_URI, values);
+                db.insert("users", null, values);
             } else {
-                cr.update(UserContentProvider.CONTENT_URI.buildUpon().appendPath(Long.toString(rowid)).build(), values, null, null);
+                //db.update();
             }
+            Intent intent = new Intent(newUserActivity.this, userSelectActivity.class);
+            intent.putExtra("calibration", calibration);
+            intent.putExtra("activity", activity);
+            System.out.println("NEW USER ACTIVITY: " + activity);
+            startActivity(intent);
             finish();
         } catch (SQLException e) {
             Toast.makeText(this, "Error updating database.", Toast.LENGTH_LONG).show();

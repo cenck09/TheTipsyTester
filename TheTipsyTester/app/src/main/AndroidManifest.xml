@@ -7,40 +7,51 @@
         android:icon="@mipmap/tipsy_tester"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <provider
-            android:name="com.thetipsytester.thetipsytester.UserContentProvider"
-            android:authorities="com.thetipsytester.thetipsytester.users"
-            android:enabled="true"
-            android:exported="false" />
         <activity
             android:name=".testSelectActivity"
             android:label="@string/title_activity_test_select"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.thetipsytester.thetipsytester.MainActivity" />
         </activity>
-        <activity android:name=".baselineActivity" />
-        <activity android:name=".bacCalculatorActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".scoresActivity" />
+        <activity
+            android:name=".baselineActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".bacCalculatorActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".scoresActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".settingsActivity" />
-        <activity android:name=".newUserActivity"/>
-        <activity android:name=".singleTestSelectActivity"/>
-        <activity android:name=".balanceTest"/>
+        <activity android:name=".newUserActivity" />
+        <activity android:name=".singleTestSelectActivity" />
+        <activity
+            android:name=".balanceTest"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".patternTest"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".typingTest"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".scorereportActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".userSelectActivity"></activity>
+        <activity android:name=".schwack_a_moleaa"></activity>
     </application>
 
 </manifest>
