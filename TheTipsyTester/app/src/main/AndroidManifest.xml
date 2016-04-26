@@ -48,10 +48,12 @@
             android:name=".typingTest"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".schwack_a_moleaa"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".scorereportActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".userSelectActivity"></activity>
-        <activity android:name=".schwack_a_moleaa"></activity>
     </application>
 
 </manifest>

@@ -22,7 +22,7 @@ public class MoleaView extends View {
 
     boolean animate;
     boolean animating;
-
+    boolean isKilled;
 
     public void animateMoleaPop(){
         this.setRedShape();
@@ -44,6 +44,7 @@ public class MoleaView extends View {
                 });
     }
     public void pop(){
+        if(!isKilled) isKilled = true;
         this.animate()
                 .alpha(0.0f)
                 .scaleX((float) 1.55)

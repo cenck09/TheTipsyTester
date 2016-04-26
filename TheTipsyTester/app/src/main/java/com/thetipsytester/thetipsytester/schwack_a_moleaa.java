@@ -3,6 +3,7 @@ package com.thetipsytester.thetipsytester;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -40,8 +41,11 @@ public class schwack_a_moleaa extends AppCompatActivity {
 
     boolean animate;
     boolean animating;
+    boolean stopGame;
 
-    public int borderBuffer = 15;
+    AlertDialog testA;
+
+    public int borderBuffer = 4;
 
     Random r = new Random();
     ArrayList<MoleaView> oldMoleas = new ArrayList<MoleaView>();
@@ -54,7 +58,6 @@ public class schwack_a_moleaa extends AppCompatActivity {
         if (savedInstanceState == null) {
             score = 0;
             gameClock = MOLEA_GAME_TIMER;
-            this.testAlert();
         }else{
             score = savedInstanceState.getInt(STATE_GAME_SCORE);
             gameClock = savedInstanceState.getLong(STATE_GAME_TIME);
@@ -62,16 +65,16 @@ public class schwack_a_moleaa extends AppCompatActivity {
             safeY = savedInstanceState.getBooleanArray(STATE_GAME_SAFE_Y_ARRAY);
         }
 
-
         setContentView(R.layout.activity_schwack_a_moleaa);
         this.getWindow().getDecorView().setBackgroundColor(Color.parseColor("#" + PreferenceManager.getDefaultSharedPreferences(this).getString("color", "232323")));
+        logError("Create teh Schwack-a-mole game!!");
 
     }
 
     public int getSafeXLocation(){
-        int val = r.nextInt((safeX.length - borderBuffer) + 3);
+        int val = r.nextInt((safeX.length - borderBuffer) + (borderBuffer/2));
         while(!isSafeLocation(safeX ,val)){
-            val = r.nextInt((safeX.length - borderBuffer) + 3);
+            val = r.nextInt((safeX.length - borderBuffer) + (borderBuffer/2));
         }
         return val;
     }
@@ -86,9 +89,9 @@ public class schwack_a_moleaa extends AppCompatActivity {
     }
 
     public int getSafeYLocation(){
-        int val = r.nextInt((safeY.length - borderBuffer) + 4);
+        int val = r.nextInt((safeY.length - borderBuffer) + (borderBuffer/2));
         while(!isSafeLocation(safeY ,val)){
-            val = r.nextInt((safeY.length - borderBuffer) + 4);
+            val = r.nextInt((safeY.length - borderBuffer) + (borderBuffer/2));
         }
         return val;
     }
@@ -139,34 +142,13 @@ public class schwack_a_moleaa extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        logError("Changed configs!");
-    }
-
-    @Override
-    public void onPause(){
-
-        while (activeMoleas.size()>0) {
-            MoleaView molea = activeMoleas.remove(0);
-            ((ViewGroup)molea.getParent()).removeView(molea);
-            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) molea.getLayoutParams();
-            removeUsedLocation(molea.getSlotFromMargin(lp.leftMargin), molea.getSlotFromMargin(lp.topMargin));
-            oldMoleas.add(molea);
-        }
-
-        super.onPause();
-    }
     public void generateMolea(){
 
-        final MoleaView molea = getRecycledMoleas();
-        logError("Got Molea");
-        int x = getSafeXLocation();
-        logError("Got safe zone for X = " + x);
+        logError("Make teh molea!!");
 
+        final MoleaView molea = getRecycledMoleas();
+        int x = getSafeXLocation();
         int y  = getSafeYLocation();
-        logError("Got safe zone for Y = " + y);
 
         setUsedLocation(x, y);
         molea.setAlpha(0.0f);
@@ -179,11 +161,15 @@ public class schwack_a_moleaa extends AppCompatActivity {
     public MoleaView setOnMoleaSmashed(final MoleaView molea){
         molea.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                addRecycledMoleas(molea);
-                molea.animateMoleaPop();
-                incrementScore();
+
+                if (!molea.isKilled) {
+                    molea.animateMoleaPop();
+                    addRecycledMoleas(molea);
+                    moleaManager();
+                    incrementScore();
+                }
+
                 ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) molea.getLayoutParams();
-                generateMolea();
                 removeUsedLocation(molea.getSlotFromMargin(lp.leftMargin), molea.getSlotFromMargin(lp.topMargin));
             }
         });
@@ -197,7 +183,9 @@ public class schwack_a_moleaa extends AppCompatActivity {
     }
 
     private void setScoreBoard(){
-        ((TextView)findViewById(R.id.scoreBoard)).setText("" + score + "");
+        try{
+            ((TextView)findViewById(R.id.scoreBoard)).setText("" + score + "");
+        }catch (Exception ex){};
     }
 
     private void setGameClockBoard(){
@@ -233,7 +221,8 @@ public class schwack_a_moleaa extends AppCompatActivity {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         if (animate) sizeIn(view);
-                        else animating = false;                         }
+                        else animating = false;
+                    }
                 });
     }
 
@@ -247,7 +236,7 @@ public class schwack_a_moleaa extends AppCompatActivity {
             case 1:
                 counterView.setText("GO!!!");
                 break;
-            case 5:
+            case 4:
                 counterView.setText("Ready?");
                 break;
             default:
@@ -266,14 +255,29 @@ public class schwack_a_moleaa extends AppCompatActivity {
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-
-                        if (value == 1) {
-                           startGame();
-                        }
                         ((ViewGroup) counterView.getParent()).removeView(counterView);
                     }
                 });
     }
+
+    private void performReadyGameCountDown(){
+        logError("starting start game countdown timer");
+        if(gameCounter != null) gameCounter.cancel(); gameCounter = null;
+
+       final CountDownTimer NgameCounter = new CountDownTimer(5000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                if(Math.round(millisUntilFinished/1000)>=1) addCountDownViewForValue(Math.round(millisUntilFinished / 1000));
+                if((Math.round(millisUntilFinished/1000)==1)) startGame();
+            }
+            public void onFinish() {
+               // if(!stopGame) startGame();
+            }
+        };
+
+        gameCounter = NgameCounter;
+        gameCounter.start();
+    }
+
 
     private void startGameCountDown(long time){
         logError("starting Game timer");
@@ -284,38 +288,24 @@ public class schwack_a_moleaa extends AppCompatActivity {
         safeX = new boolean[molea.getBattleFieldSlots(arena.getWidth())];
         safeY = new boolean[molea.getBattleFieldSlots(arena.getHeight())];
 
-        moleaManager();
 
         gameCounter = new CountDownTimer(time, 10) {
             public void onTick(long millisUntilFinished) {
                 gameClock = millisUntilFinished;
                 setGameClockBoard();
-
             }
             public void onFinish() {
-                endGame();
+                if(!stopGame) endGame();
             }
         }.start();
-
+        moleaManager();
     }
 
-    private void performReadyGameCountDown(){
-        logError("starting start game countdown timer");
-        gameCounter = new CountDownTimer(5000, 1000) {
-            public void onTick(long millisUntilFinished) {
-                addCountDownViewForValue(Math.round(millisUntilFinished / 1000));
-            }
 
-            public void onFinish() {
-
-            }
-        }.start();
-    }
-
-    private void startGame(){
+    private void startGame() {
+        logError("STARTIN TEH SCHWACKIN GAME!!!!");
         startGameCountDown(gameClock);
         setScoreBoard();
-      //  startMoleaManager();
     }
 
     private void endGame(){
@@ -324,7 +314,7 @@ public class schwack_a_moleaa extends AppCompatActivity {
         Intent currentIntent = getIntent();
         Intent intent = new Intent(this, scorereportActivity.class);
 
-        intent.putExtra("prevTest", "pattern"); // this needs to be updated
+        intent.putExtra("prevTest", "schwack"); // this needs to be updated
         intent.putExtra("nextTests",currentIntent.getStringArrayExtra("nextTests"));
         intent.putExtra("score", score);
         intent.putExtra("calibration", currentIntent.getBooleanExtra("calibration", false));
@@ -334,26 +324,53 @@ public class schwack_a_moleaa extends AppCompatActivity {
     }
 
     private void testAlert(){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Schwack-A-Molea Test").setMessage("Schwack as many Moleas as you can before the timer goes off!. \n\nGood Luck!!");
-        alertDialogBuilder.setCancelable(false).setPositiveButton("Start", new DialogInterface.OnClickListener() {
+       AlertDialog.Builder test = new AlertDialog.Builder(this);
+        test.setTitle("Schwack-A-Molea Test").setMessage("Schwack as many Moleas as you can before the timer goes off!. \n\nGood Luck!!");
+        test.setCancelable(false).setPositiveButton("Start", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 performReadyGameCountDown();
             }
-        }).show();
+        });
+        testA = test.create();
+        testA.show();
     }
 
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        logError("Changed configs!");
+    }
+
+    @Override
+    public void onPause(){
+        if(gameCounter != null) gameCounter.cancel(); gameCounter = null;
+        logError("Pausin teh schwackin");
+        stopGame = true;
+        if(testA != null) testA.cancel(); testA = null;
+
+        while (activeMoleas.size()>0) {
+            MoleaView molea = activeMoleas.remove(0);
+            ((ViewGroup)molea.getParent()).removeView(molea);
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) molea.getLayoutParams();
+            removeUsedLocation(molea.getSlotFromMargin(lp.leftMargin), molea.getSlotFromMargin(lp.topMargin));
+        }
+        super.onPause();
+    }
 
     @Override
     public void onResume(){
         super.onResume();
+        logError("Resumed schwackin");
+        stopGame = false;
         if(gameClock != MOLEA_GAME_TIMER) performReadyGameCountDown();
+        else testAlert();
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        gameCounter.cancel();
+       // gameCounter.cancel();
+        logError("SAVED INSTANCE STATE FOR THE SCHWACK");
         animate = false;
         savedInstanceState.putInt(STATE_GAME_SCORE, score);
         savedInstanceState.putLong(STATE_GAME_TIME, gameClock);
@@ -364,7 +381,13 @@ public class schwack_a_moleaa extends AppCompatActivity {
 
     @Override
     public void onDestroy(){
-        gameCounter.cancel();
+       // gameCounter.cancel();
+        logError("Ohhhhh, it's destroyed! That's Schwack!");
+        if(gameCounter != null) gameCounter.cancel(); gameCounter = null;
+        logError("Pausin teh schwackin");
+        stopGame = true;
+        if(testA != null) testA.cancel(); testA = null;
+
         animate = false;
         while (activeMoleas.size()>0) {
             MoleaView molea = activeMoleas.remove(0);
@@ -377,11 +400,14 @@ public class schwack_a_moleaa extends AppCompatActivity {
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
+
         super.onRestoreInstanceState(savedInstanceState);
         score = savedInstanceState.getInt(STATE_GAME_SCORE);
         gameClock = savedInstanceState.getLong(STATE_GAME_TIME);
         safeX = savedInstanceState.getBooleanArray(STATE_GAME_SAFE_X_ARRAY);
         safeY = savedInstanceState.getBooleanArray(STATE_GAME_SAFE_Y_ARRAY);
+        logError("RESTORED INSTANCE STATE FOR SCHWACKIN!");
+
     }
 
     public void logError(String err){
