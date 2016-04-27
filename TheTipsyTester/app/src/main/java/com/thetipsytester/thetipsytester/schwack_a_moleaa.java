@@ -161,7 +161,7 @@ public class schwack_a_moleaa extends AppCompatActivity {
     public MoleaView setOnMoleaSmashed(final MoleaView molea){
         molea.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
+                molea.setEnabled(false);
                 if (!molea.isKilled) {
                     molea.animateMoleaPop();
                     addRecycledMoleas(molea);
