@@ -56,6 +56,14 @@
                 android:paddingBottom="25dp"
                 android:onClick="startSchwacking"/>
 
+            <Button
+                android:id="@+id/cometSmashSingleTestButton"
+                android:text="Comet Smash!"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="25dp"
+                android:onClick="startComet"/>
+
         </LinearLayout>
 
 

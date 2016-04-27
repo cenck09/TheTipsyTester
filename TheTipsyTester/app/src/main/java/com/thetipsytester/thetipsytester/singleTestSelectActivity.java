@@ -35,6 +35,13 @@ public class singleTestSelectActivity extends AppCompatActivity{
         view.setBackgroundColor(Color.parseColor("#" + color));
     }
 
+    public void startComet(View view){
+        Intent intent = new Intent(this, comet_smash.class);
+        intent.putExtra("calibration", calibration);
+        intent.putExtra("BAC", bac);
+        startActivity(intent);
+    }
+
     public void startSchwacking(View view){
         Intent intent = new Intent(this, schwack_a_moleaa.class);
         intent.putExtra("calibration", calibration);

@@ -22,14 +22,29 @@ public class MoleaView extends View {
 
     boolean animate;
     boolean animating;
-
+    boolean isKilled;
 
     public void animateMoleaPop(){
+        this.setRedShape();
         animate = false;
 
     }
 
+    public void spawn(){
+        this.animate()
+                .alpha(1.0f)
+                .scaleX(1.0f)
+                .scaleY(1.0f)
+                .setDuration(200)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        startAnimation();
+                    }
+                });
+    }
     public void pop(){
+        if(!isKilled) isKilled = true;
         this.animate()
                 .alpha(0.0f)
                 .scaleX((float) 1.55)

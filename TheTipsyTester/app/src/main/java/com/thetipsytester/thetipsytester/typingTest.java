@@ -20,8 +20,12 @@ import java.util.Random;
  * Created by Amanda on 4/22/2016.
  */
 public class typingTest extends AppCompatActivity {
-    String sentence1 = "The cat ran across the field.";
-    String sentence2 = "Elephants are very large creatures.";
+    String sentence1 = "The production of alcohol started 12,000 years ago.";
+    String sentence2 = "Vodka means 'little water' in Russian.";
+    String sentence3 = "The world's oldest known recipe is for beer.";
+    String sentence4 = "A bottle of champagne contains 49 million bubbles.";
+    String sentence5 = "One shot of vodka contains as much alcohol as an entire beer.";
+
     String selection;
     Random r = new Random();
 
@@ -74,10 +78,16 @@ public class typingTest extends AppCompatActivity {
         int randNum = r.nextInt(2) + 1;
         if (randNum == 1) {
             selection = sentence1;
-        }
-        if (randNum == 2) {
+        }if (randNum == 2) {
             selection = sentence2;
+        }if (randNum == 3) {
+            selection = sentence3;
+        }if (randNum == 4) {
+            selection = sentence4;
+        }if (randNum == 5) {
+            selection = sentence5;
         }
+
         TextView sentence = (TextView) findViewById(R.id.sentence);
         sentence.setText(selection);
         sentence.setTextColor(Color.BLACK);
