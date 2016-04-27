@@ -53,7 +53,8 @@
         <activity
             android:name=".scorereportActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".userSelectActivity"></activity>
+        <activity android:name=".userSelectActivity" />
+        <activity android:name=".comet_smash"></activity>
     </application>
 
 </manifest>
