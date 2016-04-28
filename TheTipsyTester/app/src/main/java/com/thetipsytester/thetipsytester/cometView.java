@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -14,23 +15,58 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
+
+import java.security.SecureRandom;
 import java.util.ArrayList;
 
 /**
  * Created by chrisenck on 4/26/16.
  */
 
+
+enum Target {
+    TopWall, LeftWall, BottomWall, RightWall
+}
+enum Direction {
+    LEFT, RIGHT, UP, DOWN
+}
+
+class Tuple<X, Y> {
+    public X x;
+    public Y y;
+    public Tuple(X x, Y y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
 public class cometView extends FrameLayout {
 
+    private static final SecureRandom random = new SecureRandom();
+
     static int COMET_SIZE = 80;
-    static int TRIANGLE_COUNT = 15;
+    static int TRIANGLE_COUNT = 20;
+
+    Integer X_MAX;
+    Integer X_MIN;
+
+    Integer Y_MAX;
+    Integer Y_MIN;
 
     ArrayList<triangle> angles = new ArrayList<triangle>();
+
+
+    Tuple<Integer,Integer> currentLoc;
+    Tuple<Integer,Integer> destinationLoc;
+
+    Tuple<Direction,Direction> heading;
+    Target target;
+
 
     public cometView(Context context) {
         super(context);
         setLayoutParams(new LayoutParams(COMET_SIZE, COMET_SIZE, Gravity.CENTER));
-
+        setBackgroundColor(Color.BLUE);
         for(int i = 0; i<TRIANGLE_COUNT; i++){
             triangle tmp = new triangle(context);
             addView(tmp);
@@ -43,11 +79,11 @@ public class cometView extends FrameLayout {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
 
-        logError("Layed out comet view");
+        logError("Layout comet view");
     }
 
     @Override
-    public void onWindowFocusChanged (boolean hasFocus) {
+    public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus){
             for(int i = 0; i<angles.size(); i++){
@@ -73,8 +109,37 @@ public class cometView extends FrameLayout {
         return false;
     }
 
-}
+    private void setHeading(){
 
+        if(destinationLoc.y<currentLoc.y){ heading.y = Direction.UP;}
+        else{ heading.y = Direction.DOWN;}
+
+        if(destinationLoc.x<currentLoc.x){ heading.x = Direction.LEFT;}
+        else{ heading.x = Direction.RIGHT;}
+    }
+
+    private void setWallForTarget(){
+        switch (this.target){
+            case LeftWall: this.destinationLoc.x = X_MIN;
+                break;
+            case RightWall: this.destinationLoc.x = X_MAX;
+                break;
+            case TopWall: this.destinationLoc.y = Y_MIN;
+                break;
+            case BottomWall: this.destinationLoc.y = Y_MAX;
+                break;
+        }
+    }
+
+    private void setRandomTarget(){
+        this.target = randomEnum(Target.class);
+    }
+
+    public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
+        int x = random.nextInt(clazz.getEnumConstants().length);
+        return clazz.getEnumConstants()[x];
+    }
+}
 
 class triangle extends View {
 
