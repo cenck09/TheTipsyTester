@@ -74,16 +74,18 @@ public class comet_smash extends AppCompatActivity {
         if (hasFocus){
             if(comet == null){
                 comet = new cometView(this);
-                comet.setVisibility(View.INVISIBLE);
+                comet.setClickable(false);
 
-                ((RelativeLayout)findViewById(R.id.space)).addView(comet);
+                final RelativeLayout space = ((RelativeLayout) findViewById(R.id.space));//.addView(comet);
+                space.addView(comet);
 
                 new android.os.Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            comet.setVisibility(View.VISIBLE);
-                            comet.initRandomTrajectory();
+                            comet.setClickable(true);
+                          //  comet.setVisibility(View.VISIBLE);
+                            comet.initRandomTrajectory((space.getHeight()- (comet.Y_MIN+comet.COMET_SIZE))/2,(space.getWidth()- (comet.X_MIN+comet.COMET_SIZE))/2);
                         } catch (Exception ex) {
                         }
                     }

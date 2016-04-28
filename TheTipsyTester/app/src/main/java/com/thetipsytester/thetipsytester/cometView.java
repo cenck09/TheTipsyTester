@@ -15,13 +15,16 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.Transformation;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.logging.Handler;
 
 /**
  * Created by chrisenck on 4/26/16.
@@ -48,11 +51,11 @@ public class cometView extends FrameLayout {
 
     private static final SecureRandom random = new SecureRandom();
 
-    static int COMET_SIZE = 80;
+    static int COMET_SIZE = 100;
     static int TRIANGLE_COUNT = 20;
 
     RelativeLayout.LayoutParams lParams;
-    Animation animatorTarget;
+    TranslateAnimation animatorTarget;
 
     Integer speed = 20;
 
@@ -90,7 +93,7 @@ public class cometView extends FrameLayout {
         super(context);
         lParams = new RelativeLayout.LayoutParams(COMET_SIZE, COMET_SIZE);
         setLayoutParams(lParams);
-        setBackgroundColor(Color.BLUE);
+     //   setBackgroundColor(Color.BLUE);
         for(int i = 0; i<TRIANGLE_COUNT; i++){
             triangle tmp = new triangle(context);
             addView(tmp);
@@ -120,14 +123,9 @@ public class cometView extends FrameLayout {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
-        X_MAX = ((ViewGroup)this.getParent()).getWidth() - (COMET_SIZE+X_MIN);
-        Y_MAX = ((ViewGroup)this.getParent()).getHeight()- (COMET_SIZE+Y_MIN);
+        X_MAX = ((ViewGroup)this.getParent()).getWidth() - (COMET_SIZE + X_MIN);
+        Y_MAX = ((ViewGroup) this.getParent()).getHeight()- (COMET_SIZE+Y_MIN);
         logError("comet view has focus with X_MAX: " + X_MAX + "  Y_MAX: " + Y_MAX);
-
-        lParams.topMargin = (Y_MAX-COMET_SIZE)/2;
-        lParams.leftMargin = (X_MAX-COMET_SIZE)/2;
-
-        setLayoutParams(lParams);
 
         if (hasFocus){
             for(int i = 0; i<angles.size(); i++){
@@ -154,13 +152,13 @@ public class cometView extends FrameLayout {
     }
 
 
-    public void initRandomTrajectory(){
-        logError("Random Trajectory sent");
-        currentLoc = new Tuple<>(lParams.leftMargin,lParams.topMargin);
-        if(animatorTarget != null) {
+    public void initRandomTrajectory(Integer left, Integer top){
+        currentLoc = new Tuple<>(left,top);
+        logError("Random Trajectory sent for current loc X= " + currentLoc.x+" Y= "+currentLoc.y);
+       /* if(animatorTarget != null) {
             animatorTarget.cancel();
             animatorTarget = null;
-        }
+        }*/
         setRandomDestination();
         setRandomTarget();
         setWallForTarget();
@@ -171,35 +169,27 @@ public class cometView extends FrameLayout {
 
     private void launchComet(){
 
- /*       animate()
-                .translationX(Math.abs(destinationLoc.x-currentLoc.x))
-                .translationY(Math.abs(destinationLoc.y-currentLoc.y))
-                .setDuration(calcTravelTime())
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        setNewDestination();
-                        launchComet();
-                    }
-                }).start();
+  /*      RelativeLayout.LayoutParams nlp = new RelativeLayout.LayoutParams(COMET_SIZE,COMET_SIZE);
+        nlp.leftMargin = (currentLoc.x );
+        nlp.topMargin = (currentLoc.y );
+        logError("Setting location post animation || X= " + lParams.leftMargin + " Y=" + lParams.topMargin);
+        setLayoutParams(nlp);
 */
-        if(animatorTarget != null) {
-            animatorTarget.cancel();
-            animatorTarget = null;
-        }
+        float deltaX=destinationLoc.x - currentLoc.x;
+        float deltaY= destinationLoc.y - currentLoc.y;
 
-        animatorTarget = new Animation() {
+        /*
+        if (animatorTarget != null){
+             animatorTarget.cancel();
+             animatorTarget = null;
+        }*/
 
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                lParams.leftMargin = (int)(destinationLoc.x * interpolatedTime);
-                lParams.topMargin = (int)(destinationLoc.y * interpolatedTime);
-                setLayoutParams(lParams);
-            }
-        };
-          animatorTarget.setAnimationListener(new Animation.AnimationListener() {
+       // animatorTarget = new TranslateAnimation(currentLoc.x,destinationLoc.x,currentLoc.y,destinationLoc.y);
+        animatorTarget = new TranslateAnimation(0,deltaX,0,deltaY);
+        animatorTarget.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation arg0) {
+
             }
 
             @Override
@@ -208,18 +198,37 @@ public class cometView extends FrameLayout {
 
             @Override
             public void onAnimationEnd(Animation arg0) {
-                lParams.leftMargin = destinationLoc.x;
-                lParams.topMargin = destinationLoc.y;
-                setLayoutParams(lParams);
-                setNewDestination();
-                launchComet();
+                // setNewDestination();
+                //launchComet();
+
+                android.os.Handler mainHandler = new android.os.Handler(getContext().getMainLooper());
+
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+
+                        RelativeLayout.LayoutParams nlp = new RelativeLayout.LayoutParams(COMET_SIZE, COMET_SIZE);
+                        nlp.leftMargin = (destinationLoc.x);
+                        nlp.topMargin = (destinationLoc.y);
+                        logError("Setting location post animation || X= " + lParams.leftMargin + " Y=" + lParams.topMargin);
+                        setLayoutParams(nlp);
+                        lParams = nlp;
+
+                        initRandomTrajectory(destinationLoc.x, destinationLoc.y);
+                        // setNewDestination();
+                        // launchComet();
+                    }
+                };
+                mainHandler.post(runnable);
+
             }
         });
-
-        animatorTarget.setInterpolator(this.getContext(), android.R.anim.linear_interpolator);
-        animatorTarget.setDuration(calcTravelTime()); // in ms
-        animatorTarget.setFillEnabled(true);
+        Double time = Math.sqrt((deltaX*deltaX)+(deltaY*deltaY));
+        logError("'Time' factor = "+time);
+        animatorTarget.setDuration(time.longValue());
+        animatorTarget.setInterpolator(new LinearInterpolator());
         animatorTarget.setFillAfter(true);
+    //    animatorTarget.setDuration(calcTravelTime()); // in ms
         startAnimation(animatorTarget);
 
     }
@@ -232,9 +241,9 @@ public class cometView extends FrameLayout {
     private void setNewDestination(){
 
         setNewHeading();
-        Double angleB = calculateImpactAngle();
+        Double angleB = calculateImpactAngle()*360;
         Double angleC = 360 - (90+angleB);
-
+        logError("Impact angleB : "+angleB +" AngleC : "+angleC);
         switch (heading.x){
             case LEFT: calcTargetForLeft(angleB, angleC);
                 break;
@@ -259,6 +268,7 @@ public class cometView extends FrameLayout {
             newY = 0.0;
             newX = calcBlowOutForValue(destinationLoc.y, Y_MIN, angleB, angleC);
         }
+        logError("Destination location for left || X = "+ newX +" Y = "+newY);
         currentLoc = destinationLoc;
         destinationLoc = new Tuple<>(newX.intValue(), newY.intValue());
     }
@@ -266,18 +276,32 @@ public class cometView extends FrameLayout {
     private void calcTargetForRight(Double angleB, Double angleC) {
 
         Double newY = calcBlowOutForValue(X_MAX, destinationLoc.x, angleB, angleC);
-        Double newX = 0.0;
+        Double newX = X_MIN.doubleValue();
 
         if (!(newY < Y_MAX)) {
-            newY = 0.0;
+            newY = Y_MIN.doubleValue();
             newX = calcBlowOutForValue(Y_MAX, destinationLoc.y, angleB, angleC);
         }
+        if ((newY < Y_MIN)) {
+            newY = Y_MIN.doubleValue();
+            newX = calcBlowOutForValue(Y_MAX, destinationLoc.y, angleB, angleC);
+        }
+
+        if ((newX > X_MAX)) {
+            newX = X_MAX.doubleValue();
+        }
+
+        if ((newX < X_MIN)) {
+            newX = X_MIN.doubleValue();
+        }
+
+        logError("Destination location for left || X = "+ newX +" Y = "+newY);
         currentLoc = destinationLoc;
         destinationLoc = new Tuple<>(newX.intValue(), newY.intValue());
     }
 
     private Double calcBlowOutForValue(Integer v, Integer v_min, Double angleB, Double angleC){
-      return ((v-v_min)*Math.sin(angleC))/Math.sin(angleB);
+      return (Math.abs(v-v_min)*Math.sin(angleC))/Math.sin(angleB);
    }
 
     private void setNewTarget(){
@@ -285,14 +309,14 @@ public class cometView extends FrameLayout {
         if(destinationLoc.x == X_MAX) target = Target.RightWall;
         if(destinationLoc.y == Y_MIN) target = Target.TopWall;
         if(destinationLoc.y == Y_MAX) target = Target.BottomWall;
-        logError("Target "+ target);
+        logError("New Target "+ target);
     }
 
     private void setNewHeading(){
         switch (this.target){
-            case LeftWall: heading.x = Direction.LEFT;
+            case LeftWall: heading.x = Direction.RIGHT;
                 break;
-            case RightWall:  heading.x = Direction.RIGHT;
+            case RightWall:  heading.x = Direction.LEFT;
                 break;
             case TopWall:  heading.y = Direction.DOWN;
                 break;
@@ -309,6 +333,7 @@ public class cometView extends FrameLayout {
 
         if(destinationLoc.x<currentLoc.x){ heading.x = Direction.LEFT;}
         else{ heading.x = Direction.RIGHT;}
+        logError("Values before setting heading || current Y: "+currentLoc.y+" current X: "+currentLoc.x+" destination Y: "+destinationLoc.y+" destination X: "+destinationLoc.x);
         logError("Heading ( " +heading.x + " , " + heading.y+" )");
 
     }
@@ -342,13 +367,13 @@ public class cometView extends FrameLayout {
     private void validateNoLines(){
         if(currentLoc.x == destinationLoc.x){
             logError("Line found, correcting ");
-            if((destinationLoc.x + 2) < X_MAX ) destinationLoc.x+=2;
-            else destinationLoc.x-=2;
+            if((destinationLoc.x + 5) < X_MAX ) destinationLoc.x+=5;
+            else destinationLoc.x-=5;
         }
         if(currentLoc.y == destinationLoc.y){
             logError("Line found, correcting ");
-            if((destinationLoc.y + 2) < Y_MAX ) destinationLoc.y+=2;
-            else destinationLoc.y-=2;
+            if((destinationLoc.y + 5) < Y_MAX ) destinationLoc.y+=5;
+            else destinationLoc.y-=5;
         }
 
      //   if((destinationLoc.x == X_MAX)&&(destinationLoc.y == Y_MAX)){ destinationLoc.y=-2; validateNoLines();}
@@ -367,7 +392,7 @@ public class cometView extends FrameLayout {
 class triangle extends View {
 
     static final String STATE_GAME_INITENT_ROCK_THROW = "CometSmashGameBrekRock";
-    static int COMET_SIZE = 50;
+    static int COMET_SIZE = 80;
     RotateAnimation ra;
 
     public triangle(Context context){
