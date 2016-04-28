@@ -20,7 +20,8 @@ import java.util.logging.Handler;
 public class comet_smash extends AppCompatActivity {
 
     static final String STATE_GAME_TIME = "CometSmashGameTime";
-    static final String STATE_GAME_INITENT_ROCK_THROW = "CometSmashGameBrekRock";
+    static final String STATE_GAME_INTENT_ROCK_THROW = "CometSmashGameBreakRock";
+    static final String STATE_GAME_INTENT_END_GAME = "CometSmashGameEndGame";
     int time;
     cometView comet;
 
@@ -32,16 +33,22 @@ public class comet_smash extends AppCompatActivity {
         this.getWindow().getDecorView().setBackgroundColor(Color.parseColor("#" + PreferenceManager.getDefaultSharedPreferences(this).getString("color", "232323")));
         logError("Create teh Comet smash game!!");
 
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(breakRockReceiver,new IntentFilter(STATE_GAME_INITENT_ROCK_THROW));
-
+        LocalBroadcastManager.getInstance(this).registerReceiver(breakRockReceiver, new IntentFilter(STATE_GAME_INTENT_ROCK_THROW));
+        LocalBroadcastManager.getInstance(this).registerReceiver(endGameReceiver,new IntentFilter(STATE_GAME_INTENT_END_GAME));
     }
 
 
     private BroadcastReceiver breakRockReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            logError("Got message: " + intent.getStringExtra("message"));
+            logError("Got Break Rock Message");
+        }
+    };
+    private BroadcastReceiver endGameReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            logError("Got end game Message");
+            endGame();
         }
     };
 
@@ -76,6 +83,7 @@ public class comet_smash extends AppCompatActivity {
                     public void run() {
                         try {
                             comet.setVisibility(View.VISIBLE);
+                            comet.initRandomTrajectory();
                         } catch (Exception ex) {
                         }
                     }
@@ -99,6 +107,7 @@ public class comet_smash extends AppCompatActivity {
     @Override
     public void onDestroy(){
         LocalBroadcastManager.getInstance(this).unregisterReceiver(breakRockReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(endGameReceiver);
 
         super.onDestroy();
         logError("DESTROYED COMET SMASH");

@@ -1,5 +1,7 @@
 package com.thetipsytester.thetipsytester;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -7,14 +9,16 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.view.animation.Transformation;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -28,7 +32,7 @@ enum Target {
     TopWall, LeftWall, BottomWall, RightWall
 }
 enum Direction {
-    LEFT, RIGHT, UP, DOWN
+    LEFT, RIGHT, UP, DOWN, UNSET
 }
 
 class Tuple<X, Y> {
@@ -47,11 +51,16 @@ public class cometView extends FrameLayout {
     static int COMET_SIZE = 80;
     static int TRIANGLE_COUNT = 20;
 
+    RelativeLayout.LayoutParams lParams;
+    Animation animatorTarget;
+
+    Integer speed = 20;
+
     Integer X_MAX;
-    Integer X_MIN;
+    Integer X_MIN = 5;
 
     Integer Y_MAX;
-    Integer Y_MIN;
+    Integer Y_MIN = 5;
 
     ArrayList<triangle> angles = new ArrayList<triangle>();
 
@@ -62,16 +71,42 @@ public class cometView extends FrameLayout {
     Tuple<Direction,Direction> heading;
     Target target;
 
+    Integer hitCount = 5;
+
+    static final String STATE_GAME_INTENT_ROCK_THROW = "CometSmashGameBreakRock";
+    static final String STATE_GAME_INTENT_END_GAME = "CometSmashGameEndGame";
+
+    private void sendBreakRockMessage() {
+        logError("Broadcasting Break Rock message");
+        LocalBroadcastManager.getInstance(this.getContext()).sendBroadcast(new Intent(STATE_GAME_INTENT_ROCK_THROW));
+    }
+    private void sendEndGameMessage() {
+        logError("Broadcasting End Game message");
+        LocalBroadcastManager.getInstance(this.getContext()).sendBroadcast(new Intent(STATE_GAME_INTENT_END_GAME));
+    }
+
 
     public cometView(Context context) {
         super(context);
-        setLayoutParams(new LayoutParams(COMET_SIZE, COMET_SIZE, Gravity.CENTER));
+        lParams = new RelativeLayout.LayoutParams(COMET_SIZE, COMET_SIZE);
+        setLayoutParams(lParams);
         setBackgroundColor(Color.BLUE);
         for(int i = 0; i<TRIANGLE_COUNT; i++){
             triangle tmp = new triangle(context);
             addView(tmp);
             angles.add(tmp);
         }
+        heading = new Tuple<>(Direction.UNSET,Direction.UNSET);
+
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendBreakRockMessage();
+                hitCount--;
+                if (hitCount == 0) sendEndGameMessage();
+            }
+        });
+
         logError("created comet view");
     }
 
@@ -79,12 +114,21 @@ public class cometView extends FrameLayout {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
 
-        logError("Layout comet view");
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+
+        X_MAX = ((ViewGroup)this.getParent()).getWidth() - (COMET_SIZE+X_MIN);
+        Y_MAX = ((ViewGroup)this.getParent()).getHeight()- (COMET_SIZE+Y_MIN);
+        logError("comet view has focus with X_MAX: " + X_MAX + "  Y_MAX: " + Y_MAX);
+
+        lParams.topMargin = (Y_MAX-COMET_SIZE)/2;
+        lParams.leftMargin = (X_MAX-COMET_SIZE)/2;
+
+        setLayoutParams(lParams);
+
         if (hasFocus){
             for(int i = 0; i<angles.size(); i++){
                 triangle tmp = angles.get(i);
@@ -96,17 +140,166 @@ public class cometView extends FrameLayout {
             }
         }
     }
+    public void destroy(){
+        stopSpin();
+        while(angles.size()>0) angles.remove(0).removeSelf();
+    }
 
     public void stopSpin(){
         for(int i=0; i<angles.size(); i++) angles.get(i).stopSpin();
     }
 
-    public void logError(String err){
+    private void logError(String err){
         Log.d("COMET_VIEW ", err);
     }
 
-    public boolean shouldDelayChildPressedState() {
-        return false;
+
+    public void initRandomTrajectory(){
+        logError("Random Trajectory sent");
+        currentLoc = new Tuple<>(lParams.leftMargin,lParams.topMargin);
+        if(animatorTarget != null) {
+            animatorTarget.cancel();
+            animatorTarget = null;
+        }
+        setRandomDestination();
+        setRandomTarget();
+        setWallForTarget();
+        validateNoLines();
+        setHeading();
+        launchComet();
+    }
+
+    private void launchComet(){
+
+ /*       animate()
+                .translationX(Math.abs(destinationLoc.x-currentLoc.x))
+                .translationY(Math.abs(destinationLoc.y-currentLoc.y))
+                .setDuration(calcTravelTime())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        setNewDestination();
+                        launchComet();
+                    }
+                }).start();
+*/
+        if(animatorTarget != null) {
+            animatorTarget.cancel();
+            animatorTarget = null;
+        }
+
+        animatorTarget = new Animation() {
+
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                lParams.leftMargin = (int)(destinationLoc.x * interpolatedTime);
+                lParams.topMargin = (int)(destinationLoc.y * interpolatedTime);
+                setLayoutParams(lParams);
+            }
+        };
+          animatorTarget.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation arg0) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                lParams.leftMargin = destinationLoc.x;
+                lParams.topMargin = destinationLoc.y;
+                setLayoutParams(lParams);
+                setNewDestination();
+                launchComet();
+            }
+        });
+
+        animatorTarget.setInterpolator(this.getContext(), android.R.anim.linear_interpolator);
+        animatorTarget.setDuration(calcTravelTime()); // in ms
+        animatorTarget.setFillEnabled(true);
+        animatorTarget.setFillAfter(true);
+        startAnimation(animatorTarget);
+
+    }
+
+    private Double calculateImpactAngle(){
+        logError("Calculating Impact angle current Y: "+currentLoc.y+" current X: "+currentLoc.x+" destination Y: "+destinationLoc.y+" destination X: "+destinationLoc.x);
+        return Math.atan(Math.abs(currentLoc.y - destinationLoc.y)/Math.abs(currentLoc.x-destinationLoc.x));
+    }
+
+    private void setNewDestination(){
+
+        setNewHeading();
+        Double angleB = calculateImpactAngle();
+        Double angleC = 360 - (90+angleB);
+
+        switch (heading.x){
+            case LEFT: calcTargetForLeft(angleB, angleC);
+                break;
+            case RIGHT: calcTargetForRight(angleB,angleC);
+                break;
+        }
+
+        validateNoLines();
+        setNewTarget();
+    }
+
+    private long calcTravelTime(){
+        return (long)(Math.sqrt(Math.abs(currentLoc.x-destinationLoc.x)+Math.abs(currentLoc.y-destinationLoc.y))*(1000/speed));
+    }
+
+    private void calcTargetForLeft(Double angleB, Double angleC) {
+
+        Double newY = calcBlowOutForValue(destinationLoc.x, X_MIN, angleB, angleC);
+        Double newX = 0.0;
+
+        if (!(newY < Y_MAX)) {
+            newY = 0.0;
+            newX = calcBlowOutForValue(destinationLoc.y, Y_MIN, angleB, angleC);
+        }
+        currentLoc = destinationLoc;
+        destinationLoc = new Tuple<>(newX.intValue(), newY.intValue());
+    }
+
+    private void calcTargetForRight(Double angleB, Double angleC) {
+
+        Double newY = calcBlowOutForValue(X_MAX, destinationLoc.x, angleB, angleC);
+        Double newX = 0.0;
+
+        if (!(newY < Y_MAX)) {
+            newY = 0.0;
+            newX = calcBlowOutForValue(Y_MAX, destinationLoc.y, angleB, angleC);
+        }
+        currentLoc = destinationLoc;
+        destinationLoc = new Tuple<>(newX.intValue(), newY.intValue());
+    }
+
+    private Double calcBlowOutForValue(Integer v, Integer v_min, Double angleB, Double angleC){
+      return ((v-v_min)*Math.sin(angleC))/Math.sin(angleB);
+   }
+
+    private void setNewTarget(){
+        if(destinationLoc.x == X_MIN) target = Target.LeftWall;
+        if(destinationLoc.x == X_MAX) target = Target.RightWall;
+        if(destinationLoc.y == Y_MIN) target = Target.TopWall;
+        if(destinationLoc.y == Y_MAX) target = Target.BottomWall;
+        logError("Target "+ target);
+    }
+
+    private void setNewHeading(){
+        switch (this.target){
+            case LeftWall: heading.x = Direction.LEFT;
+                break;
+            case RightWall:  heading.x = Direction.RIGHT;
+                break;
+            case TopWall:  heading.y = Direction.DOWN;
+                break;
+            case BottomWall:  heading.y = Direction.UP;
+                break;
+        }
+        logError("New Heading ( " +heading.x + " , " + heading.y+" )");
     }
 
     private void setHeading(){
@@ -116,6 +309,8 @@ public class cometView extends FrameLayout {
 
         if(destinationLoc.x<currentLoc.x){ heading.x = Direction.LEFT;}
         else{ heading.x = Direction.RIGHT;}
+        logError("Heading ( " +heading.x + " , " + heading.y+" )");
+
     }
 
     private void setWallForTarget(){
@@ -129,13 +324,41 @@ public class cometView extends FrameLayout {
             case BottomWall: this.destinationLoc.y = Y_MAX;
                 break;
         }
+        logError("Set to wall, new destination is X: " + destinationLoc.x + "  Y: " + destinationLoc.y);
+    }
+
+    private void setRandomDestination(){
+        destinationLoc = new Tuple<>(random.nextInt(X_MAX),random.nextInt(Y_MAX));
+        if(destinationLoc.y <= Y_MIN) destinationLoc.y = Y_MIN;
+        if(destinationLoc.x <= X_MIN) destinationLoc.x = X_MIN;
+        logError("Random destination X: " +destinationLoc.x + "  Y: " + destinationLoc.y);
     }
 
     private void setRandomTarget(){
-        this.target = randomEnum(Target.class);
+        target = randomEnum(Target.class);
+        logError("Random Target : "+target);
     }
 
-    public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
+    private void validateNoLines(){
+        if(currentLoc.x == destinationLoc.x){
+            logError("Line found, correcting ");
+            if((destinationLoc.x + 2) < X_MAX ) destinationLoc.x+=2;
+            else destinationLoc.x-=2;
+        }
+        if(currentLoc.y == destinationLoc.y){
+            logError("Line found, correcting ");
+            if((destinationLoc.y + 2) < Y_MAX ) destinationLoc.y+=2;
+            else destinationLoc.y-=2;
+        }
+
+     //   if((destinationLoc.x == X_MAX)&&(destinationLoc.y == Y_MAX)){ destinationLoc.y=-2; validateNoLines();}
+     //   else if((destinationLoc.x == X_MIN)&&(destinationLoc.y == Y_MAX)){ destinationLoc.x=+2; validateNoLines();}
+     //   else if((destinationLoc.x == X_MAX)&&(destinationLoc.y == Y_MIN)){ destinationLoc.y=+2; validateNoLines();}
+     //   else if((destinationLoc.x == X_MIN)&&(destinationLoc.y == Y_MIN)){ destinationLoc.x=+2; validateNoLines();}
+
+    }
+
+    private static <T extends Enum<?>> T randomEnum(Class<T> clazz){
         int x = random.nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
     }
@@ -147,28 +370,10 @@ class triangle extends View {
     static int COMET_SIZE = 50;
     RotateAnimation ra;
 
-    private void sendBreakRockMessage() {
-        logError("Broadcasting message");
-        Intent intent = new Intent(STATE_GAME_INITENT_ROCK_THROW);
-        // You can also include some extra data.
-        intent.putExtra("message", "This is my message!");
-        LocalBroadcastManager.getInstance(this.getContext()).sendBroadcast(intent);
-    }
-
-
     public triangle(Context context){
         super(context);
         FrameLayout.LayoutParams l = new FrameLayout.LayoutParams(COMET_SIZE,COMET_SIZE, Gravity.CENTER);
-      //  l.leftMargin = (int)Math.round((200-COMET_SIZE)/2);
-      //  l.topMargin = (int)Math.round((200-COMET_SIZE)/2);
         setLayoutParams(l);
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendBreakRockMessage();
-                setVisibility(INVISIBLE);
-            }
-        });
     }
 
     public void initSpin(long d, long delay){
@@ -179,13 +384,14 @@ class triangle extends View {
         ra.setFillAfter(true);
         ra.setRepeatCount(Animation.INFINITE);
        new android.os.Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    startAnimation(ra);
-                }catch (Exception ex){}
-            }
-        }, delay);
+           @Override
+           public void run() {
+               try {
+                   startAnimation(ra);
+               } catch (Exception ex) {
+               }
+           }
+       }, delay);
 
     }
 
@@ -228,7 +434,12 @@ class triangle extends View {
 
         canvas.drawPath(path, np);
     }
-    public void logError(String err){
+
+    public void removeSelf(){
+        ((ViewGroup)this.getParent()).removeView(this);
+    }
+
+    private void logError(String err){
         Log.d("COMET_VIEW_TRIANGLE ", err);
     }
 }
