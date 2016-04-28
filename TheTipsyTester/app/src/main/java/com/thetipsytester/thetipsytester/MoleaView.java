@@ -108,9 +108,9 @@ public class MoleaView extends View {
     public void fadeMoleaIn(){
         animating = true;
         this.animate()
-                .alpha(.75f)
-                .scaleX((float) 1.15)
-                .scaleY((float) 1.15)
+                .alpha(1.0f)
+                .scaleX((float) 0.8)
+                .scaleY((float) 0.8)
                 .setDuration(500)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
@@ -126,7 +126,7 @@ public class MoleaView extends View {
     public void fadeMoleaOut(){
         animating = true;
         this.animate()
-                .alpha(1.0f)
+                .alpha(0.75f)
                 .scaleX((float) 1)
                 .scaleY((float) 1)
                 .setDuration(500)
