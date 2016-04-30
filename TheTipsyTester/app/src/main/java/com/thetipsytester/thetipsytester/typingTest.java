@@ -101,8 +101,10 @@ public class typingTest extends AppCompatActivity {
         String userSentence = editText.getText().toString();
 
         for (int i = 0; i < userSentence.length(); i++) {
-            if (userSentence.charAt(i) == selection.charAt(i)) {
-                score = score + 5;
+            if(selection.length()> i) {
+                if (userSentence.charAt(i) == selection.charAt(i)) {
+                    score = score + 5;
+                }
             }
         }
         long temp;
