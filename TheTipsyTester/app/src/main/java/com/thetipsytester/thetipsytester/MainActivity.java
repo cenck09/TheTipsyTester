@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         //When the Test button is clicked from the main menu
         Intent intent = new Intent(this, testSelectActivity.class);
         //Intent intent = new Intent(this, userSelectActivity.class);
+        intent.putExtra("calibration", false);
 
         startActivity(intent);
     }

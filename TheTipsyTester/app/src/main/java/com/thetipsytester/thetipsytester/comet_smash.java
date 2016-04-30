@@ -54,7 +54,7 @@ public class comet_smash extends AppCompatActivity {
         Intent intent = new Intent(this, scorereportActivity.class);
 
         intent.putExtra("prevTest", "comet"); // this needs to be updated
-        intent.putExtra("nextTests",currentIntent.getStringArrayExtra("nextTests"));
+        intent.putStringArrayListExtra("nextTests",currentIntent.getStringArrayListExtra("nextTests"));
         intent.putExtra("score", time);
         intent.putExtra("calibration", currentIntent.getBooleanExtra("calibration", false));
         intent.putExtra("BAC", currentIntent.getDoubleExtra("BAC", 0));

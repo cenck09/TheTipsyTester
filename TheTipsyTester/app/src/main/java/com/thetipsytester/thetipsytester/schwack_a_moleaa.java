@@ -315,7 +315,7 @@ public class schwack_a_moleaa extends AppCompatActivity {
         Intent intent = new Intent(this, scorereportActivity.class);
 
         intent.putExtra("prevTest", "schwack"); // this needs to be updated
-        intent.putExtra("nextTests",currentIntent.getStringArrayExtra("nextTests"));
+        intent.putStringArrayListExtra("nextTests",currentIntent.getStringArrayListExtra("nextTests"));
         intent.putExtra("score", score);
         intent.putExtra("calibration", currentIntent.getBooleanExtra("calibration", false));
         intent.putExtra("BAC", currentIntent.getDoubleExtra("BAC", 0));

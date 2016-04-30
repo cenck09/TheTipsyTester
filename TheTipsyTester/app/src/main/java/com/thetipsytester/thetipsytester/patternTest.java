@@ -11,6 +11,8 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,7 +30,7 @@ public class patternTest extends AppCompatActivity{
     int runCount = 0;
     int score = 0;
 
-    String[] nextTests;
+    ArrayList<String> nextTests;
     boolean calibration = false;
     double bac = 0;
 
@@ -38,7 +40,7 @@ public class patternTest extends AppCompatActivity{
         setContentView(R.layout.pattern_test);
 
         Intent intent = getIntent();
-        nextTests = intent.getStringArrayExtra("nextTests");
+        nextTests = intent.getStringArrayListExtra("nextTests");
         calibration = intent.getBooleanExtra("calibration", false);
         bac = intent.getDoubleExtra("BAC", 0);
 
@@ -177,7 +179,7 @@ public class patternTest extends AppCompatActivity{
         else {
             Intent intent = new Intent(this, scorereportActivity.class);
             intent.putExtra("prevTest", "pattern");
-            intent.putExtra("nextTests", nextTests);
+            intent.putStringArrayListExtra("nextTests", nextTests);
             intent.putExtra("score", score);
             intent.putExtra("calibration", calibration);
             intent.putExtra("BAC", bac);

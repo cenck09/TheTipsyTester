@@ -18,6 +18,8 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Created by Nick on 4/11/2016.
  */
@@ -41,7 +43,7 @@ public class balanceTest extends Activity implements SensorEventListener{
     CountDownTimer countDownTimer = new MyCountDownTimer(startTime, interval);
     CountDownTimer pauseTimer = new MyCountDownTimer2(pauseTime, interval);
 
-    String[] nextTests;
+    ArrayList<String> nextTests;
 
     ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
 
@@ -59,7 +61,7 @@ public class balanceTest extends Activity implements SensorEventListener{
         timerText.setText(timerText.getText()+String.valueOf(startTime / 1000));
 
         Intent intent = getIntent();
-        nextTests = intent.getStringArrayExtra("nextTests");
+        nextTests = intent.getStringArrayListExtra("nextTests");
         calibration = intent.getBooleanExtra("calibration", false);
         bac = intent.getDoubleExtra("BAC", 0);
 
@@ -111,7 +113,7 @@ public class balanceTest extends Activity implements SensorEventListener{
 
             Intent intent = new Intent(balanceTest.this, scorereportActivity.class);
             intent.putExtra("prevTest", "balance");
-            intent.putExtra("nextTests", nextTests);
+            intent.putStringArrayListExtra("nextTests", nextTests);
             intent.putExtra("score", finalScore);
             intent.putExtra("calibration", calibration);
             intent.putExtra("BAC", bac);

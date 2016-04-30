@@ -2,6 +2,8 @@ package com.thetipsytester.thetipsytester;
 
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -10,13 +12,12 @@ import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 
-public class userSelectActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+public class userSelectActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
 
     private TipsyDB tipsy;
     SQLiteDatabase db;
@@ -36,6 +37,7 @@ public class userSelectActivity extends AppCompatActivity implements AdapterView
         activity = intent.getStringExtra("activity");
 
         populateList();
+
 
     }
 
@@ -74,6 +76,7 @@ public class userSelectActivity extends AppCompatActivity implements AdapterView
         UserCursorAdapter userAdapter = new UserCursorAdapter(this, userCursor,0);
         listView.setAdapter(userAdapter);
         listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
 
     }
 
@@ -105,4 +108,46 @@ public class userSelectActivity extends AppCompatActivity implements AdapterView
     }
 
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        alertDialogBuilder.setTitle("Delete User");
+
+        alertDialogBuilder.setMessage("Are you sure you want to delete + " + id + "?")
+                .setCancelable(false)
+                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        //delete all records of user
+
+                        String table = "scores";
+                        String whereClause = "_id" + "=?";
+                        String[] whereArgs = new String[] { String.valueOf(id) };
+                        db.delete(table, whereClause, whereArgs);
+                        table = "tests";
+                        db.delete(table, whereClause, whereArgs);
+                        table = "users";
+                        db.delete(table, whereClause, whereArgs);
+
+
+                        populateList();
+
+                        System.out.println("DELETED");
+
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+
+        return true;
+    }
 }

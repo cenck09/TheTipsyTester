@@ -14,6 +14,8 @@ import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -35,7 +37,7 @@ public class typingTest extends AppCompatActivity {
     long countUp;
     Chronometer stopWatch;
 
-    String[] nextTests;
+    ArrayList<String> nextTests;
     boolean calibration = false;
     double bac = 0;
 
@@ -45,7 +47,7 @@ public class typingTest extends AppCompatActivity {
         setContentView(R.layout.typing_test);
 
         Intent intent = getIntent();
-        nextTests = intent.getStringArrayExtra("nextTests");
+        nextTests = intent.getStringArrayListExtra("nextTests");
         calibration = intent.getBooleanExtra("calibration", false);
         bac = intent.getDoubleExtra("BAC", 0);
 
@@ -122,7 +124,7 @@ public class typingTest extends AppCompatActivity {
 
         Intent intent = new Intent(this, scorereportActivity.class);
         intent.putExtra("prevTest", "typing");
-        intent.putExtra("nextTests", nextTests);
+        intent.putStringArrayListExtra("nextTests", nextTests);
         intent.putExtra("score", finalScore);
         intent.putExtra("calibration", calibration);
         intent.putExtra("BAC", bac);
