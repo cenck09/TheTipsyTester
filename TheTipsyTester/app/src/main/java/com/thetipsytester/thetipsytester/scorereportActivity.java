@@ -26,8 +26,7 @@ public class scorereportActivity extends AppCompatActivity {
     boolean calibration = false;
     double bac = 0;
 
-    int bacCount;
-    int numTests;
+    int bacCount, numTests, additive = 0;
 
     int soberScore = 0,insertValue,newPercent;
     double oldPercent;
@@ -36,7 +35,7 @@ public class scorereportActivity extends AppCompatActivity {
     int displayPercent,storedPercent;
 
     double performancePercent;
-    String bacText = "Need to calibrate first";
+    String bacText = "Calibrate test first";
 
     TipsyDB tipsy;
     SQLiteDatabase db;
@@ -145,45 +144,66 @@ public class scorereportActivity extends AppCompatActivity {
                         if (ut04Percent == 0) {
                             bacText = "0.00%";
                             bacCount = bacCount + 1;
-                        } else if (performancePercent < ut08Percent - 5) {
+                            additive = 1;
+                        } else if (performancePercent <= ut08Percent - 5) {
                             bacText = "0.00-0.04%";
                             bacCount = bacCount + 1;
+                            additive = 1;
                         } else if (performancePercent < ut08Percent) {
                             bacText = "0.04-0.08%";
                             bacCount = bacCount + 2;
+                            additive = 2;
                         } else if (performancePercent >= ut08Percent && performancePercent < ut12Percent) {
                             bacText = "0.08-0.12%";
                             bacCount = bacCount + 3;
+                            additive = 3;
                         } else if (performancePercent >= ut12Percent && performancePercent < ut16Percent) {
                             bacText = "0.12-0.16%";
                             bacCount = bacCount + 4;
+                            additive = 4;
                         } else if (performancePercent >= ut16Percent && performancePercent < ut20Percent) {
                             bacText = "0.16-0.20%";
                             bacCount = bacCount + 5;
+                            additive = 5;
                         } else if (performancePercent >= ab20Percent) {
                             bacText = ">0.20%";
                             bacCount = bacCount + 6;
+                            additive = 6;
                         }else{
-                            bacText = "Need to calibrate first";
+                            bacText = "Calibrate test first";
                         }
                     }else{
 
                         if (ut04Percent == 0) {
                             bacText = "0.00%";
-                        } else if (performancePercent > ut08Percent + 5) {
+                            bacCount = bacCount + 1;
+                            additive = 1;
+                        } else if (performancePercent >= ut08Percent + 5) {
                             bacText = "0.00-0.04%";
-                        } else if (performancePercent < ut08Percent) {
+                            bacCount = bacCount + 1;
+                            additive = 1;
+                        } else if (performancePercent > ut08Percent) {
                             bacText = "0.04-0.08%";
+                            bacCount = bacCount + 2;
+                            additive = 2;
                         } else if (performancePercent <= ut08Percent && performancePercent > ut12Percent) {
                             bacText = "0.08-0.12%";
+                            bacCount = bacCount + 3;
+                            additive = 3;
                         } else if (performancePercent <= ut12Percent && performancePercent > ut16Percent) {
                             bacText = "0.12-0.16%";
+                            bacCount = bacCount + 4;
+                            additive = 4;
                         } else if (performancePercent <= ut16Percent && performancePercent > ut20Percent) {
                             bacText = "0.16-0.20%";
+                            bacCount = bacCount + 5;
+                            additive = 5;
                         } else if (performancePercent <= ab20Percent) {
                             bacText = ">0.20%";
+                            bacCount = bacCount + 6;
+                            additive = 6;
                         }else{
-                            bacText = "Need to calibrate first";
+                            bacText = "Calibrate test first";
                         }
 
                     }
@@ -199,57 +219,6 @@ public class scorereportActivity extends AppCompatActivity {
             if (c != null && c.moveToFirst()) {
                 best = c.getInt(c.getColumnIndex("best"));
                 worst = c.getInt(c.getColumnIndex("worst"));
-                testPercent = ((double)score/(double)soberScore)*100;
-                displayPercent = (int) testPercent;
-
-                if(calibration){
-                    oldDrunkScore = (int)(soberScore * (oldPercent/100));
-                    newDrunkScore = (int)(((double)(oldDrunkScore*3) + (double)score)/4);
-                    newPercent = (int)(((double)newDrunkScore/(double)soberScore)*100);
-                    storedPercent = newPercent;
-
-
-
-                    if(bac >= 0 && bac < 0.04){
-                        insertValue = (soberScore*3 + score)/4;
-                        ContentValues values = new ContentValues();
-                        values.put("ut04", insertValue);
-                        System.out.println("Insert Value: " + insertValue);
-                        db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
-                                + rowid), String.valueOf("" + prevTest)});
-
-                    }else if(bac >= 0.04 && bac < 0.08){
-                        ContentValues values = new ContentValues();
-                        values.put("ut08", storedPercent);
-                        db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
-                                + rowid), String.valueOf("" + prevTest)});
-                    }else if(bac >= 0.08 && bac < 0.12){
-                        ContentValues values = new ContentValues();
-                        values.put("ut12", storedPercent);
-                        db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
-                                + rowid), String.valueOf("" + prevTest)});
-
-                    }else if(bac >= 0.12 && bac < 0.16){
-                        ContentValues values = new ContentValues();
-                        values.put("ut16", storedPercent);
-                        db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
-                                + rowid), String.valueOf("" + prevTest)});
-
-                    }else if(bac >= 0.16 && bac < 0.20){
-                        ContentValues values = new ContentValues();
-                        values.put("ut20", storedPercent);
-                        db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
-                                + rowid), String.valueOf("" + prevTest)});
-
-                    }else if(bac >= 0.2){
-                        ContentValues values = new ContentValues();
-                        values.put("ab20", storedPercent);
-                        db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
-                                + rowid), String.valueOf("" + prevTest)});
-                    }
-                }
-
-
             }
 
             c.close();
@@ -313,30 +282,40 @@ public class scorereportActivity extends AppCompatActivity {
             Intent intent = new Intent(scorereportActivity.this, balanceTest.class);
             intent.putExtra("nextTests", nextTests);
             intent.putExtra("calibration", calibration);
+            intent.putExtra("bacCount", bacCount-additive);
+            intent.putExtra("numTests", numTests);
             startActivity(intent);
         }
         if(prevTest.equals("pattern")) {
             Intent intent = new Intent(scorereportActivity.this, patternTest.class);
             intent.putExtra("nextTests", nextTests);
             intent.putExtra("calibration", calibration);
+            intent.putExtra("bacCount", bacCount-additive);
+            intent.putExtra("numTests", numTests);
             startActivity(intent);
         }
         if(prevTest.equals("typing")) {
             Intent intent = new Intent(scorereportActivity.this, typingTest.class);
             intent.putExtra("nextTests", nextTests);
             intent.putExtra("calibration", calibration);
+            intent.putExtra("bacCount", bacCount-additive);
+            intent.putExtra("numTests", numTests);
             startActivity(intent);
         }
         if(prevTest.equals("schwack")) {
             Intent intent = new Intent(scorereportActivity.this, schwack_a_moleaa.class);
             intent.putExtra("nextTests", nextTests);
             intent.putExtra("calibration", calibration);
+            intent.putExtra("bacCount", bacCount-additive);
+            intent.putExtra("numTests", numTests);
             startActivity(intent);
         }
         if(prevTest.equals("comet")) {
             Intent intent = new Intent(scorereportActivity.this, comet_smash.class);
             intent.putExtra("nextTests", nextTests);
             intent.putExtra("calibration", calibration);
+            intent.putExtra("bacCount", bacCount-additive);
+            intent.putExtra("numTests", numTests);
             startActivity(intent);
         }
         finish();
@@ -344,6 +323,64 @@ public class scorereportActivity extends AppCompatActivity {
 
     public void nextAction(View view) {
         if (rowid != -1) {
+
+            String selectQuery = "SELECT * FROM " + "scores" + " WHERE _id = " + rowid
+                    + " AND test = '" + prevTest + "'";
+            Cursor c = db.rawQuery(selectQuery, null);
+
+            if (c != null && c.moveToFirst()) {
+                testPercent = ((double)score/(double)soberScore)*100;
+                displayPercent = (int) testPercent;
+
+                if(calibration){
+                    oldDrunkScore = (int)(soberScore * (oldPercent/100));
+                    newDrunkScore = (int)(((double)(oldDrunkScore*3) + (double)score)/4);
+                    newPercent = (int)(((double)newDrunkScore/(double)soberScore)*100);
+                    storedPercent = newPercent;
+
+
+
+                    if(bac >= 0 && bac < 0.04){
+                        insertValue = (soberScore*3 + score)/4;
+                        ContentValues values = new ContentValues();
+                        values.put("ut04", insertValue);
+                        System.out.println("Insert Value: " + insertValue);
+                        db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
+                                + rowid), String.valueOf("" + prevTest)});
+
+                    }else if(bac >= 0.04 && bac < 0.08){
+                        ContentValues values = new ContentValues();
+                        values.put("ut08", storedPercent);
+                        db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
+                                + rowid), String.valueOf("" + prevTest)});
+                    }else if(bac >= 0.08 && bac < 0.12){
+                        ContentValues values = new ContentValues();
+                        values.put("ut12", storedPercent);
+                        db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
+                                + rowid), String.valueOf("" + prevTest)});
+
+                    }else if(bac >= 0.12 && bac < 0.16){
+                        ContentValues values = new ContentValues();
+                        values.put("ut16", storedPercent);
+                        db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
+                                + rowid), String.valueOf("" + prevTest)});
+
+                    }else if(bac >= 0.16 && bac < 0.20){
+                        ContentValues values = new ContentValues();
+                        values.put("ut20", storedPercent);
+                        db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
+                                + rowid), String.valueOf("" + prevTest)});
+
+                    }else if(bac >= 0.2){
+                        ContentValues values = new ContentValues();
+                        values.put("ab20", storedPercent);
+                        db.update("tests", values, "_id = ? AND test = ?", new String[]{String.valueOf(""
+                                + rowid), String.valueOf("" + prevTest)});
+                    }
+                }
+
+            }
+            c.close();
 
             if (best == 0 && worst == 0) {
                 ContentValues values = new ContentValues();
@@ -369,7 +406,7 @@ public class scorereportActivity extends AppCompatActivity {
                     values.put("ut12", 85);
                     values.put("ut16", 70);
                     values.put("ut20", 55);
-                    values.put("ab20", 30);
+                    values.put("ab20", 40);
                 }
 
                 if(prevTest.equals("typing")) {
@@ -458,7 +495,7 @@ public class scorereportActivity extends AppCompatActivity {
                 startActivity(intent);
             }
 
-            if(next.equals("schwack_a_moleaa")) {
+            if(next.equals("schwack")) {
                 Intent intent = new Intent(this, schwack_a_moleaa.class);
                 intent.putStringArrayListExtra("nextTests", nextTests);
                 intent.putExtra("bacCount", bacCount);
@@ -483,11 +520,17 @@ public class scorereportActivity extends AppCompatActivity {
                 mInterstitialAd.show();
             }
 
+            System.out.println("bacCOUNT: " + bacCount + "\n\n\n");
 
             if(numTests > 1){
                 Intent intent = new Intent(this, estimatedBAC.class);
                 intent.putExtra("bacCount", bacCount);
-                intent.putExtra("numTests", numTests);
+                if(bacText.equals("Calibrate test first")){
+                    intent.putExtra("numTests", numTests-1);
+                }else{
+                    intent.putExtra("numTests", numTests);
+                }
+                startActivity(intent);
             }
             finish();
         }

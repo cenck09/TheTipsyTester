@@ -24,6 +24,8 @@ public class comet_smash extends AppCompatActivity {
     int time;
     cometView comet;
 
+    int bacCount, numTests;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,9 @@ public class comet_smash extends AppCompatActivity {
         intent.putExtra("score", time);
         intent.putExtra("calibration", currentIntent.getBooleanExtra("calibration", false));
         intent.putExtra("BAC", currentIntent.getDoubleExtra("BAC", 0));
+        intent.putExtra("bacCount", intent.getIntExtra("bacCount", 0));
+        intent.putExtra("numTests", intent.getIntExtra("numTests", 0));
+
 
         startActivity(intent);
     }

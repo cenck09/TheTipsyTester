@@ -23,7 +23,10 @@ public class estimatedBAC extends AppCompatActivity {
         int bacCount = intent.getIntExtra("bacCount", 0);
         int numTests = intent.getIntExtra("numTests", 0);
         int estimate = bacCount/numTests;
-        String finalEstimate = "";
+        String finalEstimate;
+
+        System.out.println("bacCount: " + bacCount + "      numTests: " + numTests);
+        System.out.println("estimate: " + estimate);
 
         if(estimate == 1){
             finalEstimate = "0.00-0.04";
@@ -37,6 +40,8 @@ public class estimatedBAC extends AppCompatActivity {
             finalEstimate = "0.16-0.20";
         }else if(estimate == 6){
             finalEstimate = ">.20";
+        }else{
+            finalEstimate = "0.00";
         }
 
 

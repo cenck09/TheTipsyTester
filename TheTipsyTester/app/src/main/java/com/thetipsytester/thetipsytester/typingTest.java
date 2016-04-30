@@ -33,6 +33,7 @@ public class typingTest extends AppCompatActivity {
 
     long score = 0;
     int finalScore = 0;
+    int bacCount, numTests;
     long startTime;
     long countUp;
     Chronometer stopWatch;
@@ -50,6 +51,8 @@ public class typingTest extends AppCompatActivity {
         nextTests = intent.getStringArrayListExtra("nextTests");
         calibration = intent.getBooleanExtra("calibration", false);
         bac = intent.getDoubleExtra("BAC", 0);
+        bacCount = intent.getIntExtra("bacCount", 0);
+        numTests = intent.getIntExtra("numTests", 0);
 
 
 
@@ -130,6 +133,9 @@ public class typingTest extends AppCompatActivity {
         intent.putExtra("score", finalScore);
         intent.putExtra("calibration", calibration);
         intent.putExtra("BAC", bac);
+        intent.putExtra("bacCount", bacCount);
+        intent.putExtra("numTests", numTests);
+        System.out.println("bacCOUNT: " + bacCount + "\n\n\n");
         startActivity(intent);
 
     }

@@ -30,6 +30,8 @@ public class patternTest extends AppCompatActivity{
     int runCount = 0;
     int score = 0;
 
+    int bacCount, numTests;
+
     ArrayList<String> nextTests;
     boolean calibration = false;
     double bac = 0;
@@ -43,6 +45,8 @@ public class patternTest extends AppCompatActivity{
         nextTests = intent.getStringArrayListExtra("nextTests");
         calibration = intent.getBooleanExtra("calibration", false);
         bac = intent.getDoubleExtra("BAC", 0);
+        bacCount = intent.getIntExtra("bacCount", 0);
+        numTests = intent.getIntExtra("numTests", 0);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Memory Test");
@@ -183,6 +187,9 @@ public class patternTest extends AppCompatActivity{
             intent.putExtra("score", score);
             intent.putExtra("calibration", calibration);
             intent.putExtra("BAC", bac);
+            intent.putExtra("bacCount", bacCount);
+            intent.putExtra("numTests", numTests);
+            System.out.println("bacCOUNT: " + bacCount + "\n\n\n");
             startActivity(intent);
         }
     }

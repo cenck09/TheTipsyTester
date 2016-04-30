@@ -29,11 +29,16 @@ public class balanceTest extends Activity implements SensorEventListener{
     Sensor accelerometer;
     SensorManager sm;
 
+
     //TextView acceleration;
     TextView timerText;
 
+    float [] history = new float[3];
+
     boolean calibration = false;
     double bac = 0;
+
+    int bacCount, numTests;
 
     int finalScore;
     boolean measuring = false, waiting = false;
@@ -64,8 +69,8 @@ public class balanceTest extends Activity implements SensorEventListener{
         nextTests = intent.getStringArrayListExtra("nextTests");
         calibration = intent.getBooleanExtra("calibration", false);
         bac = intent.getDoubleExtra("BAC", 0);
-
-        System.out.println("Calibraion: " + calibration);
+        bacCount = intent.getIntExtra("bacCount", 0);
+        numTests = intent.getIntExtra("numTests", 0);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Balance Test");
@@ -94,6 +99,8 @@ public class balanceTest extends Activity implements SensorEventListener{
 
         String color = sharedPref.getString("color", "232323");
 
+        sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+
         view.setBackgroundColor(Color.parseColor("#" + color));
     }
 
@@ -106,10 +113,11 @@ public class balanceTest extends Activity implements SensorEventListener{
         public void onFinish(){
             measuring = false;
             lastTotal = totalAcceleration;
+            if(lastTotal<0) lastTotal = 0;
             totalAcceleration = 0;
             finalScore = (int)lastTotal;
 
-            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP,150);
+            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
 
             Intent intent = new Intent(balanceTest.this, scorereportActivity.class);
             intent.putExtra("prevTest", "balance");
@@ -117,7 +125,10 @@ public class balanceTest extends Activity implements SensorEventListener{
             intent.putExtra("score", finalScore);
             intent.putExtra("calibration", calibration);
             intent.putExtra("BAC", bac);
+            intent.putExtra("bacCount", bacCount);
+            intent.putExtra("numTests", numTests);
             timerText.setText("Score: " + finalScore);
+            System.out.println("bacCOUNT: " + bacCount + "\n\n\n");
             startActivity(intent);
             finish();
         }
@@ -150,10 +161,14 @@ public class balanceTest extends Activity implements SensorEventListener{
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        x = event.values[0];
-        y = event.values[1];
-        z = event.values[2];
-        changeAcceleration = Math.abs(Math.abs(x) + Math.abs(y) + Math.abs(z) - (float) 10.2);
+        x = history[0] - event.values[0];
+        y = history[1] - event.values[1];
+        z = history[2] - event.values[2];
+        history[0]= event.values[0];
+        history[1]= event.values[1];
+        history[2]= event.values[2];
+
+        changeAcceleration = Math.abs(Math.abs(x) + Math.abs(y) + Math.abs(z));
         if (measuring) {
             totalAcceleration = totalAcceleration + changeAcceleration;
         }

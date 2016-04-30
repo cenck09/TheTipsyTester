@@ -34,7 +34,7 @@
     <string-array
         name="test_names">
         <item>balanceTest</item>
-        <item>comet_smash</item>
+
         <item>patternTest</item>
         <item>schwack_a_moleaa</item>
         <item>typingTest</item>

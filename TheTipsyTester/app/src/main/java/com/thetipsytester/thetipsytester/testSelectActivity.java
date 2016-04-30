@@ -67,7 +67,7 @@ public class testSelectActivity extends AppCompatActivity {
             Intent intent = new Intent(this, balanceTest.class);
             intent.putStringArrayListExtra("nextTests", nextTests);
             intent.putExtra("bacCount", 0);
-            intent.putExtra("numTests", numTests);
+            intent.putExtra("numTests", 3);
             startActivity(intent);
         }
 
@@ -75,7 +75,7 @@ public class testSelectActivity extends AppCompatActivity {
             Intent intent = new Intent(this, comet_smash.class);
             intent.putStringArrayListExtra("nextTests", nextTests);
             intent.putExtra("bacCount", 0);
-            intent.putExtra("numTests", numTests);
+            intent.putExtra("numTests", 3);
             startActivity(intent);
         }
 
@@ -83,7 +83,7 @@ public class testSelectActivity extends AppCompatActivity {
             Intent intent = new Intent(this, patternTest.class);
             intent.putStringArrayListExtra("nextTests", nextTests);
             intent.putExtra("bacCount", 0);
-            intent.putExtra("numTests", numTests);
+            intent.putExtra("numTests", 3);
             startActivity(intent);
         }
 
@@ -91,7 +91,7 @@ public class testSelectActivity extends AppCompatActivity {
             Intent intent = new Intent(this, schwack_a_moleaa.class);
             intent.putStringArrayListExtra("nextTests", nextTests);
             intent.putExtra("bacCount", 0);
-            intent.putExtra("numTests", numTests);
+            intent.putExtra("numTests", 3);
             startActivity(intent);
         }
 
@@ -99,7 +99,7 @@ public class testSelectActivity extends AppCompatActivity {
             Intent intent = new Intent(this, typingTest.class);
             intent.putStringArrayListExtra("nextTests", nextTests);
             intent.putExtra("bacCount", 0);
-            intent.putExtra("numTests", numTests);
+            intent.putExtra("numTests", 3);
             startActivity(intent);
         }
 

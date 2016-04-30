@@ -27,6 +27,7 @@
         android:text="Next"
         android:id="@+id/homeButton"
         android:layout_below="@+id/finalBACtag"
+        android:onClick="goHome"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="98dp" />
 </RelativeLayout>
