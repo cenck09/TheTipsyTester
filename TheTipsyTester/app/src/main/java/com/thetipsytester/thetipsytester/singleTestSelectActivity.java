@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import java.util.ArrayList;
+
 public class singleTestSelectActivity extends AppCompatActivity{
 
     boolean calibration = false;
@@ -36,8 +38,11 @@ public class singleTestSelectActivity extends AppCompatActivity{
     }
 
     public void startComet(View view){
+
         Intent intent = new Intent(this, comet_smash.class);
         intent.putExtra("calibration", calibration);
+        ArrayList<String> nextTests = new ArrayList<>();
+        intent.putStringArrayListExtra("nextTests", nextTests);
         intent.putExtra("BAC", bac);
         startActivity(intent);
     }
@@ -45,6 +50,8 @@ public class singleTestSelectActivity extends AppCompatActivity{
     public void startSchwacking(View view){
         Intent intent = new Intent(this, schwack_a_moleaa.class);
         intent.putExtra("calibration", calibration);
+        ArrayList<String> nextTests = new ArrayList<>();
+        intent.putStringArrayListExtra("nextTests", nextTests);
         intent.putExtra("BAC", bac);
         startActivity(intent);
     }
@@ -52,6 +59,8 @@ public class singleTestSelectActivity extends AppCompatActivity{
     public void startBalance(View view){
         Intent intent = new Intent(this, balanceTest.class);
         intent.putExtra("calibration", calibration);
+        ArrayList<String> nextTests = new ArrayList<>();
+        intent.putStringArrayListExtra("nextTests", nextTests);
         intent.putExtra("BAC", bac);
         startActivity(intent);
     }
@@ -59,6 +68,8 @@ public class singleTestSelectActivity extends AppCompatActivity{
     public void startPattern (View view){
         Intent intent = new Intent(this, patternTest.class);
         intent.putExtra("calibration", calibration);
+        ArrayList<String> nextTests = new ArrayList<>();
+        intent.putStringArrayListExtra("nextTests", nextTests);
         intent.putExtra("BAC", bac);
         startActivity(intent);
     }
@@ -66,6 +77,8 @@ public class singleTestSelectActivity extends AppCompatActivity{
     public void startTyping(View view) {
         Intent intent = new Intent(this, typingTest.class);
         intent.putExtra("calibration", calibration);
+        ArrayList<String> nextTests = new ArrayList<>();
+        intent.putStringArrayListExtra("nextTests", nextTests);
         intent.putExtra("BAC", bac);
         startActivity(intent);
     }

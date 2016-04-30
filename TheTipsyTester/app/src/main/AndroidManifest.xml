@@ -54,7 +54,11 @@
             android:name=".scorereportActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".userSelectActivity" />
-        <activity android:name=".comet_smash"></activity>
+        <activity android:name=".comet_smash" />
+        <activity
+            android:name=".estimatedBAC"
+            android:label="@string/title_activity_estimated_bac"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

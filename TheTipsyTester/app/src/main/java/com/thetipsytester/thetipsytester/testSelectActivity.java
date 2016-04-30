@@ -39,6 +39,8 @@ public class testSelectActivity extends AppCompatActivity {
     public void single(View view) {
         //When the single test button is clicked from the test select menu
         Intent intent = new Intent(this, singleTestSelectActivity.class);
+        intent.putExtra("bacCount", 0);
+        intent.putExtra("numTests", 1);
 
         startActivity(intent);
     }
@@ -64,30 +66,40 @@ public class testSelectActivity extends AppCompatActivity {
         if(testArray[first].equals("balanceTest")) {
             Intent intent = new Intent(this, balanceTest.class);
             intent.putStringArrayListExtra("nextTests", nextTests);
+            intent.putExtra("bacCount", 0);
+            intent.putExtra("numTests", numTests);
             startActivity(intent);
         }
 
         if(testArray[first].equals("comet_smash")) {
             Intent intent = new Intent(this, comet_smash.class);
             intent.putStringArrayListExtra("nextTests", nextTests);
+            intent.putExtra("bacCount", 0);
+            intent.putExtra("numTests", numTests);
             startActivity(intent);
         }
 
         if(testArray[first].equals("patternTest")) {
             Intent intent = new Intent(this, patternTest.class);
             intent.putStringArrayListExtra("nextTests", nextTests);
+            intent.putExtra("bacCount", 0);
+            intent.putExtra("numTests", numTests);
             startActivity(intent);
         }
 
         if(testArray[first].equals("schwack_a_moleaa")) {
             Intent intent = new Intent(this, schwack_a_moleaa.class);
             intent.putStringArrayListExtra("nextTests", nextTests);
+            intent.putExtra("bacCount", 0);
+            intent.putExtra("numTests", numTests);
             startActivity(intent);
         }
 
         if(testArray[first].equals("typingTest")) {
             Intent intent = new Intent(this, typingTest.class);
             intent.putStringArrayListExtra("nextTests", nextTests);
+            intent.putExtra("bacCount", 0);
+            intent.putExtra("numTests", numTests);
             startActivity(intent);
         }
 
@@ -107,6 +119,8 @@ public class testSelectActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, balanceTest.class);
         intent.putStringArrayListExtra("nextTests", nextTests);
+        intent.putExtra("bacCount", 0);
+        intent.putExtra("numTests", numTests);
         startActivity(intent);
 
     }

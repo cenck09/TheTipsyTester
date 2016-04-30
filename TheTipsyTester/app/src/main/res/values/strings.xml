@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TheTipsyTester</string>
+    <string name="app_name">The Tipsy Tester</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_test_select">testSelect</string>
 
@@ -8,4 +8,5 @@
 
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="interstitial_ad_unit_id">"ca-app-pub-3940256099942544/1033173712"</string>
+    <string name="title_activity_estimated_bac">estimatedBAC</string>
 </resources>
