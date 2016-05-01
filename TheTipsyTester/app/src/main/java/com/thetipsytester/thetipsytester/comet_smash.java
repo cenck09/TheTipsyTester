@@ -2,29 +2,23 @@ package com.thetipsytester.thetipsytester;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.CountDownTimer;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Chronometer;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import java.security.SecureRandom;
-import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class comet_smash extends AppCompatActivity {
@@ -32,14 +26,14 @@ public class comet_smash extends AppCompatActivity {
     private static final SecureRandom random = new SecureRandom();
 
     static final String STATE_GAME_TIME = "CometSmashGameTime";
-    static final String STATE_GAME_INTENT_ROCK_THROW = "CometSmashGameBreakRock";
-    static final String STATE_GAME_INTENT_END_GAME = "CometSmashGameEndGame";
+    static final String STATE_GAME_SCORE = "CometSmashGameScore";
 
-    // this makes the comet easier to tap
+     // this makes the comet easier to tap
     // it adds half the value to each side
-    int TOUCH_TOLERANCE = 60;
+    int TOUCH_TOLERANCE = 50;
 
-    int comet_speed = 100;
+    // for speeds, the higher the number the faster the object
+    int comet_speed = 700;
     int comet_size = 75;
     int comet_triangle_count = 20;
 
@@ -52,17 +46,16 @@ public class comet_smash extends AppCompatActivity {
     int debris_size_min = 10;
     int debris_size_max = 30;
 
-    int debris_speed_max = 300;
-    int debris_speed_min = 20;
+    int debris_speed_max = 1000; // debris can be slow or fast
+    int debris_speed_min = 50;
 
-    int time;
-    long startTime;
-    float count;
+    Timer timer;
+    int count;
+    boolean shouldCount;
 
     cometView comet;
     Integer hitCount = 10;
 
-    Chronometer stopWatch;
     public CountDownTimer gameCounter;
 
     private int scaleValue(int value){
@@ -144,11 +137,16 @@ public class comet_smash extends AppCompatActivity {
 
         debris_size_max = scaleValue(debris_size_max);
         debris_size_min = scaleValue(debris_size_min);
+        if(savedInstanceState != null){
+            count = savedInstanceState.getInt(STATE_GAME_TIME);
+            hitCount = savedInstanceState.getInt(STATE_GAME_SCORE);
+        }else{
+            count = 0;
+        }
     }
 
-    private void setGameClockBoard(float ntime){
-
-        //((TextView)findViewById(R.id.timeView)).setText("" + ((double) ntime / 1000.0));
+    private void setGameClockBoard(){
+        ((TextView)findViewById(R.id.timeView)).setText("" + ((double) count));
     }
 
 
@@ -169,20 +167,31 @@ public class comet_smash extends AppCompatActivity {
     private void startGameCount(long time){
         logError("starting Game timer");
 
-        stopWatch = (Chronometer) findViewById(R.id.timeView);
-        startTime = SystemClock.elapsedRealtime();
-        stopWatch.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+        shouldCount = true;
+        timer = new Timer();
+        TimerTask tt = new TimerTask() {
             @Override
-            public void onChronometerTick(Chronometer chronometer) {
-                count = (SystemClock.elapsedRealtime() - chronometer.getBase()) / 1000;
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        clockIt();
+                    }
+                });
             }
-        });
-        stopWatch.setBase(SystemClock.elapsedRealtime());
-        stopWatch.start();
+        };
+
+    timer.scheduleAtFixedRate(tt,0,1000);
+
+    }
+
+    private void clockIt(){
+        if(shouldCount) count++;
+        setGameClockBoard();
     }
 
     private void startGame(){
-        startGameCount(time);
+        startGameCount(count);
         launchComet();
 
     }
@@ -235,6 +244,15 @@ public class comet_smash extends AppCompatActivity {
 
     @Override
     public void onPause() {
+        shouldCount = false;
+        if(timer != null) {
+            timer.cancel();
+        }
+
+        if(comet != null){
+            comet.killComet();
+            comet = null;
+        }
         super.onPause();
         logError("PAUSED COMET SMASH");
     }
@@ -243,7 +261,7 @@ public class comet_smash extends AppCompatActivity {
         super.onResume();
         logError("RESUMED COMET SMASH");
         performReadyGameCountDown();
-
+        ((TextView) findViewById(R.id.hitCount)).setText(hitCount + "");
     }
     @Override
     public void onDestroy(){
@@ -256,11 +274,15 @@ public class comet_smash extends AppCompatActivity {
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
         logError("SAVED INSTANCE STATE FOR COMET_SMASH!");
+        savedInstanceState.putInt(STATE_GAME_TIME, count);
+        savedInstanceState.putInt(STATE_GAME_SCORE, hitCount);
     }
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         logError("RESTORED INSTANCE STATE FOR COMET_SMASH!");
+        count = savedInstanceState.getInt(STATE_GAME_TIME);
+        hitCount = savedInstanceState.getInt(STATE_GAME_SCORE);
     }
     private void addCountDownViewForValue(final int value){
         RelativeLayout arena = (RelativeLayout)findViewById(R.id.space);

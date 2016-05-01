@@ -1,18 +1,12 @@
 package com.thetipsytester.thetipsytester;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.app.ActivityManager;
+
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ConfigurationInfo;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.opengl.GLSurfaceView;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -27,7 +21,6 @@ import android.widget.RelativeLayout;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.logging.Handler;
 
 /**
  * Created by chrisenck on 4/26/16.
@@ -71,8 +64,6 @@ public class cometView extends FrameLayout {
     Integer Y_MIN = 5;
 
     ArrayList<triangle> angles = new ArrayList<triangle>();
-    //ArrayList<triangle> hiddenAngles = new ArrayList<triangle>();
-
 
     Tuple<Integer,Integer> currentLoc;
     Tuple<Integer,Integer> destinationLoc;
@@ -80,22 +71,8 @@ public class cometView extends FrameLayout {
     Tuple<Direction,Direction> heading;
     Target target;
 
-    Integer hitCount = 7;
-
     boolean debris;
     boolean inverted;
-
-    static final String STATE_GAME_INTENT_ROCK_THROW = "CometSmashGameBreakRock";
-    static final String STATE_GAME_INTENT_END_GAME = "CometSmashGameEndGame";
-
-    private void sendBreakRockMessage() {
-        logError("Broadcasting Break Rock message");
-        LocalBroadcastManager.getInstance(this.getContext()).sendBroadcast(new Intent(STATE_GAME_INTENT_ROCK_THROW));
-    }
-    private void sendEndGameMessage() {
-        logError("Broadcasting End Game message");
-        LocalBroadcastManager.getInstance(this.getContext()).sendBroadcast(new Intent(STATE_GAME_INTENT_END_GAME));
-    }
 
     private int scaleValue(int value){
         final float scale = getResources().getDisplayMetrics().density;
@@ -122,15 +99,6 @@ public class cometView extends FrameLayout {
             angles.add(tmp);
         }
         heading = new Tuple<>(Direction.UNSET,Direction.UNSET);
-
-        /*setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendBreakRockMessage();
-                hitCount--;
-                if (hitCount == 0) sendEndGameMessage();
-            }
-        });*/
 
         logError("created comet view");
     }
@@ -164,11 +132,6 @@ public class cometView extends FrameLayout {
             forceRotation();
         }
     }
-    /*public void destroy(){
-     super
-        //stopSpin();
-      //  while(angles.size()>0) angles.remove(0).removeSelf();
-    }*/
 
     public void stopSpin(){
         for(int i=0; i<angles.size(); i++) angles.get(i).removeSelf();
@@ -196,12 +159,6 @@ public class cometView extends FrameLayout {
 
     private void launchComet(){
 
-  /*      RelativeLayout.LayoutParams nlp = new RelativeLayout.LayoutParams(COMET_SIZE,COMET_SIZE);
-        nlp.leftMargin = (currentLoc.x );
-        nlp.topMargin = (currentLoc.y );
-        logError("Setting location post animation || X= " + lParams.leftMargin + " Y=" + lParams.topMargin);
-        setLayoutParams(nlp);
-*/
         float deltaX=destinationLoc.x - currentLoc.x;
         float deltaY= destinationLoc.y - currentLoc.y;
 
@@ -250,15 +207,14 @@ public class cometView extends FrameLayout {
         });
         Double time = Math.sqrt((deltaX*deltaX)+(deltaY*deltaY));
         logError("'Time' factor = " + time);
-        animatorTarget.setDuration(time.longValue());
+        animatorTarget.setDuration(time.longValue()*(1000/speed));
         animatorTarget.setInterpolator(new LinearInterpolator());
         animatorTarget.setFillAfter(true);
-    //    animatorTarget.setDuration(calcTravelTime()); // in ms
         startAnimation(animatorTarget);
 
     }
 
-    private void killComet(){
+    public void killComet(){
        // while (angles.size()>0) angles.get(0).removeSelf();
         ((ViewGroup)this.getParent()).removeView(this);
     }
