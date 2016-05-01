@@ -15,14 +15,20 @@ import java.util.ArrayList;
  * Created by chrisenck on 4/24/16.
  */
 
+
 public class MoleaView extends View {
 
-    public static final int MOLEA_SIZE = 100;        // The size of the moleas
-    public static final int MOLEA_MARGIN = 5;        // The space between Moleas
+    public int MOLEA_SIZE = 75;        // The size of the moleas
+    public int MOLEA_MARGIN = 5;        // The space between Moleas
 
     boolean animate;
     boolean animating;
     boolean isKilled;
+
+    private int scaleValue(int value){
+        final float scale = getResources().getDisplayMetrics().density;
+        return (int) (value * scale + 0.5f);
+    }
 
     public void animateMoleaPop(){
         this.setRedShape();
@@ -69,11 +75,13 @@ public class MoleaView extends View {
     }
     public MoleaView(Context context) {
         super(context);
-
+        MOLEA_MARGIN = scaleValue(MOLEA_MARGIN);
+        MOLEA_SIZE = scaleValue(MOLEA_SIZE);
         GradientDrawable shape =  new GradientDrawable();
         shape.setCornerRadius((MOLEA_SIZE / 2));
         shape.setColor(Color.BLACK);
         this.setBackground(shape);
+
     }
 
     public int getBattleFieldSlots(int size){

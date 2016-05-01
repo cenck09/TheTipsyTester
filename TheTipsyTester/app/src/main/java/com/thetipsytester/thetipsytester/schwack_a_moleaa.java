@@ -326,6 +326,7 @@ public class schwack_a_moleaa extends AppCompatActivity {
         System.out.println("bacCount: " + currentIntent.getIntExtra("bacCount", 0) + "\n\n\n");
 
         startActivity(intent);
+        finish();
     }
 
     private void testAlert(){
