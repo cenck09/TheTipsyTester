@@ -63,6 +63,14 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="25dp"
                 android:onClick="startComet"/>
+            <Button
+                android:id="@+id/moveBallSingleTestButton"
+                android:text="MOVE BALL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="25dp"
+                android:onClick="startMoveBall"
+                android:layout_gravity="center_horizontal" />
 
         </LinearLayout>
 

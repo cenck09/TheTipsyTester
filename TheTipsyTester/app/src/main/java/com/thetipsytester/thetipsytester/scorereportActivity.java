@@ -318,6 +318,14 @@ public class scorereportActivity extends AppCompatActivity {
             intent.putExtra("numTests", numTests);
             startActivity(intent);
         }
+        if(prevTest.equals("move_ball")) {
+            Intent intent = new Intent(scorereportActivity.this, move_ball.class);
+            intent.putExtra("nextTests", nextTests);
+            intent.putExtra("calibration", calibration);
+            intent.putExtra("bacCount", bacCount - additive);
+            intent.putExtra("numTests", numTests);
+            startActivity(intent);
+        }
         finish();
     }
 
@@ -433,6 +441,14 @@ public class scorereportActivity extends AppCompatActivity {
                     values.put("ab20", 60);
                 }
 
+                if(prevTest.equals("move_ball")) {
+                    values.put("ut08", 95);
+                    values.put("ut12", 90);
+                    values.put("ut16", 83);
+                    values.put("ut20", 73);
+                    values.put("ab20", 60);
+                }
+
                 db.insert("tests", null, values);
 
             } else {
@@ -481,6 +497,14 @@ public class scorereportActivity extends AppCompatActivity {
 
             if(next.equals("comet_smash")) {
                 Intent intent = new Intent(this, comet_smash.class);
+                intent.putStringArrayListExtra("nextTests", nextTests);
+                intent.putExtra("bacCount", bacCount);
+                intent.putExtra("numTests", numTests);
+                startActivity(intent);
+            }
+
+            if(next.equals("move_ball")) {
+                Intent intent = new Intent(this, move_ball.class);
                 intent.putStringArrayListExtra("nextTests", nextTests);
                 intent.putExtra("bacCount", bacCount);
                 intent.putExtra("numTests", numTests);
