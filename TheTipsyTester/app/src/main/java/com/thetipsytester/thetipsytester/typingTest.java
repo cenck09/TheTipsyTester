@@ -14,6 +14,8 @@ import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -31,11 +33,12 @@ public class typingTest extends AppCompatActivity {
 
     long score = 0;
     int finalScore = 0;
+    int bacCount, numTests;
     long startTime;
     long countUp;
     Chronometer stopWatch;
 
-    String[] nextTests;
+    ArrayList<String> nextTests;
     boolean calibration = false;
     double bac = 0;
 
@@ -45,9 +48,11 @@ public class typingTest extends AppCompatActivity {
         setContentView(R.layout.typing_test);
 
         Intent intent = getIntent();
-        nextTests = intent.getStringArrayExtra("nextTests");
+        nextTests = intent.getStringArrayListExtra("nextTests");
         calibration = intent.getBooleanExtra("calibration", false);
         bac = intent.getDoubleExtra("BAC", 0);
+        bacCount = intent.getIntExtra("bacCount", 0);
+        numTests = intent.getIntExtra("numTests", 0);
 
 
 
@@ -99,8 +104,10 @@ public class typingTest extends AppCompatActivity {
         String userSentence = editText.getText().toString();
 
         for (int i = 0; i < userSentence.length(); i++) {
-            if (userSentence.charAt(i) == selection.charAt(i)) {
-                score = score + 5;
+            if(selection.length()> i) {
+                if (userSentence.charAt(i) == selection.charAt(i)) {
+                    score = score + 5;
+                }
             }
         }
         long temp;
@@ -122,10 +129,13 @@ public class typingTest extends AppCompatActivity {
 
         Intent intent = new Intent(this, scorereportActivity.class);
         intent.putExtra("prevTest", "typing");
-        intent.putExtra("nextTests", nextTests);
+        intent.putStringArrayListExtra("nextTests", nextTests);
         intent.putExtra("score", finalScore);
         intent.putExtra("calibration", calibration);
         intent.putExtra("BAC", bac);
+        intent.putExtra("bacCount", bacCount);
+        intent.putExtra("numTests", numTests);
+        System.out.println("bacCOUNT: " + bacCount + "\n\n\n");
         startActivity(intent);
 
     }

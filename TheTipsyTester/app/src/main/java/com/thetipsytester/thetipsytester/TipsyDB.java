@@ -1,11 +1,9 @@
 package com.thetipsytester.thetipsytester;
 
-
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.AsyncTask;
+
 
 public class TipsyDB extends SQLiteOpenHelper {
 

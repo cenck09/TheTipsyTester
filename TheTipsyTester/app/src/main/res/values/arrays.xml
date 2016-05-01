@@ -31,5 +31,14 @@
         <item>66cdaa</item>
     </string-array>
 
+    <string-array
+        name="test_names">
+        <item>balanceTest</item>
+
+        <item>patternTest</item>
+        <item>schwack_a_moleaa</item>
+        <item>typingTest</item>
+    </string-array>
+
 
 </resources>

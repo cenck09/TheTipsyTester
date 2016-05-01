@@ -33,6 +33,7 @@ public class newUserActivity extends AppCompatActivity {
         tipsy = new TipsyDB(this);
         db = tipsy.getWritableDatabase();
 
+        calibration = getIntent().getBooleanExtra("calibration", false);
         activity = getIntent().getStringExtra("activity");
 
         if (getIntent().hasExtra("rowid")) {
@@ -82,7 +83,6 @@ public class newUserActivity extends AppCompatActivity {
     }
 
     public void btnAddClick(View view) {
-        ContentResolver cr = getContentResolver();
         String name, gender, weight;
 
         RadioButton male = (RadioButton)findViewById(R.id.maleRadioButton);
@@ -111,7 +111,7 @@ public class newUserActivity extends AppCompatActivity {
             Intent intent = new Intent(newUserActivity.this, userSelectActivity.class);
             intent.putExtra("calibration", calibration);
             intent.putExtra("activity", activity);
-            System.out.println("NEW USER ACTIVITY: " + activity);
+            System.out.println("calibration: " + calibration);
             startActivity(intent);
             finish();
         } catch (SQLException e) {
