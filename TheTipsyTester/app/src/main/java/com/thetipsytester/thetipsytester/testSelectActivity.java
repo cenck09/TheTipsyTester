@@ -79,6 +79,14 @@ public class testSelectActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
+        if(testArray[first].equals("move_ball")) {
+            Intent intent = new Intent(this, move_ball.class);
+            intent.putStringArrayListExtra("nextTests", nextTests);
+            intent.putExtra("bacCount", 0);
+            intent.putExtra("numTests", 3);
+            startActivity(intent);
+        }
+
         if(testArray[first].equals("patternTest")) {
             Intent intent = new Intent(this, patternTest.class);
             intent.putStringArrayListExtra("nextTests", nextTests);

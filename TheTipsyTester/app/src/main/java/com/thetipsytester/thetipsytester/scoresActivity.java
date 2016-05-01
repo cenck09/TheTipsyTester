@@ -107,7 +107,7 @@ public class scoresActivity extends AppCompatActivity {
         StringBuffer sb2 = new StringBuffer();
         StringBuffer sb3 = new StringBuffer();
         StringBuffer sb4 = new StringBuffer();
-        Cursor c = theDB.rawQuery("SELECT * FROM users,scores WHERE users._id = scores._id ORDER BY scores.best, users.name", null);
+        Cursor c = theDB.rawQuery("SELECT * FROM users,scores WHERE users._id = scores._id ORDER BY scores.best DESC, users.name", null);
 
         while (c.moveToNext()) {
             name = c.getString(c.getColumnIndexOrThrow("name"));
