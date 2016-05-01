@@ -321,6 +321,7 @@ public class schwack_a_moleaa extends AppCompatActivity {
         intent.putExtra("BAC", currentIntent.getDoubleExtra("BAC", 0));
 
         startActivity(intent);
+        finish();
     }
 
     private void testAlert(){
