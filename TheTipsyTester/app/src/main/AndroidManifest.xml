@@ -51,6 +51,9 @@
             android:name=".schwack_a_moleaa"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".move_ball"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".scorereportActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".userSelectActivity" />
