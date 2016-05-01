@@ -519,7 +519,7 @@ public class scorereportActivity extends AppCompatActivity {
                 startActivity(intent);
             }
 
-            if(next.equals("schwack")) {
+            if(next.equals("schwack_a_moleaa")) {
                 Intent intent = new Intent(this, schwack_a_moleaa.class);
                 intent.putStringArrayListExtra("nextTests", nextTests);
                 intent.putExtra("bacCount", bacCount);
