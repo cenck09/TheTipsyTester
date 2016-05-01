@@ -55,7 +55,13 @@ public class scoresActivity extends AppCompatActivity {
                 sb.append("\t\t\t");
             }
             sb.append(test);
-            sb.append("\t\t\t\t\t");
+            if(test.length() <= 2) {
+                sb.append("\t\t\t\t\t\t\t");
+            }else if(test.length()>2 && test.length()<6){
+                sb.append("\t\t\t\t\t\t");
+            }else if(test.length()>6 && test.length()<9){
+                sb.append("\t\t\t\t\t");
+            }
 
 
             sb.append(best);

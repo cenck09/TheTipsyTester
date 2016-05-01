@@ -203,10 +203,12 @@ public class comet_smash extends AppCompatActivity {
         Intent intent = new Intent(this, scorereportActivity.class);
 
         intent.putExtra("prevTest", "comet"); // this needs to be updated
-        intent.putExtra("nextTests",currentIntent.getStringArrayExtra("nextTests"));
+        intent.putExtra("nextTests", currentIntent.getStringArrayListExtra("nextTests"));
         intent.putExtra("score", count);
         intent.putExtra("calibration", currentIntent.getBooleanExtra("calibration", false));
         intent.putExtra("BAC", currentIntent.getDoubleExtra("BAC", 0));
+        intent.putExtra("bacCount", currentIntent.getIntExtra("bacCount", 0));
+        intent.putExtra("numTests", currentIntent.getIntExtra("numTests", 0));
 
         startActivity(intent);
         finish();
