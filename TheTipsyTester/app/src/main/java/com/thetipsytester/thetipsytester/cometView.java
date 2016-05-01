@@ -2,13 +2,16 @@ package com.thetipsytester.thetipsytester;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ConfigurationInfo;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.opengl.GLSurfaceView;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -49,15 +52,17 @@ class Tuple<X, Y> {
 
 public class cometView extends FrameLayout {
 
+    boolean debug = false;
+
     private static final SecureRandom random = new SecureRandom();
 
-    static int COMET_SIZE = 100;
-    static int TRIANGLE_COUNT = 20;
+    int speed = 50; // these 3 values are replaced, so they don't really matter
+    int COMET_SIZE = 100;
+    int TRIANGLE_COUNT = 20;
 
     RelativeLayout.LayoutParams lParams;
-    TranslateAnimation animatorTarget;
+    public SlideTranslate animatorTarget;
 
-    Integer speed = 20;
 
     Integer X_MAX;
     Integer X_MIN = 5;
@@ -66,6 +71,7 @@ public class cometView extends FrameLayout {
     Integer Y_MIN = 5;
 
     ArrayList<triangle> angles = new ArrayList<triangle>();
+    //ArrayList<triangle> hiddenAngles = new ArrayList<triangle>();
 
 
     Tuple<Integer,Integer> currentLoc;
@@ -74,7 +80,10 @@ public class cometView extends FrameLayout {
     Tuple<Direction,Direction> heading;
     Target target;
 
-    Integer hitCount = 5;
+    Integer hitCount = 7;
+
+    boolean debris;
+    boolean inverted;
 
     static final String STATE_GAME_INTENT_ROCK_THROW = "CometSmashGameBreakRock";
     static final String STATE_GAME_INTENT_END_GAME = "CometSmashGameEndGame";
@@ -88,27 +97,40 @@ public class cometView extends FrameLayout {
         LocalBroadcastManager.getInstance(this.getContext()).sendBroadcast(new Intent(STATE_GAME_INTENT_END_GAME));
     }
 
+    private int scaleValue(int value){
+        final float scale = getResources().getDisplayMetrics().density;
+        return (int) (value * scale + 0.5f);
+    }
 
-    public cometView(Context context) {
+
+    public cometView(Context context, int triangleCount, int size, int comet_speed, boolean invert, boolean isDebris) {
         super(context);
+        speed = comet_speed;
+        TRIANGLE_COUNT = triangleCount;
+        COMET_SIZE = scaleValue(size);
+        inverted = invert;
+        debris = isDebris;
+
         lParams = new RelativeLayout.LayoutParams(COMET_SIZE, COMET_SIZE);
         setLayoutParams(lParams);
-     //   setBackgroundColor(Color.BLUE);
+        lParams.topMargin = -COMET_SIZE*2;
+        lParams.leftMargin = -COMET_SIZE*2;
+       // setBackgroundColor(Color.BLUE);
         for(int i = 0; i<TRIANGLE_COUNT; i++){
-            triangle tmp = new triangle(context);
+            triangle tmp = new triangle(context, COMET_SIZE-scaleValue(20));
             addView(tmp);
             angles.add(tmp);
         }
         heading = new Tuple<>(Direction.UNSET,Direction.UNSET);
 
-        setOnClickListener(new OnClickListener() {
+        /*setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendBreakRockMessage();
                 hitCount--;
                 if (hitCount == 0) sendEndGameMessage();
             }
-        });
+        });*/
 
         logError("created comet view");
     }
@@ -119,36 +141,41 @@ public class cometView extends FrameLayout {
 
     }
 
+    public void forceRotation(){
+
+        for(int i = 0; i<angles.size(); i++){
+            triangle tmp = angles.get(i);
+            if(tmp.ra == null) {
+                long angle = 360;
+                if((i % 2) == 0 && inverted) angle = -360;
+                tmp.initSpin(angle, (long)(300*(i*((float)3/(float)angles.size()))));
+            }
+        }
+
+    }
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-
-        X_MAX = ((ViewGroup)this.getParent()).getWidth() - (COMET_SIZE + X_MIN);
-        Y_MAX = ((ViewGroup) this.getParent()).getHeight()- (COMET_SIZE+Y_MIN);
-        logError("comet view has focus with X_MAX: " + X_MAX + "  Y_MAX: " + Y_MAX);
-
         if (hasFocus){
-            for(int i = 0; i<angles.size(); i++){
-                triangle tmp = angles.get(i);
-                if(tmp.ra == null) {
-                    long angle = 360;
-                  //  if((i % 3) == 0) angle = -360;
-                    tmp.initSpin(angle, (long)(500*(i*((float)3/(float)angles.size()))));
-                }
-            }
+            X_MAX = ((ViewGroup)this.getParent()).getWidth() - (COMET_SIZE + X_MIN);
+            Y_MAX = ((ViewGroup) this.getParent()).getHeight()- (COMET_SIZE+Y_MIN);
+            logError("comet view has focus with X_MAX: " + X_MAX + "  Y_MAX: " + Y_MAX);
+
+            forceRotation();
         }
     }
-    public void destroy(){
-        stopSpin();
-        while(angles.size()>0) angles.remove(0).removeSelf();
-    }
+    /*public void destroy(){
+     super
+        //stopSpin();
+      //  while(angles.size()>0) angles.remove(0).removeSelf();
+    }*/
 
     public void stopSpin(){
-        for(int i=0; i<angles.size(); i++) angles.get(i).stopSpin();
+        for(int i=0; i<angles.size(); i++) angles.get(i).removeSelf();
     }
 
     private void logError(String err){
-        Log.d("COMET_VIEW ", err);
+        if(debug) Log.d("COMET_VIEW ", err);
     }
 
 
@@ -178,14 +205,12 @@ public class cometView extends FrameLayout {
         float deltaX=destinationLoc.x - currentLoc.x;
         float deltaY= destinationLoc.y - currentLoc.y;
 
-        /*
-        if (animatorTarget != null){
-             animatorTarget.cancel();
-             animatorTarget = null;
-        }*/
 
-       // animatorTarget = new TranslateAnimation(currentLoc.x,destinationLoc.x,currentLoc.y,destinationLoc.y);
-        animatorTarget = new TranslateAnimation(0,deltaX,0,deltaY);
+       // animatorTarget = new SlideTranslate(currentLoc.x,destinationLoc.x,currentLoc.y,destinationLoc.y);
+        animatorTarget = new SlideTranslate(0,deltaX,0,deltaY);
+        animatorTarget.fromX = currentLoc.x;
+        animatorTarget.fromY = currentLoc.y;
+
         animatorTarget.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation arg0) {
@@ -213,8 +238,8 @@ public class cometView extends FrameLayout {
                         logError("Setting location post animation || X= " + lParams.leftMargin + " Y=" + lParams.topMargin);
                         setLayoutParams(nlp);
                         lParams = nlp;
-
-                        initRandomTrajectory(destinationLoc.x, destinationLoc.y);
+                        if (!debris) initRandomTrajectory(destinationLoc.x, destinationLoc.y);
+                        else killComet();
                         // setNewDestination();
                         // launchComet();
                     }
@@ -224,7 +249,7 @@ public class cometView extends FrameLayout {
             }
         });
         Double time = Math.sqrt((deltaX*deltaX)+(deltaY*deltaY));
-        logError("'Time' factor = "+time);
+        logError("'Time' factor = " + time);
         animatorTarget.setDuration(time.longValue());
         animatorTarget.setInterpolator(new LinearInterpolator());
         animatorTarget.setFillAfter(true);
@@ -233,6 +258,17 @@ public class cometView extends FrameLayout {
 
     }
 
+    private void killComet(){
+       // while (angles.size()>0) angles.get(0).removeSelf();
+        ((ViewGroup)this.getParent()).removeView(this);
+    }
+
+    public void removeChunks(){
+        if(angles.size()>4){
+            for(int i = 0; i<3; i++) removeView(angles.remove(0));
+        }
+
+    }
     private Double calculateImpactAngle(){
         logError("Calculating Impact angle current Y: "+currentLoc.y+" current X: "+currentLoc.x+" destination Y: "+destinationLoc.y+" destination X: "+destinationLoc.x);
         return Math.atan(Math.abs(currentLoc.y - destinationLoc.y)/Math.abs(currentLoc.x-destinationLoc.x));
@@ -256,7 +292,7 @@ public class cometView extends FrameLayout {
     }
 
     private long calcTravelTime(){
-        return (long)(Math.sqrt(Math.abs(currentLoc.x-destinationLoc.x)+Math.abs(currentLoc.y-destinationLoc.y))*(1000/speed));
+        return (long)(Math.sqrt(Math.abs(currentLoc.x-destinationLoc.x)+Math.abs(currentLoc.y-destinationLoc.y))*(speed/100));
     }
 
     private void calcTargetForLeft(Double angleB, Double angleC) {
@@ -392,11 +428,13 @@ public class cometView extends FrameLayout {
 class triangle extends View {
 
     static final String STATE_GAME_INITENT_ROCK_THROW = "CometSmashGameBrekRock";
-    static int COMET_SIZE = 80;
+    int COMET_SIZE = 80;
     RotateAnimation ra;
 
-    public triangle(Context context){
+
+    public triangle(Context context, int size){
         super(context);
+        COMET_SIZE = size;
         FrameLayout.LayoutParams l = new FrameLayout.LayoutParams(COMET_SIZE,COMET_SIZE, Gravity.CENTER);
         setLayoutParams(l);
     }
@@ -422,7 +460,8 @@ class triangle extends View {
 
 
     public void stopSpin(){
-        ra.cancel();
+      if(ra !=null) ra.cancel();
+        else logError("rotation animation was null");
     }
 
     @Override
@@ -461,10 +500,38 @@ class triangle extends View {
     }
 
     public void removeSelf(){
+        stopSpin();
         ((ViewGroup)this.getParent()).removeView(this);
     }
 
     private void logError(String err){
         Log.d("COMET_VIEW_TRIANGLE ", err);
     }
+}
+
+class SlideTranslate extends TranslateAnimation{
+
+    float fromX;
+    float fromY;
+    float toX;
+    float toY;
+
+   public Tuple<Long,Long> currentLoc;
+
+    public SlideTranslate(float fromXDelta, float toXDelta, float fromYDelta, float toYDelta) {
+        super(fromXDelta, toXDelta, fromYDelta, toYDelta);
+        fromX = fromXDelta;
+        toX = toXDelta;
+        fromY = fromYDelta;
+        toY = toYDelta;
+        currentLoc = new Tuple<>(0l,0l);
+    }
+
+    @Override
+    protected void applyTransformation (float interpolatedTime, Transformation t){
+        super.applyTransformation(interpolatedTime,t);
+        currentLoc.x = (long)(fromX + (interpolatedTime * toX));
+        currentLoc.y = (long)(fromY + (interpolatedTime * toY));
+    }
+
 }
