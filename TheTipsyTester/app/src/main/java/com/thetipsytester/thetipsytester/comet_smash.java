@@ -37,9 +37,9 @@ public class comet_smash extends AppCompatActivity {
 
     // this makes the comet easier to tap
     // it adds half the value to each side
-    int TOUCH_TOLERANCE = 70;
+    int TOUCH_TOLERANCE = 60;
 
-    int comet_speed = 50;
+    int comet_speed = 100;
     int comet_size = 75;
     int comet_triangle_count = 20;
 
