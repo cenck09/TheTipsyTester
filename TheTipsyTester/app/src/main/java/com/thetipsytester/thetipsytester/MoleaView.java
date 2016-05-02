@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -37,6 +38,7 @@ public class MoleaView extends View {
     }
 
     public void spawn(){
+        Log.d("MoleaView"," About to spawn");
         this.animate()
                 .alpha(1.0f)
                 .scaleX(1.0f)
@@ -59,6 +61,11 @@ public class MoleaView extends View {
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
+                  try{
+
+                  }catch (Exception ex){
+                      Log.d("MoleaView: remove self", ex.toString());
+                  }
                         removeSelf();
                     }
                 });

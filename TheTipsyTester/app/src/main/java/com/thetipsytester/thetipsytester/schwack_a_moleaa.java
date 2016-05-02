@@ -74,8 +74,13 @@ public class schwack_a_moleaa extends AppCompatActivity {
 
     public int getSafeXLocation(){
         int val = r.nextInt((safeX.length - borderBuffer) + (borderBuffer/2));
+        logError("Getting safe x= "+val);
+        int breakFlag = 5;
         while(!isSafeLocation(safeX ,val)){
             val = r.nextInt((safeX.length - borderBuffer) + (borderBuffer/2));
+            logError("recheck safe x= "+val);
+            if(breakFlag>0)breakFlag--;
+            else break;
         }
         return val;
     }
@@ -90,9 +95,15 @@ public class schwack_a_moleaa extends AppCompatActivity {
     }
 
     public int getSafeYLocation(){
+        int breakFlag = 5;
+
         int val = r.nextInt((safeY.length - borderBuffer) + (borderBuffer/2));
+        logError("Getting safe y= "+val);
         while(!isSafeLocation(safeY ,val)){
             val = r.nextInt((safeY.length - borderBuffer) + (borderBuffer/2));
+            logError("recheck safe y= "+val);
+            if(breakFlag>0)breakFlag--;
+            else break;
         }
         return val;
     }
@@ -123,8 +134,7 @@ public class schwack_a_moleaa extends AppCompatActivity {
     public MoleaView getRecycledMoleas() {
         if (true) {
     //        if (oldMoleas.size() == 0) {
-            logError("Creating Molea");
-            MoleaView m = setOnMoleaSmashed(new MoleaView(this));
+            MoleaView m = setOnMoleaSmashed(new MoleaView(findViewById(R.id.molea_arena).getContext()));
             activeMoleas.add(m);
             return m;
         }else{
@@ -148,34 +158,50 @@ public class schwack_a_moleaa extends AppCompatActivity {
         logError("Make teh molea!!");
 
         final MoleaView molea = getRecycledMoleas();
+        logError("Just got the recycled molea");
         int x = getSafeXLocation();
         int y  = getSafeYLocation();
 
+        logError("Got safe loc at X= "+ x + " Y= "+y);
         setUsedLocation(x, y);
+        logError("Set safe");
+
         molea.setAlpha(0.0f);
         molea.setScaleX(0.0f);
         molea.setScaleY(0.0f);
         ((RelativeLayout) findViewById(R.id.molea_arena)).addView(molea, molea.getMoleaPlacement(x, y));
+        logError("Added molea to view,about to spawn");
         molea.spawn();
     }
 
     public MoleaView setOnMoleaSmashed(final MoleaView molea){
         molea.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                molea.setEnabled(false);
-                if (!molea.isKilled) {
-                    molea.animateMoleaPop();
-                    addRecycledMoleas(molea);
-                    moleaManager();
-                    incrementScore();
-                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        molea.setEnabled(false);
+                        if (!molea.isKilled) {
+                            logError("About to pop molea");
+                            molea.animateMoleaPop();
+                            logError("About to recycle molea");
+                            addRecycledMoleas(molea);
+                            logError("creating molea");
+                            generateMolea();
+                            logError(" Increment score");
+                            incrementScore();
+                        }
 
-                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) molea.getLayoutParams();
-                removeUsedLocation(molea.getSlotFromMargin(lp.leftMargin), molea.getSlotFromMargin(lp.topMargin));
+                        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) molea.getLayoutParams();
+                        removeUsedLocation(molea.getSlotFromMargin(lp.leftMargin), molea.getSlotFromMargin(lp.topMargin));
+
+                    }
+                });
             }
         });
         return molea;
     }
+
 
 
     public void incrementScore(){
