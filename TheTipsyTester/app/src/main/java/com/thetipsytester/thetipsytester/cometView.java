@@ -84,7 +84,7 @@ public class cometView extends FrameLayout {
         super(context);
         speed = comet_speed;
         TRIANGLE_COUNT = triangleCount;
-        COMET_SIZE = scaleValue(size);
+        COMET_SIZE = size;
         inverted = invert;
         debris = isDebris;
 

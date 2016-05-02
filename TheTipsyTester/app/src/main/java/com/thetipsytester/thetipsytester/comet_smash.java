@@ -2,9 +2,13 @@ package com.thetipsytester.thetipsytester;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.TimeAnimator;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -34,24 +38,27 @@ public class comet_smash extends AppCompatActivity {
 
     // for speeds, the higher the number the faster the object
     int comet_speed = 700;
-    int comet_size = 75;
+    int comet_size = 80;
     int comet_triangle_count = 20;
 
     int debris_count_min = 3;
-    int debris_count_max = 15;
+    int debris_count_max = 12;
 
     int debris_triangle_count_min = 2;
     int debris_triangle_count_max = 5;
 
-    int debris_size_min = 10;
-    int debris_size_max = 30;
+    int debris_size_min = 20;
+    int debris_size_max = 35;
 
     int debris_speed_max = 1000; // debris can be slow or fast
     int debris_speed_min = 50;
 
-    Timer timer;
+    private static Timer timer = new Timer();
+    TimerTask timerTask;
     int count;
     boolean shouldCount;
+    boolean firstRun;
+    AlertDialog testA;
 
     cometView comet;
     Integer hitCount = 10;
@@ -134,13 +141,26 @@ public class comet_smash extends AppCompatActivity {
         this.getWindow().getDecorView().setBackgroundColor(Color.parseColor("#" + PreferenceManager.getDefaultSharedPreferences(this).getString("color", "232323")));
         logError("Create teh Comet smash game!!");
         TOUCH_TOLERANCE = scaleValue(TOUCH_TOLERANCE);
+        comet_size = scaleValue(comet_size);
 
         debris_size_max = scaleValue(debris_size_max);
         debris_size_min = scaleValue(debris_size_min);
+
+        if(!isTablet(this)){
+            logError("shrinking for phones");
+            double factor = 0.75;
+            comet_size = (int)(comet_size*(factor));
+            TOUCH_TOLERANCE = (int)(TOUCH_TOLERANCE*(factor));
+            debris_size_max = (int)(debris_size_max*(factor));
+            debris_size_min = (int)(debris_size_min*(factor));
+        }
+
         if(savedInstanceState != null){
             count = savedInstanceState.getInt(STATE_GAME_TIME);
             hitCount = savedInstanceState.getInt(STATE_GAME_SCORE);
+            firstRun = savedInstanceState.getBoolean("firstRun");
         }else{
+            firstRun = true;
             count = 0;
         }
     }
@@ -168,8 +188,8 @@ public class comet_smash extends AppCompatActivity {
         logError("starting Game timer");
 
         shouldCount = true;
-        timer = new Timer();
-        TimerTask tt = new TimerTask() {
+        if(timerTask != null) timerTask.cancel();
+        timerTask = new TimerTask() {
             @Override
             public void run() {
                 runOnUiThread(new Runnable() {
@@ -180,8 +200,7 @@ public class comet_smash extends AppCompatActivity {
                 });
             }
         };
-
-    timer.scheduleAtFixedRate(tt,0,1000);
+    timer.scheduleAtFixedRate(timerTask,0,1000);
 
     }
 
@@ -244,30 +263,49 @@ public class comet_smash extends AppCompatActivity {
 
     }
 
+    private void testAlert(){
+        AlertDialog.Builder test = new AlertDialog.Builder(this);
+        test.setTitle("Comet smash Test").setMessage("hit the comet until it breaks! \n\nGood Luck!!");
+        test.setCancelable(false).setPositiveButton("Start", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                performReadyGameCountDown();
+                firstRun = false;
+            }
+        });
+        testA = test.create();
+        testA.show();
+    }
+
+
+
     @Override
     public void onPause() {
-        shouldCount = false;
-        if(timer != null) {
-            timer.cancel();
-        }
+        super.onPause();
 
+        shouldCount = false;
+        //if(timer != null) timer.cancel();
+        if(timerTask != null) timerTask.cancel();
+        logError("Purged time for count = " + timer.purge());
         if(comet != null){
             comet.killComet();
             comet = null;
         }
-        super.onPause();
+
+        if(testA != null) testA.cancel();
+
         logError("PAUSED COMET SMASH");
     }
     @Override
     public void onResume() {
         super.onResume();
         logError("RESUMED COMET SMASH");
-        performReadyGameCountDown();
+        if(firstRun) testAlert();
+        else performReadyGameCountDown();
         ((TextView) findViewById(R.id.hitCount)).setText(hitCount + "");
     }
     @Override
     public void onDestroy(){
-
+        if(testA != null) testA.cancel(); testA = null;
         super.onDestroy();
         logError("DESTROYED COMET SMASH");
     }
@@ -278,6 +316,7 @@ public class comet_smash extends AppCompatActivity {
         logError("SAVED INSTANCE STATE FOR COMET_SMASH!");
         savedInstanceState.putInt(STATE_GAME_TIME, count);
         savedInstanceState.putInt(STATE_GAME_SCORE, hitCount);
+        savedInstanceState.putBoolean("firstRun", firstRun);
     }
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -285,6 +324,7 @@ public class comet_smash extends AppCompatActivity {
         logError("RESTORED INSTANCE STATE FOR COMET_SMASH!");
         count = savedInstanceState.getInt(STATE_GAME_TIME);
         hitCount = savedInstanceState.getInt(STATE_GAME_SCORE);
+        firstRun = savedInstanceState.getBoolean("firstRun");
     }
     private void addCountDownViewForValue(final int value){
         RelativeLayout arena = (RelativeLayout)findViewById(R.id.space);
@@ -341,4 +381,10 @@ public class comet_smash extends AppCompatActivity {
     public void logError(String err){
         Log.d("COMET_SMASH ", err);
     }
+    public boolean isTablet(Context context) {
+        boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE);
+        boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+        return (xlarge || large);
+    }
+
 }
